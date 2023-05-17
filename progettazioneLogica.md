@@ -9,7 +9,7 @@
 |                        | password              | varchar(32)  |         | NOTNULL         |           |
 |                        | cellulare             | varchar(20)  |         | NOTNULL         |           |
 |                        |                       |              |         |                 |           |
-| docente                | IDUtente              | integer      | PK, FK  |                 |           |
+| docente                | IDDocente             | integer      | PK, FK  |                 |           |
 |                        | inizioRapporto        | date         |         | NOTNULL         |           |
 |                        | fineRapporto          | date         |         |                 | NULL      |
 |                        |                       |              |         |                 |           |
