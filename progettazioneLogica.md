@@ -28,7 +28,7 @@
 | insegnamento           | IDInsegnamento        | SERIAL       | PK      |                 |           |
 |                        | IDDocente             | integer      | FK      |                 | NULL      |
 |                        | nome                  | varchar(200) |         | NOTNULL         |           |
-|                        | descrizione           | varchar(500) |         |                 |           |
+|                        | descrizione           | text |         |                 |           |
 |                        | crediti               | integer      |         | NOTNULL         |           |
 |                        | annoAttivazione       | integer      |         | NOTNULL         |           |
 |                        |                       |              |         |                 |           |
