@@ -52,7 +52,8 @@ Inoltre prevediamo il requisito di propedeuticità tra gli esami e la possibilit
 
 Esame/Esito
 Gli esami sono registarti dal Docente responsabile dell'Insegnamento che ne specifica una data.
-Una volta resgistato lo studente di quel corso di laurea, potra uscriversi all'esame, in particolare verra creato un record in Esito con IDEsame, Matricola, voto e lode NULL e lo stato inizializzato a "In attesa"
+Una volta registato lo studente di quel corso di laurea, potra uscriversi all'esame, in particolare verra creato un record in Esito con IDEsame, Matricola, voto e lode NULL e lo stato inizializzato a "In attesa". 
+Potra iscriversi a quell'esame SOLO SE ha passato gli esami di cui è richiesta la propedeuticità e non si puo iscrivere una seconda volta allo stesso esame
 
 Storico_Esame/Composizione_Passata_Corso
 Oltre allo Storico_Insegnamento e allo Storico_Studente, prevediamo lo storico degli esami in Storico_Esame che contiene le informazioni degli esami passati (non per forza superati) o di studenti passati o di insegnamenti il cui docente responsabile è cambiato. 
@@ -60,9 +61,8 @@ Lo Storico_Esame lo associamo infatti a Matricola in quanto non sarebbe corretto
 Teniamo inoltre traccia in Composizione_Passata_Corso dato un insegnamento passato, i corsi di laurea a cui era associato 
 
 Laurea/Sessione_Laurea/Iscrizione_Sessione
-Prevediamo infine la gestione delle lauree, in cui data una Sessione_Laurea di un corso in una determinata data e luogo (ci potrebbero essere piu sessioni di laurea dello stesso corso in luoghi diversi), lo studente dello stesso corso si puo iscrivere alla suddetta sessione (previa verifica degli esami conseguiti)
-A cio poi seguira la registrazione della laurea nella tabella Laurea, caratterizzata dalla matricola e dall'id del corso di laurea in cui si è laureato, e ovviamente dal Voto, dal voto della prova finale e dall'eventuale lode assegnata.
-La distinzione tra l'iscrizione della laurea e la laurea, a differenza degli esami, è data dalla volotà di separare logicamente in una tabella tutte le lauree conseguite. 
+Prevediamo infine la gestione delle lauree, in cui data una Sessione_Laurea di un corso in una determinata data (per un corso di laurea prevediamo che ci sia solo una sessione per data), lo studente dello stesso corso si puo iscrivere alla suddetta sessione (previa verifica degli esami conseguiti)
+A cio poi seguira la registrazione della laurea nella tabella Laurea, caratterizzata dalla matricola e dall'id del corso di laurea in cui si è laureato, e ovviamente dal Voto, dal voto della prova finale e dall'eventuale lode assegnata. 
 
 //foto ER
 //foto ER ristrutturato
