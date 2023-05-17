@@ -3,7 +3,9 @@
 | ---------------------- | --------------------- | ------------ | ------- | --------------- | --------- |
 | utente                 | IDUtente              | SERIAL       | PK      |                 |           |
 |                        | ruolo                 | ruolo        |         | NOTNULL         |           |
-|                        | email                 | varchar(50)  |         | NOTNULL         |           |
+|                        | nome                  | varchar(50)  |         | NOTNULL         |           |
+|                        | cognome               | varchar(50)  |         | NOTNULL         |           |
+|                        | email                 | varchar(50)  |         | NOTNULL, UNIQUE |           |
 |                        | password              | varchar(32)  |         | NOTNULL         |           |
 |                        | cellulare             | varchar(20)  |         | NOTNULL         |           |
 |                        |                       |              |         |                 |           |
@@ -28,11 +30,11 @@
 | insegnamento           | IDInsegnamento        | SERIAL       | PK      |                 |           |
 |                        | IDDocente             | integer      | FK      |                 | NULL      |
 |                        | nome                  | varchar(200) |         | NOTNULL         |           |
-|                        | descrizione           | text |         |                 |           |
+|                        | descrizione           | text         |         |                 |           |
 |                        | crediti               | integer      |         | NOTNULL         |           |
 |                        | annoAttivazione       | integer      |         | NOTNULL         |           |
 |                        |                       |              |         |                 |           |
-| manifesto_Insegnamenti | IDInsegnamento        | integer      | PPK, FK |                 |           |
+| manifesto_insegnamenti | IDInsegnamento        | integer      | PPK, FK |                 |           |
 |                        | IDCorso               | varchar(20)  | PPK, FK |                 |           |
 |                        | anno                  | annoCorso    |         | NOTNULL         |           |
 |                        |                       |              |         |                 |           |
