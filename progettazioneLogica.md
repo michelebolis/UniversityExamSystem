@@ -14,7 +14,7 @@
 |                        | fineRapporto          | date         |         |                 | NULL         |
 |                        |                       |              |         |                 |              |
 | studente               | IDCorso               | varchar(20)  | PPK, FK |                 |              |
-|                        | matricola             | varchar(6)   | PPK, FK | UNIQUE          |              |
+|                        | matricola             | char(6)      | PPK, FK | UNIQUE          |              |
 |                        | dataImmatricolazione  | date         |         | NOTNULL         | CURRENT_DATE |
 |                        |                       |              |         |                 |              |
 | matricola              | matricola             | varchar(6)   | PK      |                 |              |
@@ -46,7 +46,7 @@
 |                        | IDInsegnamento        | integer      | FK      | NOTNULL         |              |
 |                        | data                  | date         |         | NOTNULL         |              |
 |                        |                       |              |         |                 |              |
-| esito                  | matricola             | varchar(6)   | PPK, FK |                 |              |
+| esito                  | matricola             | char(6)      | PPK, FK |                 |              |
 |                        | IDEsame               | integer      | PPK, FK |                 |              |
 |                        | voto                  | voto         |         |                 | NULL         |
 |                        | stato                 | statoEsito   |         |                 | In attesa    |
@@ -63,13 +63,13 @@
 |                        | IDInsegnamento        | integer      | PPK, FK |                 |              |
 |                        | IDCorso               | varchar(20)  | PPK, FK |                 |              |
 |                        |                       |              |         |                 |              |
-| storico_studente       | matricola             | varchar(6)   | PPK, FK |                 |              |
+| storico_studente       | matricola             | char(6)      | PPK, FK |                 |              |
 |                        | IDCorso               | varchar(20)  | PPK, FK |                 |              |
 |                        | dataImmatricolazione  | date         |         | NOTNULL         |              |
 |                        | dataRimozione         | date         |         | NOTNULL         | CURRENT_DATE |
 |                        |                       |              |         |                 |              |
 | storico_esame          | IDStorico             | SERIAL       | PK      |                 |              |
-|                        | matricola             | varchar(6)   | FK      | NOTNULL         |              |
+|                        | matricola             | char(6)      | FK      | NOTNULL         |              |
 |                        | IDCorso               | varchar(20)  | FK      | NOTNULL         |              |
 |                        | IDInsegnamento        | integer      | FK      | NOTNULL         |              |
 |                        | IDDocente             | integer      | FK      | NOTNULL         |              |
@@ -78,7 +78,7 @@
 |                        | lode                  | boolean      |         |                 |              |
 |                        | data                  | date         |         | NOTNULL         |              |
 |                        |                       |              |         |                 |              |
-| laurea                 | matricola             | varchar(6)   | PPK, FK |                 |              |
+| laurea                 | matricola             | char(6)      | PPK, FK |                 |              |
 |                        | data                  | date         | PPK, FK |                 |              |
 |                        | IDCorso               | varchar(20)  | PPK, FK |                 |              |
 |                        | voto                  | votoLaurea   |         |                 | NULL         |

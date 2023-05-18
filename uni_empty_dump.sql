@@ -75,14 +75,14 @@ CREATE TABLE uni.insegnamento(
 );
 
 CREATE TABLE uni.matricola(
-    matricola varchar(6) PRIMARY KEY,
+    matricola char(6) PRIMARY KEY,
     IDUtente integer REFERENCES uni.utente(IDUtente) NOT NULL UNIQUE,
     codiceFiscale varchar(16) NOT NULL UNIQUE
 );
 
 CREATE TABLE uni.studente(
     IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso),
-    matricola varchar(6) REFERENCES uni.matricola(matricola) UNIQUE,
+    matricola char(6) REFERENCES uni.matricola(matricola) UNIQUE,
     dataImmatricolazione date NOT NULL DEFAULT CURRENT_DATE,
     PRIMARY KEY (IDCorso, matricola)
 );
@@ -95,7 +95,7 @@ CREATE TABLE uni.sessione_laurea(
 );
 
 CREATE TABLE uni.laurea(
-    matricola varchar(6) REFERENCES uni.matricola(matricola),
+    matricola char(6) REFERENCES uni.matricola(matricola),
     data date,
     IDCorso varchar(20),
     voto uni.votoLaurea DEFAULT NULL,
@@ -123,7 +123,7 @@ CREATE TABLE uni.storico_insegnamento(
 );
 
 CREATE TABLE uni.storico_studente(
-    matricola varchar(6) REFERENCES uni.matricola(matricola),
+    matricola char(6) REFERENCES uni.matricola(matricola),
     IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso),
     dataImmatricolazione date NOT NULL,
     dataRimozione date NOT NULL DEFAULT CURRENT_DATE,
@@ -132,7 +132,7 @@ CREATE TABLE uni.storico_studente(
 
 CREATE TABLE uni.storico_esame(
     IDStorico SERIAL PRIMARY KEY,
-    matricola varchar(6) REFERENCES uni.matricola(matricola) NOT NULL,
+    matricola char(6) REFERENCES uni.matricola(matricola) NOT NULL,
     IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso) NOT NULL,
     IDInsegnamento integer NOT NULL,
     IDDocente integer NOT NULL,
@@ -159,7 +159,7 @@ CREATE TABLE uni.manifesto_passato(
 );
 
 CREATE TABLE uni.esito(
-    matricola varchar(6) REFERENCES uni.matricola(matricola),
+    matricola char(6) REFERENCES uni.matricola(matricola),
     IDEsame integer REFERENCES uni.esame(IDEsame),
     voto uni.voto DEFAULT NULL,
     stato uni.statoEsito DEFAULT 'In attesa',
@@ -173,9 +173,138 @@ CREATE TABLE uni.propedeuticita(
     PRIMARY KEY (insegnamento, insegnamentoRichiesto)
 );
 
+-- Inserimento delle viste
+-- studente_bio: contiene tutte le informazioni biografiche degli studenti iscritti
+CREATE OR REPLACE VIEW uni.studente_bio AS 
+	SELECT m.matricola, u.nome, u.cognome, u.email, u.cellulare, s.IDCorso, s.dataImmatricolazione
+    FROM uni.utente as u INNER JOIN uni.matricola as m ON u.IDUtente = m.IDUtente
+	INNER JOIN uni.studente as s ON m.matricola = s.matricola
+;
+
+
+-- Creazione delle funzioni
+-- insert_utente
+CREATE OR REPLACE FUNCTION uni.insert_utente(ruolo ruolo, nome varchar(50), cognome varchar(50), new_email varchar(100), password varchar(32), cellulare varchar(20)) 
+RETURNS VOID AS $$
+BEGIN 
+    INSERT INTO uni.utente(ruolo, nome, cognome, email, password, cellulare) 
+    VALUES (ruolo, nome, cognome, new_email, md5(password), cellulare);
+END;
+$$ LANGUAGE plpgsql;
+
+-- insert_docente: Inserisce un nuovo docente 
+-- INPUT: 
+-- - nome NOT NULL
+-- - cognome NOT NULL
+-- - email NOT NULL e UNIQUE 
+-- - password NOT NULL
+-- - cellulare NOT NULL
+-- - inizioRapporto NOT NULL
+-- - fineRapporto eventualmente NULL
+-- OUTPUT: ---
+CREATE OR REPLACE FUNCTION uni.insert_docente(nome varchar(50), cognome varchar(50), new_email varchar(100), password varchar(32), cellulare varchar(20), inizioRapporto date, fineRapporto date) 
+RETURNS VOID AS $$
+DECLARE newId uni.utente.IDUtente%TYPE;
+BEGIN 
+    SELECT * FROM uni.insert_utente('Docente', nome, cognome, new_email, password, cellulare);
+    SELECT u.IDUtente INTO newId FROM uni.utente as u WHERE u.email=new_email;
+    INSERT INTO uni.docente(IDDocente, inizioRapporto, fineRapporto) 
+    VALUES (newId, inizioRapporto, fineRapporto);
+END;
+$$ LANGUAGE plpgsql;
+
+-- new_matricola: restituisce la nuova matricola da assegnare a uno studente
+CREATE OR REPLACE FUNCTION uni.new_matricola() RETURNS uni.matricola.matricola%type AS $$
+DECLARE 
+	lastMatricola uni.matricola.matricola%TYPE;
+	newMatricola uni.matricola.matricola%TYPE;
+BEGIN
+	SELECT m.matricola INTO lastMatricola FROM uni.matricola as m ORDER BY m.matricola desc;
+	IF lastMatricola IS NULL THEN
+		RETURN '000001';
+	END IF;
+	newMatricola := CAST((CAST(lastMatricola as integer)+1) as varchar(6));
+	WHILE length(newMatricola)<6 LOOP
+		newMatricola := ('0' || newMatricola );
+	END LOOP;
+    RETURN newMatricola;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- insert_studente: 
+CREATE OR REPLACE FUNCTION uni.insert_studente(nome varchar(50), cognome varchar(50), new_email varchar(100), password varchar(32), cellulare varchar(20), codiceFiscale varchar(16), IDCorso integer, dataImmatricolazione date) 
+RETURNS VOID AS $$
+DECLARE 
+    newId uni.utente.IDUtente%TYPE;
+    newMatricola uni.matricola.matricola%TYPE;
+BEGIN 
+    SELECT * FROM uni.insert_utente('Docente', nome, cognome, new_email, password, cellulare);
+    SELECT * INTO newMatricola FROM uni.new_matricola();
+    SELECT u.IDUtente INTO newId FROM uni.utente as u WHERE u.email=new_email;
+    INSERT INTO uni.matricola(IDUtente, matricola, codiceFiscale) 
+    VALUES (newId, newMatricola, codiceFiscale);
+
+	INSERT INTO uni.studente(matricola, dataImmatricolazione, IDCorso) 
+    VALUES (newMatricola, dataImmatricolazione, IDCorso);
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- insert_segreteria: 
+CREATE OR REPLACE FUNCTION uni.get_insert_segreteria(nome varchar(50), cognome varchar(50), new_email varchar(100), password varchar(32), cellulare varchar(20)) 
+RETURNS VOID AS $$
+BEGIN
+    SELECT * FROM uni.insert_utente('Segreteria', nome, cognome, new_email, password, cellulare);
+END; 
+$$ LANGUAGE plpgsql;
+
+
+-- insert_corso_laurea: 
+-- il corso di laurea è di default attivo
+CREATE OR REPLACE FUNCTION uni.insert_corso_laurea(IDCorso varchar(20), nome varchar(100), anniTotali tipoLaurea, valoreLode integer)
+RETURNS VOID AS $$
+BEGIN 
+    INSERT INTO uni.corso_laurea(IDCorso, nome, anniTotali, valoreLode, attivo)
+    VALUES (IDCorso, nome, anniTotali, valoreLode, True);
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+-- get_id_ruolo: 
+CREATE OR REPLACE FUNCTION uni.get_id_ruolo(the_email varchar(100), the_password varchar(32))
+RETURNS SETOF uni.utente AS $$
+DECLARE ut uni.utente%ROWTYPE;
+BEGIN
+    SELECT u.IDUtente, u.ruolo INTO ut
+    FROM uni.utente as u 
+    WHERE u.email=the_email AND u.password=the_password;
+	RETURN NEXT ut;
+END;
+$$ LANGUAGE plpgsql;
+
+-- get_docente: 
+
+
+-- get_studente: restituisce le informazioni biografiche di uno studente
+CREATE OR REPLACE FUNCTION uni.get_studente_bio(corso varchar(20), matricola varchar(6))
+RETURNS SETOF uni.studente_bio AS $$
+DECLARE stud uni.studente_bio%ROWTYPE;
+BEGIN
+    SELECT u.* INTO stud
+    FROM uni.studente_bio as u 
+    WHERE corso=u.corso AND matricola=u.matricola;
+	RETURN NEXT stud;
+END;
+$$ LANGUAGE plpgsql;
+
+
 -- Inserimento base di un utente segreteria
 INSERT INTO uni.utente(
     ruolo, nome, cognome, email, password, cellulare
 ) VALUES (
     'Segreteria', 'admin', '_', 'admin', 'admin', '0'
 );
+
+
