@@ -43,7 +43,7 @@ CHECK (
 -- creazione delle tabelle del db uni nello schema uni
 CREATE TABLE uni.utente(
     IDUtente SERIAL PRIMARY KEY,
-    ruolo ruolo NOT NULL,
+    ruolo uni.ruolo NOT NULL,
     nome varchar(50) NOT NULL,
     cognome varchar(50) NOT NULL,
     email varchar(100) NOT NULL UNIQUE,
@@ -54,7 +54,7 @@ CREATE TABLE uni.utente(
 CREATE TABLE uni.corso_laurea(
     IDCorso varchar(20) PRIMARY KEY,
     nome varchar(100) NOT NULL,
-    anniTotali tipoLaurea NOT NULL,
+    anniTotali uni.tipoLaurea NOT NULL,
     valoreLode integer NOT NULL,
     attivo boolean NOT NULL
 );
@@ -85,4 +85,90 @@ CREATE TABLE uni.studente(
     matricola varchar(6) REFERENCES uni.matricola(matricola) UNIQUE,
     dataImmatricolazione date NOT NULL DEFAULT CURRENT_DATE,
     PRIMARY KEY (IDCorso, matricola)
+);
+
+CREATE TABLE uni.sessione_laurea(
+    data date,
+    IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso),
+    creditiLaurea integer NOT NULL,
+    PRIMARY KEY(data, IDCorso)
+);
+
+CREATE TABLE uni.laurea(
+    matricola varchar(6) REFERENCES uni.matricola(matricola),
+    data date,
+    IDCorso varchar(20),
+    voto int DEFAULT NULL,
+    votoProva uni.voto DEFAULT NULL, 
+    lode boolean DEFAULT NULL,
+	FOREIGN KEY (data, IDCorso) REFERENCES uni.sessione_laurea(data, IDCorso),
+	PRIMARY KEY (matricola, data, IDCorso)
+);
+
+CREATE TABLE uni.esame(
+    IDEsame SERIAL PRIMARY KEY,
+    IDDocente integer REFERENCES uni.docente(IDDocente) NOT NULL,
+    IDInsegnamento integer REFERENCES uni.insegnamento(IDInsegnamento) NOT NULL,
+    data date NOT NULL
+);
+
+CREATE TABLE uni.storico_insegnamento(
+    IDDocente integer REFERENCES uni.docente(IDDocente),
+    IDInsegnamento integer,
+    nome varchar(200) NOT NULL,
+    crediti integer NOT NULL, 
+    annoInizio integer NOT NULL,
+    annoFine integer NOT NULL,
+    PRIMARY KEY(IDDocente, IDInsegnamento)
+);
+
+CREATE TABLE uni.storico_studente(
+    matricola varchar(6) REFERENCES uni.matricola(matricola),
+    IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso),
+    dataImmatricolazione date NOT NULL,
+    dataRimozione date NOT NULL DEFAULT CURRENT_DATE,
+    PRIMARY KEY(matricola, IDCorso)
+);
+
+CREATE TABLE uni.storico_esame(
+    IDStorico SERIAL PRIMARY KEY,
+    matricola varchar(6) REFERENCES uni.matricola(matricola) NOT NULL,
+    IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso) NOT NULL,
+    IDInsegnamento integer NOT NULL,
+    IDDocente integer NOT NULL,
+    voto voto,
+    stato uni.statoesito NOT NULL,
+    lode boolean,
+    data date NOT NULL,
+	FOREIGN KEY (IDInsegnamento, IDDocente) REFERENCES uni.storico_insegnamento(IDInsegnamento, IDDocente)
+);
+
+CREATE TABLE uni.manifesto_insegnamenti(
+    IDInsegnamento integer REFERENCES uni.insegnamento(IDInsegnamento),
+    IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso),
+    anno uni.annoCorso NOT NULL,
+    PRIMARY KEY (IDInsegnamento, IDCorso) 
+);
+
+CREATE TABLE uni.manifesto_passato(
+    IDInsegnamento integer,
+    IDDocente integer,
+    IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso),
+    FOREIGN KEY (IDInsegnamento, IDDocente) REFERENCES uni.storico_insegnamento(IDInsegnamento, IDDocente),
+    PRIMARY KEY (IDInsegnamento, IDCorso, IDDocente) 
+);
+
+CREATE TABLE uni.esito(
+    matricola varchar(6) REFERENCES uni.matricola(matricola),
+    IDEsame integer REFERENCES uni.esame(IDEsame),
+    voto uni.voto DEFAULT NULL,
+    stato uni.statoEsito DEFAULT 'In attesa',
+    lode boolean DEFAULT NULL,
+    PRIMARY KEY (matricola, IDEsame)
+);
+
+CREATE TABLE uni.propedeuticita(
+    insegnamento integer REFERENCES uni.insegnamento(IDInsegnamento),
+    insegnamentoRichiesto integer REFERENCES uni.insegnamento(IDInsegnamento),
+    PRIMARY KEY (insegnamento, insegnamentoRichiesto)
 );

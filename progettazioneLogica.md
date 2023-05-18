@@ -44,16 +44,16 @@
 | esame                  | IDEsame               | SERIAL       | PK      |                 |              |
 |                        | IDDocente             | integer      | FK      | NOTNULL         |              |
 |                        | IDInsegnamento        | integer      | FK      | NOTNULL         |              |
-|                        | data                  |              |         | NOTNULL         |              |
+|                        | data                  | date         |         | NOTNULL         |              |
 |                        |                       |              |         |                 |              |
 | esito                  | matricola             | varchar(6)   | PPK, FK |                 |              |
-|                        | IDEsame               | SERIAL       | PPK, FK |                 |              |
+|                        | IDEsame               | integer      | PPK, FK |                 |              |
 |                        | voto                  | voto         |         |                 | NULL         |
 |                        | stato                 | statoEsito   |         |                 | In attesa    |
 |                        | lode                  | boolean      |         |                 | NULL         |
 |                        |                       |              |         |                 |              |
 | storico_insegnamento   | IDDocente             | integer      | PPK, FK |                 |              |
-|                        | IDInsegnamento        | integer      | PPK, FK |                 |              |
+|                        | IDInsegnamento        | integer      | PPK     |                 |              |
 |                        | nome                  | varchar(200) |         | NOTNULL         |              |
 |                        | crediti               | integer      |         | NOTNULL         |              |
 |                        | annoInizio            | integer      |         | NOTNULL         |              |
@@ -71,8 +71,8 @@
 | storico_esame          | IDStorico             | SERIAL       | PK      |                 |              |
 |                        | matricola             | varchar(6)   | FK      | NOTNULL         |              |
 |                        | IDCorso               | varchar(20)  | FK      | NOTNULL         |              |
-|                        | IDInsegnamento        | SERIAL       | FK      | NOTNULL         |              |
-|                        | IDDocente             | SERIAL       | FK      | NOTNULL         |              |
+|                        | IDInsegnamento        | integer      | FK      | NOTNULL         |              |
+|                        | IDDocente             | integer      | FK      | NOTNULL         |              |
 |                        | voto                  | voto         |         |                 |              |
 |                        | stato                 | statoEsito   |         | NOTNULL         |              |
 |                        | lode                  | boolean      |         |                 |              |
@@ -81,8 +81,8 @@
 | laurea                 | matricola             | varchar(6)   | PPK, FK |                 |              |
 |                        | data                  | date         | PPK, FK |                 |              |
 |                        | IDCorso               | varchar(20)  | PPK, FK |                 |              |
-|                        | voto                  | votoLaurea   |         | NOTNULL         |              |
-|                        | votoProva             | voto         |         | NOTNULL         |              |
+|                        | voto                  | votoLaurea   |         |                 | NULL         |
+|                        | votoProva             | voto         |         |                 | NULL         |
 |                        | lode                  | boolean      |         |                 | NULL         |
 |                        |                       |              |         |                 |              |
 | sessione_laurea        | data                  | date         | PPK     |                 |              |
