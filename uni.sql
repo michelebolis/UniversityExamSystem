@@ -48,7 +48,11 @@ CHECK (
 
 -- creazione delle tabelle del db uni nello schema uni
 CREATE OR REPLACE uni.insegnamento(
-
+    IDUtente SERIAL PRIMARY KEY,
+    ruolo ruolo NOT NULL,
+    nome varchar(50) NOT NULL,
+    cognome varchar(50) NOT NULL,
+    email varchar(100)
 );
 CREATE OR REPLACE uni.utente(
 

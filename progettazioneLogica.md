@@ -5,7 +5,7 @@
 |                        | ruolo                 | ruolo        |         | NOTNULL         |           |
 |                        | nome                  | varchar(50)  |         | NOTNULL         |           |
 |                        | cognome               | varchar(50)  |         | NOTNULL         |           |
-|                        | email                 | varchar(50)  |         | NOTNULL, UNIQUE |           |
+|                        | email                 | varchar(100)  |         | NOTNULL, UNIQUE |           |
 |                        | password              | varchar(32)  |         | NOTNULL         |           |
 |                        | cellulare             | varchar(20)  |         | NOTNULL         |           |
 |                        |                       |              |         |                 |           |
