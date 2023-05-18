@@ -55,7 +55,7 @@ CREATE TABLE uni.corso_laurea(
     IDCorso varchar(20) PRIMARY KEY,
     nome varchar(100) NOT NULL,
     anniTotali uni.tipoLaurea NOT NULL,
-    valoreLode integer NOT NULL,
+    valoreLode integer NOT NULL CHECK(valoreLode>=30),
     attivo boolean NOT NULL
 );
 
@@ -70,8 +70,8 @@ CREATE TABLE uni.insegnamento(
     IDDocente integer REFERENCES uni.docente(IDDocente) DEFAULT NULL,
     nome varchar(200) NOT NULL,
     descrizione text,
-    crediti integer NOT NULL,
-    annoAttivazione integer NOT NULL
+    crediti integer NOT NULL CHECK(crediti>0),
+    annoAttivazione integer NOT NULL CHECK(annoAttivazione>0)
 );
 
 CREATE TABLE uni.matricola(
@@ -90,7 +90,7 @@ CREATE TABLE uni.studente(
 CREATE TABLE uni.sessione_laurea(
     data date,
     IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso),
-    creditiLaurea integer NOT NULL,
+    creditiLaurea integer NOT NULL CHECK(creditiLaurea>0),
     PRIMARY KEY(data, IDCorso)
 );
 
@@ -98,7 +98,7 @@ CREATE TABLE uni.laurea(
     matricola varchar(6) REFERENCES uni.matricola(matricola),
     data date,
     IDCorso varchar(20),
-    voto int DEFAULT NULL,
+    voto uni.votoLaurea DEFAULT NULL,
     votoProva uni.voto DEFAULT NULL, 
     lode boolean DEFAULT NULL,
 	FOREIGN KEY (data, IDCorso) REFERENCES uni.sessione_laurea(data, IDCorso),
@@ -116,9 +116,9 @@ CREATE TABLE uni.storico_insegnamento(
     IDDocente integer REFERENCES uni.docente(IDDocente),
     IDInsegnamento integer,
     nome varchar(200) NOT NULL,
-    crediti integer NOT NULL, 
-    annoInizio integer NOT NULL,
-    annoFine integer NOT NULL,
+    crediti integer NOT NULL CHECK(crediti>0), 
+    annoInizio integer NOT NULL CHECK(annoInizio>0),
+    annoFine integer NOT NULL CHECK(annoFine>0),
     PRIMARY KEY(IDDocente, IDInsegnamento)
 );
 
@@ -136,7 +136,7 @@ CREATE TABLE uni.storico_esame(
     IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso) NOT NULL,
     IDInsegnamento integer NOT NULL,
     IDDocente integer NOT NULL,
-    voto voto,
+    voto uni.voto,
     stato uni.statoesito NOT NULL,
     lode boolean,
     data date NOT NULL,
@@ -146,7 +146,7 @@ CREATE TABLE uni.storico_esame(
 CREATE TABLE uni.manifesto_insegnamenti(
     IDInsegnamento integer REFERENCES uni.insegnamento(IDInsegnamento),
     IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso),
-    anno uni.annoCorso NOT NULL,
+    anno uni.annoCorso NOT NULL CHECK(anno>0),
     PRIMARY KEY (IDInsegnamento, IDCorso) 
 );
 
@@ -171,4 +171,11 @@ CREATE TABLE uni.propedeuticita(
     insegnamento integer REFERENCES uni.insegnamento(IDInsegnamento),
     insegnamentoRichiesto integer REFERENCES uni.insegnamento(IDInsegnamento),
     PRIMARY KEY (insegnamento, insegnamentoRichiesto)
+);
+
+-- Inserimento base di un utente segreteria
+INSERT INTO uni.utente(
+    ruolo, nome, cognome, email, password, cellulare
+) VALUES (
+    'Segreteria', 'admin', '_', 'admin', 'admin', '0'
 );
