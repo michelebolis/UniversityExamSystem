@@ -183,12 +183,51 @@ CREATE OR REPLACE VIEW uni.studente_bio AS
 
 
 -- Creazione delle funzioni
+-- insert_corso_laurea: 
+-- il corso di laurea è di default attivo
+CREATE OR REPLACE FUNCTION uni.insert_corso_laurea(
+    IDCorso varchar(20), nome varchar(100), anniTotali tipoLaurea, valoreLode integer
+)
+RETURNS VOID AS $$
+BEGIN 
+    INSERT INTO uni.corso_laurea(IDCorso, nome, anniTotali, valoreLode, attivo)
+        VALUES (IDCorso, nome, anniTotali, valoreLode, True);
+END;
+$$ LANGUAGE plpgsql;
+
+-- insert_insegnamento
+CREATE OR REPLACE FUNCTION uni.insert_insegnamento(
+    IDDocente integer, nome varchar(200), descrizione text, crediti integer, annoAttivazione integer
+)
+RETURNS VOID AS $$
+BEGIN 
+    INSERT INTO uni.insegnamento(IDDocente, nome, descrizione, crediti, annoAttivazione)
+        VALUES (IDDocente, nome, descrizione, crediti, annoAttivazione);
+END;
+$$ LANGUAGE plpgsql;
+
+-- cambia_responsabile
+CREATE OR REPLACE FUNCTION uni.cambia_responsabile(
+    insegnamentoToUpdate integer, newDocente integer
+)
+RETURNS VOID AS $$
+DECLARE rec uni.insegnamento%ROWTYPE;
+BEGIN
+    PERFORM * FROM uni.insegnamento as c WHERE c.IDInsegnamento= insegnamentoToUpdate;
+    IF NOT FOUND THEN 
+        RAISE EXCEPTION 'Insegnamento non trovato';
+    END IF;
+    UPDATE uni.insegnamento SET IDDocente = newDocente WHERE IDInsegnamento=insegnamentoToUpdate;
+END;
+$$ LANGUAGE plpgsql;
+
+
 -- insert_utente
 CREATE OR REPLACE FUNCTION uni.insert_utente(ruolo ruolo, nome varchar(50), cognome varchar(50), new_email varchar(100), password varchar(32), cellulare varchar(20)) 
 RETURNS VOID AS $$
 BEGIN 
     INSERT INTO uni.utente(ruolo, nome, cognome, email, password, cellulare) 
-    VALUES (ruolo, nome, cognome, new_email, md5(password), cellulare);
+        VALUES (ruolo, nome, cognome, new_email, md5(password), cellulare);
 END;
 $$ LANGUAGE plpgsql;
 
@@ -201,15 +240,26 @@ $$ LANGUAGE plpgsql;
 -- - cellulare NOT NULL
 -- - inizioRapporto NOT NULL
 -- - fineRapporto eventualmente NULL
+-- - IDCorso NOT NULL
 -- OUTPUT: ---
-CREATE OR REPLACE FUNCTION uni.insert_docente(nome varchar(50), cognome varchar(50), new_email varchar(100), password varchar(32), cellulare varchar(20), inizioRapporto date, fineRapporto date) 
+CREATE OR REPLACE FUNCTION uni.insert_docente(
+    nome varchar(50), cognome varchar(50), new_email varchar(100), password varchar(32), cellulare varchar(20), 
+    inizioRapporto date, fineRapporto date,
+    insegnamentoToUpdate integer
+) 
 RETURNS VOID AS $$
-DECLARE newId uni.utente.IDUtente%TYPE;
+DECLARE 
+    newId uni.utente.IDUtente%TYPE;
 BEGIN 
-    SELECT * FROM uni.insert_utente('Docente', nome, cognome, new_email, password, cellulare);
+    PERFORM * FROM uni.insegnamento as c WHERE c.IDInsegnamento= insegnamentoToUpdate;
+    IF NOT FOUND THEN 
+        RAISE EXCEPTION 'Insegnamento non trovato';
+    END IF;
+    PERFORM * FROM uni.insert_utente('Docente', nome, cognome, new_email, password, cellulare);
     SELECT u.IDUtente INTO newId FROM uni.utente as u WHERE u.email=new_email;
     INSERT INTO uni.docente(IDDocente, inizioRapporto, fineRapporto) 
-    VALUES (newId, inizioRapporto, fineRapporto);
+        VALUES (newId, inizioRapporto, fineRapporto);
+    PERFORM * FROM uni.cambia_responsabile(insegnamentoToUpdate, newId);
 END;
 $$ LANGUAGE plpgsql;
 
@@ -233,20 +283,23 @@ $$ LANGUAGE plpgsql;
 
 
 -- insert_studente: 
-CREATE OR REPLACE FUNCTION uni.insert_studente(nome varchar(50), cognome varchar(50), new_email varchar(100), password varchar(32), cellulare varchar(20), codiceFiscale varchar(16), IDCorso integer, dataImmatricolazione date) 
+CREATE OR REPLACE FUNCTION uni.insert_studente(
+    nome varchar(50), cognome varchar(50), new_email varchar(100), password varchar(32), cellulare varchar(20), codiceFiscale varchar(16), 
+    IDCorso integer, dataImmatricolazione date
+) 
 RETURNS VOID AS $$
 DECLARE 
     newId uni.utente.IDUtente%TYPE;
     newMatricola uni.matricola.matricola%TYPE;
 BEGIN 
-    SELECT * FROM uni.insert_utente('Docente', nome, cognome, new_email, password, cellulare);
+    PERFORM * FROM uni.insert_utente('Docente', nome, cognome, new_email, password, cellulare);
     SELECT * INTO newMatricola FROM uni.new_matricola();
     SELECT u.IDUtente INTO newId FROM uni.utente as u WHERE u.email=new_email;
     INSERT INTO uni.matricola(IDUtente, matricola, codiceFiscale) 
-    VALUES (newId, newMatricola, codiceFiscale);
+        VALUES (newId, newMatricola, codiceFiscale);
 
 	INSERT INTO uni.studente(matricola, dataImmatricolazione, IDCorso) 
-    VALUES (newMatricola, dataImmatricolazione, IDCorso);
+        VALUES (newMatricola, dataImmatricolazione, IDCorso);
 END;
 $$ LANGUAGE plpgsql;
 
@@ -255,19 +308,8 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION uni.get_insert_segreteria(nome varchar(50), cognome varchar(50), new_email varchar(100), password varchar(32), cellulare varchar(20)) 
 RETURNS VOID AS $$
 BEGIN
-    SELECT * FROM uni.insert_utente('Segreteria', nome, cognome, new_email, password, cellulare);
+    PERFORM * FROM uni.insert_utente('Segreteria', nome, cognome, new_email, password, cellulare);
 END; 
-$$ LANGUAGE plpgsql;
-
-
--- insert_corso_laurea: 
--- il corso di laurea è di default attivo
-CREATE OR REPLACE FUNCTION uni.insert_corso_laurea(IDCorso varchar(20), nome varchar(100), anniTotali tipoLaurea, valoreLode integer)
-RETURNS VOID AS $$
-BEGIN 
-    INSERT INTO uni.corso_laurea(IDCorso, nome, anniTotali, valoreLode, attivo)
-    VALUES (IDCorso, nome, anniTotali, valoreLode, True);
-END;
 $$ LANGUAGE plpgsql;
 
 
