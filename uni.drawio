@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-05-18T07:38:27.756Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36" etag="Gwhy2d2NtLcu4JMXUnkl" version="21.3.2" type="github" pages="3">
+<mxfile host="app.diagrams.net" modified="2023-05-19T14:09:35.063Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36" etag="OnCuDQRXebOuTXd3yXkt" version="21.3.2" type="github" pages="3">
   <diagram name="ER" id="ei8fi8gPT5rXZid7RnSF">
-    <mxGraphModel dx="1620" dy="467" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="1623" dy="468" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="mUWgfkTVN4Pzx1sX07Q9-0" />
         <mxCell id="mUWgfkTVN4Pzx1sX07Q9-1" parent="mUWgfkTVN4Pzx1sX07Q9-0" />
@@ -698,9 +698,6 @@
             <mxPoint x="685" y="668" as="sourcePoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="kwuCq1-gE4yX7JOUzjt6-6" value="votoProva" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="mUWgfkTVN4Pzx1sX07Q9-1" vertex="1">
-          <mxGeometry x="892" y="924.5" width="80" height="30" as="geometry" />
-        </mxCell>
         <mxCell id="kwuCq1-gE4yX7JOUzjt6-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="mUWgfkTVN4Pzx1sX07Q9-1" source="kwuCq1-gE4yX7JOUzjt6-9" target="kwuCq1-gE4yX7JOUzjt6-10" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="724.5" y="1085" as="targetPoint" />
@@ -1106,11 +1103,14 @@
         <mxCell id="xdwMSbJAu44SIAuWiM6E-0" value="(0, N)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="mUWgfkTVN4Pzx1sX07Q9-1" vertex="1">
           <mxGeometry x="205" y="145" width="50" height="30" as="geometry" />
         </mxCell>
+        <mxCell id="RyaI2ZSmjA2Y-SDxpkCA-1" value="incrementoVoto" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="mUWgfkTVN4Pzx1sX07Q9-1">
+          <mxGeometry x="895" y="924.5" width="110" height="30" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
   <diagram name="ER Ristrutturato" id="Z5GbzlKkcZcJBYi0-Bsg">
-    <mxGraphModel dx="1545" dy="389" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="1623" dy="468" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="8BG0fOGD8Of8e3mBtdMV-0" />
         <mxCell id="8BG0fOGD8Of8e3mBtdMV-1" parent="8BG0fOGD8Of8e3mBtdMV-0" />
@@ -2188,8 +2188,8 @@
             <mxPoint x="322" y="758" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="eHEyWwRXvEUDRWXHBrVZ-0" value="votoProva" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="8BG0fOGD8Of8e3mBtdMV-1" vertex="1">
-          <mxGeometry x="892" y="924.5" width="80" height="30" as="geometry" />
+        <mxCell id="eHEyWwRXvEUDRWXHBrVZ-0" value="incrementoVoto" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="8BG0fOGD8Of8e3mBtdMV-1" vertex="1">
+          <mxGeometry x="892" y="924.5" width="110" height="30" as="geometry" />
         </mxCell>
         <mxCell id="eHEyWwRXvEUDRWXHBrVZ-1" value="creditiLaurea" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="8BG0fOGD8Of8e3mBtdMV-1" vertex="1">
           <mxGeometry x="831.5" y="1115" width="90" height="30" as="geometry" />
