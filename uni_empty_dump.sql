@@ -99,7 +99,7 @@ CREATE TABLE uni.laurea(
     data date,
     IDCorso varchar(20),
     voto uni.votoLaurea DEFAULT NULL,
-    votoProva uni.voto DEFAULT NULL, 
+    incrementoVoto integer DEFAULT NULL CHECK incrementoVoto>0 , 
     lode boolean DEFAULT NULL,
 	FOREIGN KEY (data, IDCorso) REFERENCES uni.sessione_laurea(data, IDCorso),
 	PRIMARY KEY (matricola, data, IDCorso)
@@ -181,6 +181,9 @@ CREATE OR REPLACE VIEW uni.studente_bio AS
 	INNER JOIN uni.studente as s ON m.matricola = s.matricola
 ;
 
+CREATE OR REPLACE VIEW uni.media_studente AS
+
+;
 
 -- Creazione delle funzioni
 -- insert_corso_laurea: 
@@ -314,6 +317,118 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+-- insert_esame: 
+CREATE OR REPLACE PROCEDURE uni.insert_esame(
+    IDDocente integer, IDInsegnamento integer, data date
+)
+AS $$
+BEGIN 
+    IF data<CURRENT_DATE THEN
+        RAISE EXCEPTION 'La data non puo essere precedente a quella di oggi';
+    END IF;
+    INSERT INTO uni.esame(IDDocente, IDInsegnamento, data)
+        VALUES (IDDocente, IDInsegnamento, data);
+END;
+$$ LANGUAGE plpgsql;
+
+-- insert_propedeuticita
+CREATE OR REPLACE PROCEDURE uni.insert_propedeuticita(
+    IDInsegnamento1 integer, IDInsegnamento2 integer, data date
+)
+AS $$
+BEGIN 
+    IF IDInsegnamento1=IDInsegnamento2 THEN
+        RAISE EXCEPTION 'I due insegnamenti non possono essere lo stesso';
+    END IF;
+    INSERT INTO uni.propedeuticita(insegnamento, insegnamentoRichiesto)
+        VALUES (IDInsegnamento1, IDInsegnamento2);
+END;
+$$ LANGUAGE plpgsql;
+
+-- iscrizione_esame:
+CREATE OR REPLACE PROCEDURE uni.iscrizione_esame(
+    matricola char(6), IDEsame integer
+)
+AS $$
+BEGIN 
+    INSERT INTO uni.esito(matricola, IDEsame, stato)
+        VALUES (matricola, IDEsame, 'In attesa');
+END;
+$$ LANGUAGE plpgsql;
+
+-- insert_manifesto
+CREATE OR REPLACE PROCEDURE uni.insert_manifesto(
+    IDInsegnamento integer, IDCorso varchar(20), anno uni.annoCorso
+)
+AS $$
+BEGIN 
+    INSERT INTO uni.manifesto_insegnamenti(IDInsegnamento, IDCorso, anno)
+        VALUES (IDInsegnamento, IDCorso, anno);
+END;
+$$ LANGUAGE plpgsql;
+
+-- insert_sessione_laurea
+CREATE OR REPLACE PROCEDURE uni.insert_sessione_laurea(
+    data date, IDCorso varchar(20), creditiLaurea integer
+)
+AS $$
+BEGIN 
+    INSERT INTO uni.sessione_laurea(data, IDCorso, creditiLaurea)
+        VALUES (data, IDCorso, creditiLaurea);
+END;
+$$ LANGUAGE plpgsql;
+
+-- iscrizione_laurea
+CREATE OR REPLACE PROCEDURE uni.iscrizione_esame(
+    matricola char(6), data date, IDCorso varchar(20)
+)
+AS $$
+BEGIN 
+    INSERT INTO uni.laurea(matricola, data, IDCorso)
+        VALUES (matricola, data, IDCorso);
+END;
+$$ LANGUAGE plpgsql;
+
+-- registrazione_esito_esame
+CREATE OR REPLACE PROCEDURE uni.registrazione_esito_esame(
+    the_matricola char(6), the_IDEsame integer, voto uni.voto, lode boolean
+)
+AS $$
+BEGIN 
+    UPDATE uni.esito SET voto=voto, lode=lode
+    WHERE matricola=the_matricola AND IDEsame=the_IDEsame;
+END;
+$$ LANGUAGE plpgsql;
+
+-- calcola_voto_laurea
+CREATE OR REPLACE FUNCTION uni.calcola_voto_laurea(
+    the_matricola char(6), incremento integer
+)
+RETURNS decimal AS $$
+DECLARE the_media decimal; voto decimal;
+BEGIN 
+    SELECT media INTO the_media FROM uni.media_studente WHERE matricola=matricola;
+    voto:=(the_media*110/30)+incremento;
+    IF VOTO>=110 THEN
+        RETURN 110;
+    ELSE 
+        RETURN ROUND(voto);
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+-- registrazion_esito_laurea
+CREATE OR REPLACE PROCEDURE uni.registrazione_esito_laurea(
+    the_matricola char(6), the_IDCorso integer, the_data date, incremento integer, lode boolean
+)
+AS $$
+DECLARE votoFinale decimal;
+BEGIN 
+    SELECT * INTO votoFinale FROM calcola_voto_laurea(the_matricola, incremento);
+    UPDATE uni.laurea SET incrementoVoto=incremento, lode=lode
+    WHERE matricola=the_matricola AND IDCorso=the_IDCorso AND data=the_data;
+END;
+$$ LANGUAGE plpgsql;
 
 -- get_id_ruolo: 
 CREATE OR REPLACE FUNCTION uni.get_id_ruolo(the_email varchar(100), the_password varchar(32))

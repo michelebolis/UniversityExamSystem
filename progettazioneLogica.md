@@ -82,7 +82,7 @@
 |                        | data                  | date         | PPK, FK |                 |              |
 |                        | IDCorso               | varchar(20)  | PPK, FK |                 |              |
 |                        | voto                  | votoLaurea   |         |                 | NULL         |
-|                        | votoProva             | voto         |         |                 | NULL         |
+|                        | incrementoVoto        | integer      |         |                 | NULL         |
 |                        | lode                  | boolean      |         |                 | NULL         |
 |                        |                       |              |         |                 |              |
 | sessione_laurea        | data                  | date         | PPK     |                 |              |
