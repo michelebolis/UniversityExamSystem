@@ -109,18 +109,20 @@ uni.insert_manifesto(
     anno uni.annoCorso
 )
 
-- uni.insert_sessione_laurea: permette di inserire in una determinata data, 
+- uni.insert_sessione_laurea: permette di inserire in una determinata data, la sessione di laurea per un corso di laurea
 uni.insert_sessione_laurea(
     data date, 
     IDCorso varchar(20), 
 )
 
-uni.iscrizione_esame(
+- uni.iscrizione_laurea: permette di far iscrivere uno studente ad una sessione di laurea disponibile per il suo corso di laurea in una determinata data
+uni.iscrizione_laurea(
     matricola char(6), 
     data date, 
     IDCorso varchar(20)
 )
 
+- uni.registrazione_esito_esame: data una matricola che si è iscritta in una sessione per una esame, permette di registrane l'esito, caratterizzato dal voto e dall'eventuale lode
 uni.registrazione_esito_esame(
     the_matricola char(6), 
     the_IDEsame integer, 
@@ -128,22 +130,26 @@ uni.registrazione_esito_esame(
     the_lode boolean
 )
 
+- uni.accetta_esito: permette ad uno studente di accettare o meno un esito di un esame conseguito
 uni.accetta_esito(
     the_matricola char(6), 
     the_IDEsame integer, 
     accettato boolean
 )
 
+- uni.delete_studente: permette di eliminare uno studente che segue un corso di laurea
 uni.delete_studente(
     the_matricola char(6), 
     the_IDCorso varchar(20)
 )
 
+- uni.calcola_voto_laurea: permette di calcolare il voto di laurea finale per uno studente dato l'incremento ottenuto nella prova finale
 uni.calcola_voto_laurea(
     the_matricola char(6), 
     incremento integer
 )
 
+- uni.registrazione_esito_laurea: dato uno studente di un corso di laurea che ha conseguito la laurea in una determinata data, permette di registrarne l'incremento ottenuto
 uni.registrazione_esito_laurea(
     the_matricola char(6), 
     the_IDCorso integer, 
@@ -152,14 +158,17 @@ uni.registrazione_esito_laurea(
 )
 
 ## Functions:
+- uni.new_matricola(): permette di calcolare la matricola da assegnare ad un nuovo studente
 uni.new_matricola() 
     RETURNS uni.matricola.matricola%type
 
+- uni.get_id_ruolo: date le credenziali di accesso di un utente, permette di restituirne il ruolo
 uni.get_id_ruolo(
     the_email varchar(100), 
     the_password varchar(32)
 )   RETURNS SETOF uni.utente
 
+- uni.get_studente_bio: data la matricola e il corso di laurea in cui è iscritto, vengono restituite le sue informazioni 
 uni.get_studente_bio(
     corso varchar(20), 
     matricola varchar(6)

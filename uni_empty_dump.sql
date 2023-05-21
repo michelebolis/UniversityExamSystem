@@ -464,7 +464,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- iscrizione_laurea
-CREATE OR REPLACE PROCEDURE uni.iscrizione_esame(
+CREATE OR REPLACE PROCEDURE uni.iscrizione_laurea(
     matricola char(6), data date, IDCorso varchar(20)
 )
 AS $$
