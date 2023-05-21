@@ -87,4 +87,3 @@
 |                        |                       |              |         |                 |              |
 | sessione_laurea        | data                  | date         | PPK     |                 |              |
 |                        | IDCorso               | varchar(20)  | PPK, FK |                 |              |
-|                        | creditiLaurea         | integer      |         | NOTNULL         |              |

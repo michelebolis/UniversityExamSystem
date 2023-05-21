@@ -454,12 +454,12 @@ $$ LANGUAGE plpgsql;
 
 -- insert_sessione_laurea
 CREATE OR REPLACE PROCEDURE uni.insert_sessione_laurea(
-    data date, IDCorso varchar(20), creditiLaurea integer
+    data date, IDCorso varchar(20)
 )
 AS $$
 BEGIN 
-    INSERT INTO uni.sessione_laurea(data, IDCorso, creditiLaurea)
-        VALUES (data, IDCorso, creditiLaurea);
+    INSERT INTO uni.sessione_laurea(data, IDCorso)
+        VALUES (data, IDCorso);
 END;
 $$ LANGUAGE plpgsql;
 

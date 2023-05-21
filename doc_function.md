@@ -1,44 +1,50 @@
 ## Procedures:
+- uni.insert_corso_laurea: permette di inserire un nuovo corso di laurea 
 uni.insert_corso_laurea(
-    IDCorso varchar(20), 
-    nome varchar(100), 
-    anniTotali uni.tipoLaurea, 
-    valoreLode integer
+    IDCorso varchar(20), (NOT NULL)
+    nome varchar(100), (NOT NULL)
+    anniTotali uni.tipoLaurea, (NOT NULL)
+    valoreLode integer (NOT NULL)
 )
 
+- uni.insert_insegnamento: permette di inserire un nuovo insegnamento eventualmente assegnardogli un docente responsabile
 uni.insert_insegnamento(
     IDDocente integer, 
-    nome varchar(200), 
+    nome varchar(200), (NOT NULL)
     descrizione text, 
-    crediti integer, 
-    annoAttivazione integer
+    crediti integer, (NOT NULL)
+    annoAttivazione integer (NOT NULL)
 )
 
+- uni.cambia_responsabile: dato un insegnamento, permette di cambiargli il docente responsabile
 uni.cambia_responsabile(
-    insegnamentoToUpdate integer, 
-    newDocente integer
+    insegnamentoToUpdate integer, (NOT NULL)
+    newDocente integer (NOT NULL)
 )
 
+- uni.insert_utente: permette di inserire un nuovo utente. Nota: la email non deve essere gia presente
 uni.insert_utente(
-    ruolo uni.ruolo, 
-    nome varchar(50), 
-    cognome varchar(50), 
-    new_email varchar(100), 
-    password varchar(32), 
-    cellulare varchar(20)
+    ruolo uni.ruolo, (NOT NULL)
+    nome varchar(50), (NOT NULL)
+    cognome varchar(50), (NOT NULL)
+    new_email varchar(100), (NOT NULL)
+    password varchar(32), (NOT NULL)
+    cellulare varchar(20) (NOT NULL)
 )
 
+- uni.insert_docente: permette di inserire un nuovo docente ed assegnarlo come responsabile ad un insegnamento
 uni.insert_docente(
-    nome varchar(50), 
-    cognome varchar(50), 
-    new_email varchar(100), 
-    password varchar(32), 
-    cellulare varchar(20), 
-    inizioRapporto date, 
+    nome varchar(50), (NOT NULL)
+    cognome varchar(50), (NOT NULL)
+    new_email varchar(100), (NOT NULL)
+    password varchar(32), (NOT NULL)
+    cellulare varchar(20), (NOT NULL)
+    inizioRapporto date, (NOT NULL)
     fineRapporto date,
-    insegnamentoToUpdate integer
+    insegnamentoToUpdate integer (NOT NULL)
 ) 
 
+- uni.modifica_utente: dato un utente, permette modificarne le credenziali di accesso e il recapito telefonico
 uni.modifica_utente(
     the_IDUtente integer, 
     new_email varchar(100), 
@@ -46,60 +52,67 @@ uni.modifica_utente(
     new_cellulare varchar(20)
 )
 
+- uni.cambio_corso_laurea: data una matricola di uno studente, permette di cambiargli il corso di laurea eventualmente cambiando le credenziali di accesso (SE non si vogliono modificare, inserire NULL come argomenti nei corrispondenti campi)
 uni.cambio_corso_laurea(
-    the_matricola char(6), 
-    IDCorso varchar(20), 
-    dataImmatricolazione date, 
+    the_matricola char(6), (NOT NULL)
+    IDCorso varchar(20), (NOT NULL)
+    dataImmatricolazione date, (NOT NULL)
     new_email varchar(100), 
     password varchar(32), 
     cellulare varchar(20)
 )
 
+- uni.insert_studente: permette di inserire un nuovo studente ad un corso di laurea
 uni.insert_studente(
-    nome varchar(50), 
-    cognome varchar(50), 
-    new_email varchar(100), 
-    password varchar(32), 
-    cellulare varchar(20), 
-    the_codiceFiscale varchar(16), 
-    IDCorso varchar(20), 
-    dataImmatricolazione date
+    nome varchar(50), (NOT NULL)
+    cognome varchar(50), (NOT NULL)
+    new_email varchar(100), (NOT NULL)
+    password varchar(32), (NOT NULL)
+    cellulare varchar(20), (NOT NULL)
+    the_codiceFiscale varchar(16), (NOT NULL)
+    IDCorso varchar(20), (NOT NULL)
+    dataImmatricolazione date (NOT NULL)
 ) 
 
+- uni.insert_segreteria: permette di inserire un nuovo utente della segreteria
 uni.insert_segreteria(
-    nome varchar(50), 
-    cognome varchar(50), 
-    new_email varchar(100), 
-    password varchar(32), 
-    cellulare varchar(20)
+    nome varchar(50), (NOT NULL)
+    cognome varchar(50), (NOT NULL)
+    new_email varchar(100), (NOT NULL)
+    password varchar(32), (NOT NULL)
+    cellulare varchar(20) (NOT NULL)
 ) 
 
+- uni.insert_esame: permette di inserire un una data stabilita un'esame di un insegnamento di cui è responsabile un docente
 uni.insert_esame(
     IDDocente integer, 
     IDInsegnamento integer, 
     data date
 )
 
+- uni.insert_propedeuticita: permette di inserire la propedeuticita che richiede un esame (IDInsegnamento1) rispetto ad un altro esame richiesto (IDInsegnamento2)
 uni.insert_propedeuticita(
     IDInsegnamento1 integer, 
     IDInsegnamento2 integer
 )
 
+- uni.iscrizione_esame: dato un idesame, permette ad uno studente di iscriversi
 uni.iscrizione_esame(
     matricola char(6), 
     IDEsame integer
 )
 
+- uni.insert_manifesto: permette di inserire un insegnamento per un corso di laurea in un determinato anno 
 uni.insert_manifesto(
     IDInsegnamento integer, 
     IDCorso varchar(20), 
     anno uni.annoCorso
 )
 
+- uni.insert_sessione_laurea: permette di inserire in una determinata data, 
 uni.insert_sessione_laurea(
     data date, 
     IDCorso varchar(20), 
-    creditiLaurea integer
 )
 
 uni.iscrizione_esame(
