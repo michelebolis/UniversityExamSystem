@@ -159,9 +159,8 @@ uni.registrazione_esito_laurea(
 
 ## Functions:
 - uni.new_matricola(): permette di calcolare la matricola da assegnare ad un nuovo studente 
-
-uni.new_matricola() 
-    RETURNS uni.matricola.matricola%type
+    uni.new_matricola() 
+        RETURNS uni.matricola.matricola%type
 
 - uni.get_id_ruolo: date le credenziali di accesso di un utente, permette di restituirne il ruolo
 uni.get_id_ruolo(
