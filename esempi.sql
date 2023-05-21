@@ -14,22 +14,27 @@ CALL uni.insert_manifesto(2, 'F1X', 2);
 CALL uni.insert_insegnamento(NULL, 'Web API', NULL, 6, 2020);
 CALL uni.insert_manifesto(3, 'F1X', 1);
 
+
 CALL uni.insert_insegnamento(NULL, 'Programmazione Web', NULL, 6, 2020);
 CALL uni.insert_manifesto(4, 'F1X', 1);
 CALL uni.insert_manifesto(4, 'F2X', 2);
 
+
 CALL uni.insert_insegnamento(NULL, 'Algoritmi', NULL, 12, 2020);
 CALL uni.insert_manifesto(5, 'F1X', 2);
+
 
 CALL uni.insert_docente('Stefano', 'Montanelli', 'stefano.montanelli@uni.it', 'Stefano', '03500182934', '11/12/2000', NULL, 2);
 CALL uni.insert_docente('Valerio', 'Bellandi', 'valerio.bellandi@uni.it', 'Valerio', '03500182934', '11/12/2000', NULL, 3);
 
+CALL uni.cambia_responsabile(4, 5);
+CALL uni.cambia_responsabile(5, 3);
 -- CALL uni.cambia_responsabile(3, 4); --EXCEPTION
 
 CALL uni.insert_propedeuticita(2, 1);
 
 CALL uni.insert_esame(3, 1, '21/01/2021');
-CALL uni.insert_esame(4, 3, '30/01/2021');
+CALL uni.insert_esame(5, 3, '30/01/2021');
 CALL uni.insert_esame(3, 1, '27/01/2021');
 
 CALL uni.insert_studente('Michele', 'Bolis', 'michele.bolis@uni.it', 'Michele', '01923782319', 'LASJD18AJ19AJDKA', 'F1X', '15/05/2020');

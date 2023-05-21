@@ -7,7 +7,7 @@ uni.insert_corso_laurea(
     valoreLode integer (NOT NULL)
 )
 
-- uni.insert_insegnamento: permette di inserire un nuovo insegnamento eventualmente assegnardogli un docente responsabile
+- uni.insert_insegnamento: permette di inserire un nuovo insegnamento eventualmente assegnandogli un docente responsabile
 uni.insert_insegnamento(
     IDDocente integer, 
     nome varchar(200), (NOT NULL)
@@ -16,10 +16,10 @@ uni.insert_insegnamento(
     annoAttivazione integer (NOT NULL)
 )
 
-- uni.cambia_responsabile: dato un insegnamento, permette di cambiargli il docente responsabile
+- uni.cambia_responsabile: dato un insegnamento, permette di cambiargli il docente responsabile. Nota: se non si sa ancora il nuovo docente responsabile, passare come newDocente NULL
 uni.cambia_responsabile(
     insegnamentoToUpdate integer, (NOT NULL)
-    newDocente integer (NOT NULL)
+    newDocente integer 
 )
 
 - uni.insert_utente: permette di inserire un nuovo utente. Nota: la email non deve essere gia presente
@@ -83,10 +83,10 @@ uni.insert_segreteria(
     cellulare varchar(20) (NOT NULL)
 ) 
 
-- uni.insert_esame: permette di inserire un una data stabilita un'esame di un insegnamento di cui è responsabile un docente
+- uni.insert_esame: permette di inserire in una data stabilita un'esame di un insegnamento di cui è responsabile un docente
 uni.insert_esame(
-    IDDocente integer, 
-    IDInsegnamento integer, 
+    the_IDDocente integer, 
+    the_IDInsegnamento integer, 
     data date
 )
 
@@ -149,26 +149,27 @@ uni.calcola_voto_laurea(
     incremento integer
 )
 
-- uni.registrazione_esito_laurea: dato uno studente di un corso di laurea che ha conseguito la laurea in una determinata data, permette di registrarne l'incremento ottenuto
+- uni.registrazione_esito_laurea: dato uno studente di un corso di laurea, che ha conseguito la laurea in una determinata data, permette di registrarne l'incremento ottenuto e l'eventuale lode
 uni.registrazione_esito_laurea(
     the_matricola char(6), 
     the_IDCorso integer, 
     the_data date, 
-    incremento integer, lode boolean
+    incremento integer, 
+    lode boolean
 )
 
 ## Functions:
 - uni.new_matricola(): permette di calcolare la matricola da assegnare ad un nuovo studente 
-    uni.new_matricola() 
-        RETURNS uni.matricola.matricola%type
+uni.new_matricola() 
+    RETURNS uni.matricola.matricola%type
 
-- uni.get_id_ruolo: date le credenziali di accesso di un utente, permette di restituirne il ruolo
+- uni.get_id_ruolo: date le credenziali di accesso di un utente, permette di restituirne il ruolo dell'utente
 uni.get_id_ruolo(
     the_email varchar(100), 
     the_password varchar(32)
 )   RETURNS SETOF uni.utente
 
-- uni.get_studente_bio: data la matricola e il corso di laurea in cui è iscritto, vengono restituite le sue informazioni 
+- uni.get_studente_bio: data la matricola e il corso di laurea in cui è iscritto lo studente, vengono restituite le sue informazioni 
 uni.get_studente_bio(
     corso varchar(20), 
     matricola varchar(6)

@@ -161,7 +161,7 @@ CREATE TABLE uni.manifesto_passato(
 
 CREATE TABLE uni.esito(
     matricola char(6) REFERENCES uni.matricola(matricola),
-    IDEsame integer REFERENCES uni.esame(IDEsame),
+    IDEsame integer REFERENCES uni.esame(IDEsame) ON DELETE CASCADE,
     voto uni.voto DEFAULT NULL,
     stato uni.statoEsito DEFAULT 'In attesa',
     lode boolean DEFAULT NULL,
@@ -257,16 +257,6 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- insert_docente: Inserisce un nuovo docente 
--- INPUT: 
--- - nome NOT NULL
--- - cognome NOT NULL
--- - email NOT NULL e UNIQUE 
--- - password NOT NULL
--- - cellulare NOT NULL
--- - inizioRapporto NOT NULL
--- - fineRapporto eventualmente NULL
--- - IDCorso NOT NULL
--- OUTPUT: ---
 CREATE OR REPLACE PROCEDURE uni.insert_docente(
     nome varchar(50), cognome varchar(50), new_email varchar(100), password varchar(32), cellulare varchar(20), 
     inizioRapporto date, fineRapporto date,
@@ -341,20 +331,23 @@ DECLARE
     insegnamento uni.manifesto_insegnamenti%ROWTYPE;
     esame uni.view_carriera%ROWTYPE;
 BEGIN
+    -- inserisce il nuovo studente
     INSERT INTO uni.studente(matricola, IDCorso, dataImmatricolazione)
     VALUES (the_matricola, the_IDCorso, dataImmatricolazione);
     
+    -- recupero il suo IDUtente passato
     SELECT u.IDUtente INTO the_IDUtente FROM uni.utente as u INNER JOIN uni.matricola as m 
     ON m.IDUtente=u.IDUtente AND m.matricola=the_matricola;
-    CALL uni.modifica_utente (the_IDUtente, new_email, password, cellulare);
+    CALL uni.modifica_utente (the_IDUtente, new_email, password, cellulare); -- Ne modifico i dati di accesso se richiesto
 
-    FOR insegnamento IN 
+    FOR insegnamento IN -- per ogni insegnamento nel suo nuovo corso di laurea
         SELECT * FROM uni.manifesto_insegnamenti
         WHERE IDCorso=the_IDCorso
     LOOP
-        FOR esame IN 
+        FOR esame IN -- recupeo ogni essame passato precedentemente che vale per il suo nuovo corso di laurea
             SELECT * FROM uni.view_carriera WHERE matricola=the_matricola AND IDInsegnamento=insegnamento.IDInsegnamento 
         LOOP
+            -- inserisco tale esame passato nella sua carriera
             INSERT INTO uni.carriera_studente(matricola, IDCorso, IDInsegnamento, IDDocente, voto, lode, data)
             VALUES (the_matricola, the_IDCorso, esame.IDInsegnamento, esame.IDDocente, esame.voto, esame.lode, esame.data);
         END LOOP;
@@ -374,7 +367,8 @@ DECLARE
     newMatricola uni.matricola.matricola%TYPE;
 BEGIN 
     SELECT matricola INTO old_matricola FROM uni.matricola WHERE codiceFiscale=the_codiceFiscale;
-    IF old_matricola IS NULL THEN
+    IF old_matricola IS NULL THEN --verifico che il codice fiscale non appartenga ad uno studente gia presente nel sistema
+        -- SE non è presente nel sistema, lo creo
         CALL uni.insert_utente('Studente', nome, cognome, new_email, password, cellulare);
         SELECT * INTO newMatricola FROM uni.new_matricola();
         SELECT u.IDUtente INTO newId FROM uni.utente as u WHERE u.email=new_email;
@@ -384,6 +378,7 @@ BEGIN
 	    INSERT INTO uni.studente(matricola, dataImmatricolazione, IDCorso) 
             VALUES (newMatricola, dataImmatricolazione, IDCorso);
     ELSE
+        -- SE è gia presente nel sistema, la sua iscrizione equivale ad un cambio di corso di laurea
         CALL uni.cambio_corso_laurea(old_matricola, IDCorso, dataImmatricolazione, new_email, password, cellulare);
         RETURN;
     END IF;
@@ -404,15 +399,21 @@ $$ LANGUAGE plpgsql;
 
 -- insert_esame: 
 CREATE OR REPLACE PROCEDURE uni.insert_esame(
-    IDDocente integer, IDInsegnamento integer, data date
+    the_IDDocente integer, the_IDInsegnamento integer, data date
 )
 AS $$
 BEGIN 
-    -- IF data<CURRENT_DATE THEN
-       -- RAISE EXCEPTION 'La data non puo essere precedente a quella di oggi';
-    -- END IF;
-    INSERT INTO uni.esame(IDDocente, IDInsegnamento, data)
-        VALUES (IDDocente, IDInsegnamento, data);
+    PERFORM * FROM uni.insegnamento as i WHERE i.IDInsegnamento=the_IDInsegnamento AND i.IDDocente=the_IDDocente;
+    IF FOUND THEN 
+        -- IF data<CURRENT_DATE THEN
+            -- RAISE EXCEPTION 'La data non puo essere precedente a quella di oggi';
+        -- END IF;
+        INSERT INTO uni.esame(IDDocente, IDInsegnamento, data)
+            VALUES (the_IDDocente, the_IDInsegnamento, data);
+    ELSE
+        RAISE EXCEPTION 'Il docente non è attualmente responsabile dell insegnamento, non puo inserire un esame per tale insegnamento';
+    END IF;
+
 END;
 $$ LANGUAGE plpgsql;
 
@@ -443,12 +444,19 @@ $$ LANGUAGE plpgsql;
 
 -- insert_manifesto
 CREATE OR REPLACE PROCEDURE uni.insert_manifesto(
-    IDInsegnamento integer, IDCorso varchar(20), anno uni.annoCorso
+    IDInsegnamento integer, the_IDCorso varchar(20), anno uni.annoCorso
 )
 AS $$
+DECLARE annitot uni.corso_laurea.anniTotali%TYPE;
 BEGIN 
+    IF anno=3 THEN
+        SELECT * INTO annitot FROM uni.corso_laurea WHERE IDCorso=the_IDCorso;
+        IF annitot=2 THEN 
+            RAISE EXCEPTION 'Il corso di laurea a cui si vuole assegnare l insegnamento è di 2 anni';
+        END IF;
+    END IF;
     INSERT INTO uni.manifesto_insegnamenti(IDInsegnamento, IDCorso, anno)
-        VALUES (IDInsegnamento, IDCorso, anno);
+        VALUES (IDInsegnamento, the_IDCorso, anno);
 END;
 $$ LANGUAGE plpgsql;
 
@@ -584,7 +592,7 @@ $$ LANGUAGE plpgsql;
 
 
 -- creazione dei trigger
--- insert_media: 
+-- insert_media: inizializza la media di un nuovo studente di un corso di laurea a 0
 CREATE OR REPLACE FUNCTION uni.insert_media()
 RETURNS TRIGGER AS $$
 BEGIN 
@@ -609,16 +617,19 @@ DECLARE
     num_crediti uni.insegnamento.crediti%TYPE;
     info_esame uni.esame%ROWTYPE;
 BEGIN
+        -- recupero la media ed il numero di crediti prima del nuovo esito accettato e i crediti del nuovo esito accettato
         SELECT * INTO old_stats FROM uni.media_studente WHERE matricola=NEW.matricola AND IDCorso=NEW.IDCorso;
         SELECT crediti INTO num_crediti FROM uni.insegnamento WHERE IDInsegnamento=NEW.IDInsegnamento;
-
-        IF NEW.lode THEN
+        
+        -- SE il nuovo esito ha la lode, recupero il valore della lode del corso di laurea
+        IF NEW.lode THEN -- reminder: lode<->30 viene controllato in accetta esito
             SELECT valoreLode INTO valLode FROM uni.corso_laurea WHERE IDCorso=NEW.IDCorso;
             new_media:=(old_stats.media*old_stats.crediti+num_crediti*valLode)/(old_stats.crediti+num_crediti);
         ELSE 
             new_media:=(old_stats.media*old_stats.crediti+num_crediti*NEW.voto)/(old_stats.crediti+num_crediti);
         END IF;
 
+        -- aggiorno la vista materializzata
         UPDATE uni.media_studente SET media=new_media, crediti=old_stats.crediti+num_crediti
         WHERE matricola=NEW.matricola AND IDCorso=NEW.IDCorso;
         RETURN NULL;
@@ -634,32 +645,49 @@ RETURNS TRIGGER AS $$
 DECLARE 
     corso uni.media_studente.IDCorso%TYPE;
     info_esame uni.esame%ROWTYPE;
+    insegnamento_richiesto uni.propedeuticita.insegnamentoRichiesto%TYPE;
 BEGIN 
     IF NEW.stato='Accettato' THEN
+        -- si sta accettando un esito positivo: bisogna aggiornare la vista che contiene la carriera dello studente
+        -- recupero la data, l'insegnamento, il docente responsabile e il corso di laurea dello studente
         SELECT * INTO info_esame FROM uni.esame WHERE IDEsame=NEW.IDEsame;
         SELECT IDCorso INTO corso FROM uni.studente WHERE matricola=NEW.matricola;
         INSERT INTO uni.carriera_studente(matricola, IDCorso, IDInsegnamento, IDDocente, voto, lode, data)
         VALUES (NEW.matricola, corso, info_esame.IDInsegnamento, info_esame.IDDocente, NEW.voto, new.lode, info_esame.data);
     ELSE   
         IF NEW.stato='In attesa' THEN
+            -- iscrizione dello studente all'esame
             -- controlla che lo studente non si sia gia iscritto alla stessa sessione di esame
             PERFORM * FROM uni.esito WHERE matricola=NEW.matricola AND IDEsame=NEW.IDEsame;
             IF FOUND THEN
                 RAISE EXCEPTION 'Lo studente si è gia iscritto a questa sessione dell esame';
             END IF;
-
+            
             -- controlla che lo studente sia dello stesso corso di laurea dell insegnamento per cui sostiene l'esame
             SELECT IDCorso INTO corso FROM uni.studente WHERE matricola=NEW.matricola;
             PERFORM * FROM uni.manifesto_insegnamenti WHERE IDCorso=corso AND IDInsegnamento=(
                 SELECT IDInsegnamento FROM uni.esame WHERE IDEsame = NEW.IDEsame
             );
             IF FOUND THEN
-                -- controlla che lo studente non abbia gia dato accettato un esito positivo per quell esame
+                -- controlla che lo studente non abbia gia dato accettato un esito positivo per quell insegnamento
                 PERFORM * FROM uni.view_carriera WHERE matricola=NEW.matricola AND IDInsegnamento=(
                     SELECT IDInsegnamento FROM uni.esame WHERE IDEsame = NEW.IDEsame
                 );
                 IF FOUND THEN 
                     RAISE EXCEPTION 'Lo studente ha gia accettato un esito positivo per l insegnamento';
+                ELSE 
+                    -- controlla che abbia la propedeuticita richiesta per iscriversi all esame
+                    FOR insegnamento_richiesto IN
+                        SELECT insegnamentoRichiesto FROM uni.propedeuticita
+                        WHERE insegnamento=(SELECT IDInsegnamento FROM uni.esame WHERE IDEsame = NEW.IDEsame
+                        )
+                    LOOP
+                        PERFORM * FROM uni.carriera_studente WHERE IDInsegnamento=insegnamento_richiesto;
+                        IF FOUND THEN 
+                        ELSE
+                            RAISE EXCEPTION 'Lo studente non ha superato gli esami propedeutici richiesti';
+                        END IF;
+                    END LOOP;
                 END IF;
             ELSE 
                 RAISE EXCEPTION 'L insegnamento dell esame non è previsto per il corso di laurea dello studente';
@@ -671,7 +699,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- check_esito_trigger: 
-CREATE OR REPLACE TRIGGER check_esito_trigger BEFORE UPDATE ON uni.esito 
+CREATE OR REPLACE TRIGGER check_esito_trigger BEFORE UPDATE OR INSERT ON uni.esito 
 FOR EACH ROW EXECUTE FUNCTION uni.check_esito();
 
 -- num_responsabile
@@ -682,16 +710,23 @@ DECLARE
     count_new_responsabile integer;
 BEGIN 
     IF NEW.IDDocente=OLD.IDDocente THEN
+        -- non si sta modificando il docente responsabile
         RETURN NEW;
     ELSE
+        -- recupero il numero di insegnamenti di cui è responsabile il docente che verra sostituito
         SELECT count(*) INTO count_old_responsabile FROM uni.insegnamento
         WHERE IDDocente=OLD.IDDocente;
         IF count_old_responsabile=1  THEN 
             RAISE EXCEPTION 'Il docente non puo essere sostituito come responsabile, è l unico insegnamento di cui è responsabile';
         END IF;
-        SELECT count(*) INTO count_old_responsabile FROM uni.insegnamento
-        WHERE IDDocente=OLD.IDDocente;
-        IF count_old_responsabile=1  THEN 
+
+        -- SE si sta assegnado l'insegnamento a qualcuno, recupero il numero di insegnamenti di cui è responsabile il docente che sara il nuovo responsabile
+        IF NEW.IDDocente IS NULL THEN
+            RETURN NEW;
+        END IF;
+        SELECT count(*) INTO count_new_responsabile FROM uni.insegnamento
+        WHERE IDDocente=NEW.IDDocente;
+        IF count_new_responsabile=3  THEN 
             RAISE EXCEPTION 'Il docente non puo essere responsabile del corso, è gia responsabile di altri 3 corsi';
         END IF;
         RETURN NEW;
@@ -713,28 +748,35 @@ DECLARE
     the_data uni.esame.data%TYPE;
 BEGIN 
     IF OLD.IDDocente IS NULL THEN
+        -- inizializzazione del docente responsabile --> non ci sono entry con IDDocente = NULL nelle altre tabelle
         RETURN NEW;
     END IF;
+    -- registro l insegnamento nello storico
     INSERT INTO uni.storico_insegnamento(IDDocente, IDInsegnamento, nome, crediti, annoInizio)
         VALUES (OLD.IDDocente, OLD.IDInsegnamento, OLD.nome, OLD.crediti, OLD.annoAttivazione);
-    FOR sessione IN 
+    FOR sessione IN -- per ogni sessione passata di esame dell'insegnamento con il docente che verra sostituito
         SELECT * FROM uni.esame 
         WHERE IDInsegnamento=OLD.IDInsegnamento AND IDDocente=OLD.IDDocente
     LOOP 
-        FOR esame IN
+        FOR esame IN -- per ogni iscritto a una sessione di esame fissata
             SELECT * FROM uni.esito
             WHERE IDEsame=sessione.IDEsame
         LOOP
+            -- recupero il corso di laurea dello studente iscritto (ci possono essere piu corso di laurea per quell insegnamento)
             SELECT * INTO corso FROM uni.studente WHERE matricola=esame.matricola;
+            -- aggiungo nello storico esame l esame fissato
             INSERT INTO uni.storico_esame(matricola, IDCorso, IDInsegnamento, IDDocente, voto, stato, lode, data)
             VALUES (esame.matricola, corso, sessione.IDInsegnamento, sessione.IDDocente, esame.voto, esame.stato, esame.lode, sessione.data);
         END LOOP;
+        -- elimino dagli esami, la sessione appena salvata nello storico
+        DELETE FROM uni.esame 
+        WHERE IDEsame=sessione.IDEsame;
     END LOOP;
-    RETURN NULL;
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE TRIGGER move_to_storico_insegnamento_trigger BEFORE UPDATE ON uni.insegnamento 
+CREATE OR REPLACE TRIGGER move_to_storico_insegnamento_trigger AFTER UPDATE ON uni.insegnamento 
 FOR EACH ROW EXECUTE FUNCTION uni.move_to_storico_insegnamento();
 
 -- move_to_storico_studente
@@ -745,18 +787,24 @@ DECLARE
     doc uni.docente.IDDocente%TYPE;
     row_esame uni.esame%ROWTYPE;
 BEGIN 
+    -- registro lo studente nello storico
     INSERT INTO uni.storico_studente(matricola, IDCorso, dataImmatricolazione)
         VALUES (OLD.matricola, OLD.IDCorso, OLD.dataImmatricolazione);
-    FOR exam IN 
+    FOR exam IN -- per ogni esame che ha sostenuto
         SELECT * FROM uni.esito 
         WHERE matricola=OLD.matricola
     LOOP
+        -- recupero l insegnamento, il docente e la data dell'esame fissato
         SELECT * INTO row_esame FROM uni.esame WHERE IDEsame=exam.IDEsame;
         SELECT IDDocente INTO doc FROM uni.insegnamento WHERE IDInsegnamento=row_esame.IDInsegnamento;
+        -- SE il docente responsabile è ancora lo stesso aggiungo l esito dell esame allo storico esami
         IF doc=row_esame.IDInsegnamento THEN
             INSERT INTO uni.storico_esame(matricola, IDCorso, IDInsegnamento, IDDocente, voto, stato, lode, data)
             VALUES (OLD.matricola, OLD.IDCorso, row_esame.IDInsegnamento, doc, exam.voto, exam.stato, exam.lode, row_esame.data);
         END IF;
+        -- elimino dagli esiti, l'esito appena spostato nello storico
+        DELETE FROM uni.esito 
+        WHERE IDEsame=exam.IDEsame AND matricola=exam.matricola;
     END LOOP;
     RETURN NULL;
 END;
@@ -769,5 +817,3 @@ FOR EACH ROW EXECUTE FUNCTION uni.move_to_storico_studente();
 
 -- Inserimento base di un utente segreteria
 CALL uni.insert_segreteria('admin', '_', 'admin', 'admin', '0');
-
-
