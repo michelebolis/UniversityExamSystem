@@ -149,7 +149,7 @@ uni.calcola_voto_laurea(
     incremento integer
 )
 
-- uni.registrazione_esito_laurea: dato uno studente di un corso di laurea, che ha conseguito la laurea in una determinata data, permette di registrarne l'incremento ottenuto e l'eventuale lode
+- uni.registrazione_esito_laurea: dato uno studente di un corso di laurea, che ha conseguito la laurea in una determinata data, permette di registrarne l'incremento ottenuto e l'eventuale lode <br/>
 uni.registrazione_esito_laurea(
     the_matricola char(6), 
     the_IDCorso integer, 

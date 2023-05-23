@@ -421,17 +421,37 @@ $$ LANGUAGE plpgsql;
 
 -- insert_esame: 
 CREATE OR REPLACE PROCEDURE uni.insert_esame(
-    the_IDDocente integer, the_IDInsegnamento integer, data date
+    the_IDDocente integer, the_IDInsegnamento integer, the_data date
 )
 AS $$
+DECLARE 
+    corso_laurea uni.manifesto_insegnamenti%ROWTYPE;
+    altro_insegnamento uni.insegnamento.IDInsegnamento%TYPE;
 BEGIN 
     PERFORM * FROM uni.insegnamento as i WHERE i.IDInsegnamento=the_IDInsegnamento AND i.IDDocente=the_IDDocente;
     IF FOUND THEN 
         -- IF data<CURRENT_DATE THEN
             -- RAISE EXCEPTION 'La data non puo essere precedente a quella di oggi';
         -- END IF;
+
+        -- controllo che non ci sia nella stessa data previsto nello stesso anno, un altro esame di un altro insegnamento 
+        FOR corso_laurea IN 
+            SELECT * FROM uni.manifesto_insegnamenti WHERE IDInsegnamento=the_IDInsegnamento
+        LOOP
+            FOR altro_insegnamento IN 
+                SELECT m.IDInsegnamento FROM uni.insegnamento as i INNER JOIN uni.manifesto_insegnamenti as m 
+                ON i.IDInsegnamento=m.IDInsegnamento 
+                WHERE m.IDCorso=corso_laurea.IDCorso AND m.anno=corso_laurea.anno
+            LOOP
+                PERFORM * FROM uni.esame WHERE altro_insegnamento=IDInsegnamento AND data=the_data;
+                IF FOUND THEN
+
+                END IF;
+            END LOOP;
+        END LOOP;
+
         INSERT INTO uni.esame(IDDocente, IDInsegnamento, data)
-            VALUES (the_IDDocente, the_IDInsegnamento, data);
+            VALUES (the_IDDocente, the_IDInsegnamento, the_data);
     ELSE
         RAISE EXCEPTION 'Il docente non è attualmente responsabile dell insegnamento, non puo inserire un esame per tale insegnamento';
     END IF;
