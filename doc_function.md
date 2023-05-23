@@ -163,7 +163,7 @@ uni.registrazione_esito_laurea(
 uni.new_matricola() 
     RETURNS uni.matricola.matricola%type
 
-- uni.get_id_ruolo: date le credenziali di accesso di un utente, permette di restituirne il ruolo dell'utente
+- uni.get_id_ruolo: date le credenziali di accesso di un utente, permette di restituirne l'identificativo e il ruolo dell'utente 
 uni.get_id_ruolo(
     the_email varchar(100), 
     the_password varchar(32)

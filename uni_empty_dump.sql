@@ -199,12 +199,34 @@ CREATE TABLE uni.carriera_studente (
     data date NOT NULL,
     voto uni.voto NOT NULL,
     lode boolean NOT NULL,
+    stato uni.statoEsito DEFAULT 'Accettato',
     PRIMARY KEY (matricola, IDCorso, IDInsegnamento)
 );
 
-CREATE OR REPLACE VIEW uni.view_carriera AS 
+CREATE OR REPLACE VIEW uni.carriera_studente_view AS 
     SELECT matricola, IDCorso, c.IDInsegnamento, i.nome, c.IDDocente, data, voto, lode 
     FROM uni.carriera_studente as c INNER JOIN uni.insegnamento as i ON c.IDInsegnamento=i.IDInsegnamento
+;
+
+
+-- carriera_completa_studente: contiene tutti gli esami degli attuali studenti
+CREATE OR REPLACE VIEW uni.carriera_completa_studente AS
+    SELECT s.matricola, s.IDCorso, esa.IDInsegnamento, esa.IDDocente, esa.data, e.voto, e.lode, e.stato 
+    FROM 
+        uni.studente as s INNER JOIN uni.esito as e ON e.matricola = s.matricola
+        INNER JOIN uni.esame as esa ON esa.IDEsame = e.IDEsame
+        WHERE e.stato!='Accettato'
+    UNION 
+    SELECT s.matricola, s.IDCorso, e.IDInsegnamento, e.IDDocente, e.data, e.voto, e.lode, e.stato 
+    FROM 
+        uni.studente as s INNER JOIN uni.storico_esame as e 
+        ON e.matricola = s.matricola AND e.IDCorso=s.IDCorso
+        WHERE e.stato!='Accettato'
+    UNION 
+	SELECT matricola, IDCorso, IDInsegnamento, IDDocente, data, voto, lode, stato
+    FROM uni.carriera_studente as c WHERE IDCorso=(
+        SELECT IDCorso FROM uni.studente as s WHERE s.matricola=c.matricola
+    )
 ;
 
 -- Creazione delle funzioni
@@ -329,7 +351,7 @@ AS $$
 DECLARE 
     the_IDUtente uni.utente.IDUtente%TYPE;
     insegnamento uni.manifesto_insegnamenti%ROWTYPE;
-    esame uni.view_carriera%ROWTYPE;
+    esame uni.carriera_studente_view%ROWTYPE;
 BEGIN
     -- inserisce il nuovo studente
     INSERT INTO uni.studente(matricola, IDCorso, dataImmatricolazione)
@@ -345,7 +367,7 @@ BEGIN
         WHERE IDCorso=the_IDCorso
     LOOP
         FOR esame IN -- recupeo ogni essame passato precedentemente che vale per il suo nuovo corso di laurea
-            SELECT * FROM uni.view_carriera WHERE matricola=the_matricola AND IDInsegnamento=insegnamento.IDInsegnamento 
+            SELECT * FROM uni.carriera_studente_view WHERE matricola=the_matricola AND IDInsegnamento=insegnamento.IDInsegnamento 
         LOOP
             -- inserisco tale esame passato nella sua carriera
             INSERT INTO uni.carriera_studente(matricola, IDCorso, IDInsegnamento, IDDocente, voto, lode, data)
@@ -574,10 +596,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- get_docente: 
 
-
--- get_studente: restituisce le informazioni biografiche di uno studente
+-- get_studente_bio: restituisce le informazioni biografiche di uno studente
 CREATE OR REPLACE FUNCTION uni.get_studente_bio(corso varchar(20), matricola varchar(6))
 RETURNS SETOF uni.studente_bio AS $$
 DECLARE stud uni.studente_bio%ROWTYPE;
@@ -589,6 +609,58 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- get_corso_laurea_insegnamenti
+CREATE OR REPLACE FUNCTION uni.get_corso_laurea_insegnamenti(corso varchar(20))
+RETURNS SETOF uni.insegnamento AS $$
+DECLARE a_insegnamento uni.insegnamento%ROWTYPE;
+BEGIN
+    FOR a_insegnamento IN 
+        SELECT * FROM uni.insegnamento as i INNER JOIN uni.manifesto_insegnamenti as m
+        ON i.IDInsegnamento = m.IDInsegnamento WHERE m.IDCorso=corso
+    LOOP
+        RETURN NEXT a_insegnamento;
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
+-- get_studente_stats
+CREATE OR REPLACE FUNCTION uni.get_studente_stats(the_matricola char(6), corso varchar(20))
+RETURNS SETOF uni.media_studente AS $$
+DECLARE stats uni.media_studente%ROWTYPE;
+BEGIN
+    SELECT * INTO stats FROM uni.media_studente WHERE matricola=the_matricola AND IDCorso=corso;
+    RETURN NEXT stats;
+END;
+$$ LANGUAGE plpgsql;
+
+-- get_carriera_studente
+CREATE OR REPLACE FUNCTION uni.get_carriera_studente(the_matricola char(6))
+RETURNS SETOF uni.carriera_studente_view AS $$
+DECLARE exam uni.carriera_studente_view%ROWTYPE;
+BEGIN 
+    FOR exam IN 
+        SELECT * FROM uni.carriera_studente_view WHERE matricola=the_matricola AND IDCorso=(
+            SELECT IDCorso FROM uni.studente WHERE matricola=the_matricola
+        )
+    LOOP
+        RETURN NEXT exam;
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- get_carriera_completa_studente
+CREATE OR REPLACE FUNCTION uni.get_carriera_completa_studente(the_matricola char(6))
+RETURNS SETOF uni.carriera_completa_studente AS $$
+DECLARE exam uni.carriera_studente%ROWTYPE;
+BEGIN 
+    FOR exam IN 
+        SELECT * FROM uni.carriera_completa_studente WHERE matricola=the_matricola
+    LOOP
+        RETURN NEXT exam;
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;
 
 
 -- creazione dei trigger
@@ -670,7 +742,7 @@ BEGIN
             );
             IF FOUND THEN
                 -- controlla che lo studente non abbia gia dato accettato un esito positivo per quell insegnamento
-                PERFORM * FROM uni.view_carriera WHERE matricola=NEW.matricola AND IDInsegnamento=(
+                PERFORM * FROM uni.carriera_studente_view WHERE matricola=NEW.matricola AND IDInsegnamento=(
                     SELECT IDInsegnamento FROM uni.esame WHERE IDEsame = NEW.IDEsame
                 );
                 IF FOUND THEN 
