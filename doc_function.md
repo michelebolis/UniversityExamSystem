@@ -1,47 +1,47 @@
 ## Procedures:
 - uni.insert_corso_laurea: permette di inserire un nuovo corso di laurea  
-uni.insert_corso_laurea(
-    IDCorso varchar(20), (NOT NULL)
-    nome varchar(100), (NOT NULL)
-    anniTotali uni.tipoLaurea, (NOT NULL)
-    valoreLode integer (NOT NULL)
+uni.insert_corso_laurea(  
+    IDCorso varchar(20), (NOT NULL)  
+    nome varchar(100), (NOT NULL)  
+    anniTotali uni.tipoLaurea, (NOT NULL)  
+    valoreLode integer (NOT NULL)  
 )
 
-- uni.insert_insegnamento: permette di inserire un nuovo insegnamento eventualmente assegnandogli un docente responsabile
-uni.insert_insegnamento(
-    IDDocente integer, 
-    nome varchar(200), (NOT NULL)
-    descrizione text, 
-    crediti integer, (NOT NULL)
-    annoAttivazione integer (NOT NULL)
+- uni.insert_insegnamento: permette di inserire un nuovo insegnamento eventualmente assegnandogli un docente responsabile  
+uni.insert_insegnamento(  
+    IDDocente integer,   
+    nome varchar(200), (NOT NULL)  
+    descrizione text,   
+    crediti integer, (NOT NULL)  
+    annoAttivazione integer (NOT NULL)  
 )
 
-- uni.cambia_responsabile: dato un insegnamento, permette di cambiargli il docente responsabile. Nota: se non si sa ancora il nuovo docente responsabile, passare come newDocente NULL
-uni.cambia_responsabile(
-    insegnamentoToUpdate integer, (NOT NULL)
-    newDocente integer 
+- uni.cambia_responsabile: dato un insegnamento, permette di cambiargli il docente responsabile. Nota: se non si sa ancora il nuovo docente responsabile, passare come newDocente NULL   
+uni.cambia_responsabile(  
+    insegnamentoToUpdate integer, (NOT NULL)  
+    newDocente integer   
 )
 
-- uni.insert_utente: permette di inserire un nuovo utente. Nota: la email non deve essere gia presente
-uni.insert_utente(
-    ruolo uni.ruolo, (NOT NULL)
-    nome varchar(50), (NOT NULL)
-    cognome varchar(50), (NOT NULL)
-    new_email varchar(100), (NOT NULL)
-    password varchar(32), (NOT NULL)
-    cellulare varchar(20) (NOT NULL)
-)
+- uni.insert_utente: permette di inserire un nuovo utente. Nota: la email non deve essere gia presente  
+uni.insert_utente(  
+    ruolo uni.ruolo, (NOT NULL)  
+    nome varchar(50), (NOT NULL)  
+    cognome varchar(50), (NOT NULL)  
+    new_email varchar(100), (NOT NULL)  
+    password varchar(32), (NOT NULL)  
+    cellulare varchar(20) (NOT NULL)  
+)  
 
-- uni.insert_docente: permette di inserire un nuovo docente ed assegnarlo come responsabile ad un insegnamento
-uni.insert_docente(
-    nome varchar(50), (NOT NULL)
-    cognome varchar(50), (NOT NULL)
-    new_email varchar(100), (NOT NULL)
-    password varchar(32), (NOT NULL)
-    cellulare varchar(20), (NOT NULL)
-    inizioRapporto date, (NOT NULL)
-    fineRapporto date,
-    insegnamentoToUpdate integer (NOT NULL)
+- uni.insert_docente: permette di inserire un nuovo docente ed assegnarlo come responsabile ad un insegnamento  
+uni.insert_docente(  
+    nome varchar(50), (NOT NULL)  
+    cognome varchar(50), (NOT NULL)  
+    new_email varchar(100), (NOT NULL)  
+    password varchar(32), (NOT NULL)  
+    cellulare varchar(20), (NOT NULL)  
+    inizioRapporto date, (NOT NULL)  
+    fineRapporto date,  
+    insegnamentoToUpdate integer (NOT NULL)  
 ) 
 
 - uni.modifica_utente: dato un utente, permette modificarne le credenziali di accesso e il recapito telefonico
