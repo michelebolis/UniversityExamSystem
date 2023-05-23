@@ -1,10 +1,10 @@
 ## Procedures:
 - uni.insert_corso_laurea: permette di inserire un nuovo corso di laurea  
 uni.insert_corso_laurea(  
-   1. IDCorso varchar(20), (NOT NULL)  
-   2. nome varchar(100), (NOT NULL)  
-   3. anniTotali uni.tipoLaurea, (NOT NULL)  
-   4. valoreLode integer (NOT NULL)  
+    IDCorso varchar(20), (NOT NULL)  
+    nome varchar(100), (NOT NULL)  
+    anniTotali uni.tipoLaurea, (NOT NULL)  
+    valoreLode integer (NOT NULL)  
 )
 
 - uni.insert_insegnamento: permette di inserire un nuovo insegnamento eventualmente assegnandogli un docente responsabile  
