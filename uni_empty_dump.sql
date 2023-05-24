@@ -682,6 +682,24 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- get_carriera_passata_studente
+CREATE OR REPLACE FUNCTION uni.get_carriera_passata_studente(the_matricola char(6))
+RETURNS SETOF uni.storico_esame AS $$
+DECLARE 
+    corso_passato uni.storico_studente.IDCorso%TYPE;
+    esame_passato uni.storico_esame%ROWTYPE;
+BEGIN
+    FOR corso_passato IN 
+        SELECT IDCorso FROM uni.storico_studente WHERE matricola=the_matricola
+    LOOP
+        FOR esame_passato IN 
+            SELECT * FROM uni.storico_esame WHERE IDCorso=corso_passato AND matricola=the_matricola
+        LOOP
+            RETURN NEXT esame_passato;
+        END LOOP;
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;
 
 -- creazione dei trigger
 -- insert_media: inizializza la media di un nuovo studente di un corso di laurea a 0

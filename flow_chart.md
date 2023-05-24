@@ -54,6 +54,7 @@ Info:
 - Carriera esami passati dell'attuale corso di laurea: uni.get_carriera_studente 
 - Carriera passata: uni.get_carriera_passata_studente --TO DO
 - Media e crediti attuali: uni.get_studente_stats
+- Visualizzazione elenco insegnamenti dato un corso di laurea: uni.get_corso_laurea_insegnamenti
 
 Esame
 - Iscrizione ad un esame: uni.iscrizione_esame
@@ -63,5 +64,3 @@ Esame
 Sessione_laurea:
 - Iscrizione: uni.iscrizione_laurea
 
-
-- Visualizzazione elenco insegnamenti dato un corso di laurea: uni.get_corso_laurea_insegnamenti
