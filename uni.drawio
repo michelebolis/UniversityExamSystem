@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-05-24T08:38:42.059Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36" etag="JRPaY7JEqlMI-c-fR7TG" version="21.3.2" type="github" pages="3">
+<mxfile host="app.diagrams.net" modified="2023-05-24T08:38:55.722Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36" etag="cpkDJn5Fcn_-YyyqQT0R" version="21.3.2" type="github" pages="3">
   <diagram name="ER" id="ei8fi8gPT5rXZid7RnSF">
     <mxGraphModel dx="2319" dy="476" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
@@ -1092,7 +1092,7 @@
     </mxGraphModel>
   </diagram>
   <diagram name="ER Ristrutturato" id="Z5GbzlKkcZcJBYi0-Bsg">
-    <mxGraphModel dx="1796" dy="678" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="2319" dy="476" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="8BG0fOGD8Of8e3mBtdMV-0" />
         <mxCell id="8BG0fOGD8Of8e3mBtdMV-1" parent="8BG0fOGD8Of8e3mBtdMV-0" />
@@ -1260,12 +1260,6 @@
             <Array as="points">
               <mxPoint x="600" y="871" />
             </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="b3GEeFdHSf-NkMRqYW8N-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.066;entryY=0.052;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=none;endFill=0;" parent="8BG0fOGD8Of8e3mBtdMV-1" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="355" y="841.5" as="sourcePoint" />
-            <mxPoint x="354.29999999999995" y="757.56" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="8BG0fOGD8Of8e3mBtdMV-66" value="storico_esame" style="shape=rhombus;perimeter=rhombusPerimeter;whiteSpace=wrap;html=1;align=center;" parent="8BG0fOGD8Of8e3mBtdMV-1" vertex="1">
@@ -2046,9 +2040,6 @@
             <mxPoint x="300" y="783" as="sourcePoint" />
             <mxPoint x="300" y="757" as="targetPoint" />
           </mxGeometry>
-        </mxCell>
-        <mxCell id="b3GEeFdHSf-NkMRqYW8N-8" value="(1, N)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="8BG0fOGD8Of8e3mBtdMV-1" vertex="1">
-          <mxGeometry x="351" y="755" width="50" height="30" as="geometry" />
         </mxCell>
         <mxCell id="b3GEeFdHSf-NkMRqYW8N-9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="8BG0fOGD8Of8e3mBtdMV-1" target="b3GEeFdHSf-NkMRqYW8N-10" edge="1">
           <mxGeometry relative="1" as="geometry">
