@@ -91,7 +91,6 @@ CREATE TABLE uni.studente(
 CREATE TABLE uni.sessione_laurea(
     data date,
     IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso),
-    creditiLaurea integer NOT NULL CHECK(creditiLaurea>0),
     PRIMARY KEY(data, IDCorso)
 );
 
@@ -141,7 +140,7 @@ CREATE TABLE uni.storico_esame(
     stato uni.statoesito NOT NULL,
     lode boolean,
     data date NOT NULL,
-	FOREIGN KEY (IDInsegnamento, IDDocente) REFERENCES uni.storico_insegnamento(IDInsegnamento, IDDocente)
+	FOREIGN KEY (matricola, IDCorso) REFERENCES uni.storico_studente(matricola, IDCorso)
 );
 
 CREATE TABLE uni.manifesto_insegnamenti(
@@ -214,19 +213,10 @@ CREATE OR REPLACE VIEW uni.carriera_completa_studente AS
     SELECT s.matricola, s.IDCorso, esa.IDInsegnamento, esa.IDDocente, esa.data, e.voto, e.lode, e.stato 
     FROM 
         uni.studente as s INNER JOIN uni.esito as e ON e.matricola = s.matricola
-        INNER JOIN uni.esame as esa ON esa.IDEsame = e.IDEsame
-        WHERE e.stato!='Accettato'
+        INNER JOIN uni.esame as esa ON esa.IDEsame = e.IDEsame 
     UNION 
-    SELECT s.matricola, s.IDCorso, e.IDInsegnamento, e.IDDocente, e.data, e.voto, e.lode, e.stato 
-    FROM 
-        uni.studente as s INNER JOIN uni.storico_esame as e 
-        ON e.matricola = s.matricola AND e.IDCorso=s.IDCorso
-        WHERE e.stato!='Accettato'
-    UNION 
-	SELECT matricola, IDCorso, IDInsegnamento, IDDocente, data, voto, lode, stato
-    FROM uni.carriera_studente as c WHERE IDCorso=(
-        SELECT IDCorso FROM uni.studente as s WHERE s.matricola=c.matricola
-    )
+    SELECT c.matricola, c.IDCorso, c.IDInsegnamento, c.IDDocente, c.data, c.voto, c.lode, c.stato 
+    FROM uni.carriera_studente as c INNER JOIN uni.studente as s ON c.IDCorso= s.IDCorso AND s.matricola=c.matricola
 ;
 
 -- Creazione delle funzioni
@@ -484,6 +474,16 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- annulla iscrizione
+CREATE OR REPLACE PROCEDURE uni.annulla_iscrizione_esame(
+    the_matricola char(6), the_IDEsame integer
+)
+AS $$
+BEGIN 
+    DELETE FROM uni.esito WHERE matricola=the_matricola AND IDEsame=the_IDEsame;
+END;
+$$ LANGUAGE plpgsql;
+
 -- insert_manifesto
 CREATE OR REPLACE PROCEDURE uni.insert_manifesto(
     IDInsegnamento integer, the_IDCorso varchar(20), anno uni.annoCorso
@@ -576,30 +576,30 @@ $$ LANGUAGE plpgsql;
 
 -- calcola_voto_laurea
 CREATE OR REPLACE FUNCTION uni.calcola_voto_laurea(
-    the_matricola char(6), incremento integer
+    the_matricola char(6), the_IDCorso varchar(20), incremento integer
 )
 RETURNS decimal AS $$
 DECLARE the_media decimal; voto decimal;
 BEGIN 
-    SELECT media INTO the_media FROM uni.media_studente WHERE matricola=matricola;
+    SELECT media INTO the_media FROM uni.media_studente WHERE matricola=matricola AND IDCorso=the_IDCorso;
     voto:=(the_media*110/30)+incremento;
     IF VOTO>=110 THEN
         RETURN 110;
     ELSE 
-        RETURN ROUND(voto);
+        RETURN CAST(ROUND(voto) as int);
     END IF;
 END;
 $$ LANGUAGE plpgsql;
 
 -- registrazion_esito_laurea
 CREATE OR REPLACE PROCEDURE uni.registrazione_esito_laurea(
-    the_matricola char(6), the_IDCorso integer, the_data date, incremento integer, lode boolean
+    the_matricola char(6), the_IDCorso varchar(20), the_data date, incremento integer, the_lode boolean
 )
 AS $$
-DECLARE votoFinale decimal;
+DECLARE votoFinale int;
 BEGIN 
-    SELECT * INTO votoFinale FROM calcola_voto_laurea(the_matricola, incremento);
-    UPDATE uni.laurea SET incrementoVoto=incremento, lode=lode
+    SELECT * INTO votoFinale FROM uni.calcola_voto_laurea(the_matricola, the_IDCorso, incremento);
+    UPDATE uni.laurea SET incrementoVoto=incremento, lode=the_lode, voto=votoFinale
     WHERE matricola=the_matricola AND IDCorso=the_IDCorso AND data=the_data;
 END;
 $$ LANGUAGE plpgsql;
@@ -812,6 +812,25 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE TRIGGER check_esito_trigger BEFORE UPDATE OR INSERT ON uni.esito 
 FOR EACH ROW EXECUTE FUNCTION uni.check_esito();
 
+
+CREATE OR REPLACE FUNCTION uni.check_stato()
+RETURNS TRIGGER AS $$
+DECLARE
+    exam_info uni.esame%ROWTYPE;
+BEGIN
+    IF OLD.stato='In attesa' THEN
+        SELECT * INTO exam_info FROM uni.esame WHERE IDEsame=OLD.IDEsame;
+        IF exam_info IS NOT NULL AND CURRENT_DATE>exam_info.data THEN 
+            RAISE EXCEPTION 'Lo studente non puo cancellare la prenotazione perche l esame si è gia svolto';
+        END IF;
+    END IF;
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER check_stato_trigger BEFORE DELETE ON uni.esito 
+FOR EACH ROW EXECUTE FUNCTION uni.check_stato();
+
 -- num_responsabile
 CREATE OR REPLACE FUNCTION uni.num_responsabile()
 RETURNS TRIGGER AS $$
@@ -848,6 +867,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE TRIGGER update_media_trigger BEFORE UPDATE ON uni.insegnamento 
 FOR EACH ROW EXECUTE FUNCTION uni.num_responsabile();
 
+
 -- move_to_storico_insegnamento: al cambiamento del docente responsabile, sposta i record associati in storico_insegnamento e storico_esame 
 CREATE OR REPLACE FUNCTION uni.move_to_storico_insegnamento()
 RETURNS TRIGGER AS $$
@@ -864,6 +884,7 @@ BEGIN
     -- registro l insegnamento nello storico
     INSERT INTO uni.storico_insegnamento(IDDocente, IDInsegnamento, nome, crediti, annoInizio)
         VALUES (OLD.IDDocente, OLD.IDInsegnamento, OLD.nome, OLD.crediti, OLD.annoAttivazione);
+    /*
     FOR sessione IN -- per ogni sessione passata di esame dell'insegnamento con il docente che verra sostituito
         SELECT * FROM uni.esame 
         WHERE IDInsegnamento=OLD.IDInsegnamento AND IDDocente=OLD.IDDocente
@@ -882,12 +903,14 @@ BEGIN
         DELETE FROM uni.esame 
         WHERE IDEsame=sessione.IDEsame;
     END LOOP;
+    */
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE TRIGGER move_to_storico_insegnamento_trigger AFTER UPDATE ON uni.insegnamento 
+CREATE OR REPLACE TRIGGER move_to_storico_insegnamento_trigger BEFORE UPDATE ON uni.insegnamento 
 FOR EACH ROW EXECUTE FUNCTION uni.move_to_storico_insegnamento();
+
 
 -- move_to_storico_studente
 CREATE OR REPLACE FUNCTION uni.move_to_storico_studente()
@@ -907,11 +930,10 @@ BEGIN
         -- recupero l insegnamento, il docente e la data dell'esame fissato
         SELECT * INTO row_esame FROM uni.esame WHERE IDEsame=exam.IDEsame;
         SELECT IDDocente INTO doc FROM uni.insegnamento WHERE IDInsegnamento=row_esame.IDInsegnamento;
-        -- SE il docente responsabile è ancora lo stesso aggiungo l esito dell esame allo storico esami
-        IF doc=row_esame.IDInsegnamento THEN
-            INSERT INTO uni.storico_esame(matricola, IDCorso, IDInsegnamento, IDDocente, voto, stato, lode, data)
-            VALUES (OLD.matricola, OLD.IDCorso, row_esame.IDInsegnamento, doc, exam.voto, exam.stato, exam.lode, row_esame.data);
-        END IF;
+
+        INSERT INTO uni.storico_esame(matricola, IDCorso, IDInsegnamento, IDDocente, voto, stato, lode, data)
+        VALUES (OLD.matricola, OLD.IDCorso, row_esame.IDInsegnamento, doc, exam.voto, exam.stato, exam.lode, row_esame.data);
+        
         -- elimino dagli esiti, l'esito appena spostato nello storico
         DELETE FROM uni.esito 
         WHERE IDEsame=exam.IDEsame AND matricola=exam.matricola;
@@ -924,6 +946,39 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE TRIGGER move_to_storico_studente_trigger AFTER DELETE ON uni.studente 
 FOR EACH ROW EXECUTE FUNCTION uni.move_to_storico_studente();
 
+CREATE OR REPLACE FUNCTION uni.check_esami()
+RETURNS TRIGGER AS $$
+DECLARE 
+    
+BEGIN 
+    PERFORM * FROM (
+        SELECT IDInsegnamento FROM uni.manifesto_insegnamenti WHERE IDCorso=NEW.IDCorso
+        EXCEPT
+        SELECT IDInsegnamento FROM uni.carriera_studente WHERE IDCorso=NEW.IDCorso AND matricola=NEW.matricola
+    ) as iddifference;
+    IF FOUND THEN
+        RAISE EXCEPTION 'Lo studente non ha passato tutti gli insegnamenti del corso';
+    ELSE 
+        RETURN NEW;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER check_esami_trigger BEFORE INSERT ON uni.laurea 
+FOR EACH ROW EXECUTE FUNCTION uni.check_esami();
+
+CREATE OR REPLACE FUNCTION uni.move_to_storico()
+RETURNS TRIGGER AS $$
+DECLARE 
+    
+BEGIN 
+    CALL uni.delete_studente(NEW.matricola, NEW.IDCorso);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER move_to_storico_trigger BEFORE UPDATE ON uni.laurea 
+FOR EACH ROW EXECUTE FUNCTION uni.move_to_storico();
 
 -- Inserimento base di un utente segreteria
 CALL uni.insert_segreteria('admin', '_', 'admin', 'admin', '0');

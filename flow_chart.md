@@ -58,9 +58,13 @@ Info:
 
 Esame
 - Iscrizione ad un esame: uni.iscrizione_esame
+- Annulla iscrizione ad un esame: uni.annulla_iscrizione --TO DO (CON TRIGGER ASSOCIATO)
 - Accettazione esito esame: uni.accetta_esito
 
 
 Sessione_laurea:
 - Iscrizione: uni.iscrizione_laurea
 
+
+-- TO DO manifesto passo
+-- TO DO ON DELETE Docente

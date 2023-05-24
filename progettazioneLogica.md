@@ -71,8 +71,8 @@
 | storico_esame          | IDStorico             | SERIAL       | PK      |                 |              |
 |                        | matricola             | char(6)      | FK      | NOTNULL         |              |
 |                        | IDCorso               | varchar(20)  | FK      | NOTNULL         |              |
-|                        | IDInsegnamento        | integer      | FK      | NOTNULL         |              |
-|                        | IDDocente             | integer      | FK      | NOTNULL         |              |
+|                        | IDInsegnamento        | integer      |       | NOTNULL         |              |
+|                        | IDDocente             | integer      |       | NOTNULL         |              |
 |                        | voto                  | voto         |         |                 |              |
 |                        | stato                 | statoEsito   |         | NOTNULL         |              |
 |                        | lode                  | boolean      |         |                 |              |
