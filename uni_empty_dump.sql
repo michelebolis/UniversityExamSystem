@@ -618,13 +618,13 @@ $$ LANGUAGE plpgsql;
 
 
 -- get_studente_bio: restituisce le informazioni biografiche di uno studente
-CREATE OR REPLACE FUNCTION uni.get_studente_bio(corso varchar(20), matricola varchar(6))
+CREATE OR REPLACE FUNCTION uni.get_studente_bio(the_corso varchar(20), the_matricola varchar(6))
 RETURNS SETOF uni.studente_bio AS $$
 DECLARE stud uni.studente_bio%ROWTYPE;
 BEGIN
     SELECT u.* INTO stud
     FROM uni.studente_bio as u 
-    WHERE corso=u.corso AND matricola=u.matricola;
+    WHERE the_corso=u.idcorso AND the_matricola=u.matricola;
 	RETURN NEXT stud;
 END;
 $$ LANGUAGE plpgsql;
@@ -698,6 +698,15 @@ BEGIN
             RETURN NEXT esame_passato;
         END LOOP;
     END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION uni.get_studente(the_IDUtente integer)
+RETURNS SETOF uni.studente AS $$
+DECLARE stud uni.studente%ROWTYPE;
+BEGIN
+	SELECT * INTO stud FROM uni.studente WHERE matricola=(SELECT matricola FROM uni.matricola WHERE IDUtente=the_IDUtente);
+    RETURN NEXT stud;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -981,4 +990,4 @@ CREATE OR REPLACE TRIGGER move_to_storico_trigger BEFORE UPDATE ON uni.laurea
 FOR EACH ROW EXECUTE FUNCTION uni.move_to_storico();
 
 -- Inserimento base di un utente segreteria
-CALL uni.insert_segreteria('admin', '_', 'admin', 'admin', '0');
+CALL uni.insert_segreteria('admin', '_', 'admin@uni.it', 'admin', '0');
