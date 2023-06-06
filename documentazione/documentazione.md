@@ -10,4 +10,4 @@ Ogni ruolo ha associate relative funzionalità ed accesso ad informazioni divers
 ___
 ## Progettazione schema logico ER
 Schema ER completo:  
-![ER](https://github.com/michelebolis/UniversityExamSystem/tree/main/documentazione/img/ER.png?raw=True)
+![](img/ER.png)
