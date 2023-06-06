@@ -166,3 +166,4 @@ _Nota : l'entità esito è associata con l'entità matricola cosicchè abbia sol
 ![ER_db](img/ER_db.png)
 ---
 ## Funzionalità realizzate
+L'elenco delle funzioni, procedure e trigger creati è presente per intero sia nel dump del database (![uni_empty_dump.sql](../uni_empty_dump.sql))
