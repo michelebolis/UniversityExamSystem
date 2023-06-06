@@ -133,8 +133,8 @@ CREATE TABLE uni.storico_studente(
 
 CREATE TABLE uni.storico_esame(
     IDStorico SERIAL PRIMARY KEY,
-    matricola char(6) REFERENCES uni.matricola(matricola) NOT NULL,
-    IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso) NOT NULL,
+    matricola char(6) NOT NULL,
+    IDCorso varchar(20) NOT NULL,
     IDInsegnamento integer NOT NULL,
     IDDocente integer NOT NULL,
     voto uni.voto,
