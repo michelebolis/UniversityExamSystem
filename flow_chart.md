@@ -18,19 +18,17 @@ Insegnamento
 Docente
 - Inserimento: uni.insert_docente
 - Modifica: 
-- Rimozione: uni.licenzia_docente -- TO DO
+- Rimozione: 
 
 Studente
 - Inserimento: uni.insert_studente
 - Modifica: 
 - Rimozione: uni.delete_studente
 
-Sessione_laurea
-- Inserimento: uni.insert_sessione_laurea
-- Rimozione
-
 Laurea
 - Inserimento: uni.registrazione_esito_laurea
+- Inserimento sessione: uni.insert_sessione_laurea
+- Rimozione sessione
 
 Carriera completa di uno studente: 
 Carriera esami passati di uno studente: 
@@ -67,4 +65,3 @@ Sessione_laurea:
 
 
 -- TO DO manifesto passo
--- TO DO ON DELETE Docente

@@ -45,6 +45,7 @@
 |                        | IDDocente             | integer      | FK      | NOTNULL         |              |
 |                        | IDInsegnamento        | integer      | FK      | NOTNULL         |              |
 |                        | data                  | date         |         | NOTNULL         |              |
+|                        | orario                | time         |         | NOTNULL         | 12:00        |
 |                        |                       |              |         |                 |              |
 | esito                  | matricola             | char(6)      | PPK, FK |                 |              |
 |                        | IDEsame               | integer      | PPK, FK |                 |              |
@@ -59,10 +60,6 @@
 |                        | annoInizio            | integer      |         | NOTNULL         |              |
 |                        | annoFine              | integer      |         | NOTNULL         |              |
 |                        |                       |              |         |                 |              |
-| manifesto_passato      | IDDocente             | integer      | PPK, FK |                 |              |
-|                        | IDInsegnamento        | integer      | PPK, FK |                 |              |
-|                        | IDCorso               | varchar(20)  | PPK, FK |                 |              |
-|                        |                       |              |         |                 |              |
 | storico_studente       | matricola             | char(6)      | PPK, FK |                 |              |
 |                        | IDCorso               | varchar(20)  | PPK, FK |                 |              |
 |                        | dataImmatricolazione  | date         |         | NOTNULL         |              |
@@ -71,8 +68,8 @@
 | storico_esame          | IDStorico             | SERIAL       | PK      |                 |              |
 |                        | matricola             | char(6)      | FK      | NOTNULL         |              |
 |                        | IDCorso               | varchar(20)  | FK      | NOTNULL         |              |
-|                        | IDInsegnamento        | integer      |       | NOTNULL         |              |
-|                        | IDDocente             | integer      |       | NOTNULL         |              |
+|                        | IDInsegnamento        | integer      |         | NOTNULL         |              |
+|                        | IDDocente             | integer      |         | NOTNULL         |              |
 |                        | voto                  | voto         |         |                 |              |
 |                        | stato                 | statoEsito   |         | NOTNULL         |              |
 |                        | lode                  | boolean      |         |                 |              |
