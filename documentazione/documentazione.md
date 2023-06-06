@@ -6,4 +6,8 @@ Prevediamo 3 ruoli per l'utenza che utilizzerà il nostro database:
  - I docenti
  - Gli studenti  
 
-Ogni ruolo ha nello specifico 
+Ogni ruolo ha associate relative funzionalità ed accesso ad informazioni diverse.  
+___
+## Progettazione schema logico ER
+Schema ER completo:  
+![ER](https://github.com/michelebolis/UniversityExamSystem/tree/main/documentazione/img/ER.png?raw=True)
