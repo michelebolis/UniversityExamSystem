@@ -164,6 +164,19 @@ _Nota : l'entità esito è associata con l'entità matricola cosicchè abbia sol
 ---
 ## Realizzazione database: uni
 ![ER_db](img/ER_db.png)
+
 ---
 ## Funzionalità realizzate
-L'elenco delle funzioni, procedure e trigger creati è presente per intero sia nel dump del database (![uni_empty_dump.sql](../uni_empty_dump.sql))
+L'elenco delle funzioni, procedure e trigger creati è presente per intero sia nel dump del database uni_empty_dump.sql (https://github.com/michelebolis/UniversityExamSystem/tree/main/uni_empty_dump.sql) che nelle documentazioni specifiche (  
+    - doc_function: https://github.com/michelebolis/UniversityExamSystem/tree/main/documentazione/doc_function.md     
+    -  doc_trigger: https://github.com/michelebolis/UniversityExamSystem/tree/main/documentazione/doc_function.md  
+)  
+
+Qui di seguito vengono evidenziate le parti piu rilevanti per il funzionamento corrento del database.  
+In generale ho cercato di realizzare un giusto insieme di procedure/funzioni in modo tale da riusciure, lato backend dell'applicativo, ad interrogare ed interagire con il database senza essere a conoscenza dello schema delle tabelle.  
+
+Per garantire ciò 
+
+---
+## Applicativo Web
+

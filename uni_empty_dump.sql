@@ -1046,6 +1046,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- get_num_esami_passati: restituisce il numero di esami superati da uno studente mentre è/era iscritto ad un corso di laurea
+-- ROW: integer
 CREATE OR REPLACE FUNCTION uni.get_num_esami_passati(the_matricola char(6), corso varchar(20))
 RETURNS integer AS $$
 DECLARE num integer;
@@ -1100,6 +1102,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- get_carriera_passata_studente: restituisce tutti gli esami a cui era iscritto un ex studente data la sua matricola
+-- ROW: idstorico, matricola, idcorso, idinsegnamento, iddocente, voto, stato, lode, data
 CREATE OR REPLACE FUNCTION uni.get_carriera_passata_studente(the_matricola char(6))
 RETURNS SETOF uni.storico_esame AS $$
 DECLARE 
