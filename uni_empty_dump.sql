@@ -1320,13 +1320,14 @@ RETURNS TRIGGER AS $$
 DECLARE 
     info_esame uni.esame%ROWTYPE;
 BEGIN 
+    PERFORM * FROM uni.studente WHERE matricola=OLD.matricola;
+    IF NOT FOUND THEN
+        RETURN OLD;
+    END IF;
     CASE OLD.stato
         WHEN 'Ritirato', 'Accettato', 'Rifiutato', 'Bocciato', 'In attesa di accettazione' THEN
-            PERFORM * FROM uni.studente WHERE matricola=OLD.matricola;
-            IF FOUND THEN
                 RAISE EXCEPTION 'Si puo cancellare un esito SOLO se questo ha uno stato iscritto';
-            END IF;
-        
+
         WHEN 'Iscritto' THEN
             SELECT * INTO info_esame FROM uni.get_esame(OLD.IDEsame);
             IF info_esame.data<CURRENT_DATE THEN
@@ -1468,11 +1469,11 @@ FOR EACH ROW EXECUTE FUNCTION uni.check_registrazione_laurea();
 CREATE OR REPLACE FUNCTION uni.move_to_storico()
 RETURNS TRIGGER AS $$
 BEGIN 
-    IF NEW.voto != NULL THEN
-        CALL uni.delete_studente(NEW.matricola, NEW.IDCorso);
+    IF NEW.voto IS NOT NULL THEN  
+        CALL uni.delete_studente(OLD.matricola, OLD.IDCorso);
         RETURN NEW;
     END IF;
-    RETURN NULL;
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 

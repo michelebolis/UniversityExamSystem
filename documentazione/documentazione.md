@@ -196,9 +196,15 @@ In generale ho cercato di realizzare un giusto insieme di procedure/funzioni in 
 
 Per garantire ciò prevedo vari funzioni di _get_ e _get_all_ per la maggior parte delle tabelle, congiuntamente anche a procedure _insert_ per popolarle. Tuttavia per mantenere la consistenza e correttezza della base di dati, ho previsto, durante la creazione delle tabelle, varie clausole check (per es prevedendo che i campi di tipo varchar non siano vuoti) oltre all'utilizzo di domini specifici (per es il dominio _uni.ruolo_ e _uni.voto_).  
 
-Infine, prevedendo il caso che l'utilizzatore della base di dati non utilizzi le procedure predisposte, ho aggiunto, per i casi piu problematici, appositi trigger:  
-  -  
+Per esempio, per la registrazione di un esame, grazie all'apposita procedura _uni.registrazione_esito_esame_ non vi è la necessità di specificare se lo studente è stato bocciato o meno, ma lo stato dell'esito verrà ricavato dal voto. Un ragionamento analogo è stato utilizzato per l'inserimento degli utenti con apposite procedure insert che non richiedono il ruolo ma che, in base alla procedura, inserisce automaticamente il ruolo in _utente_ insieme alle altre informazioni grazie a una procedura generale _insert_utente_.
 
+Infine, prevedendo il caso che l'utilizzatore della base di dati non utilizzi le procedure predisposte, ho aggiunto, per i casi piu problematici, appositi trigger:    
+  -  **update_media**: trigger per garantire la consistenza dei della vista materializzata _media_studente_ quando viene accetato un nuovo esito.  
+  - **check_insertesito**: trigger per controllare che la correttezza dell'iscrizione ad un esame di uno studente
+  - **check_updateesito**: trigger per garantire la correttezza dei dati in _esito_ dato il valore del campo _stato_ e lo _stato_ precedente all'update  
+  - **num_responsabile**: trigger che garantisce che ogni insegnante abbia almeno 1 insegnamento di cui è responsabile e al massimo 3
+  - **move_to_storico_studente**/**move_to_storico**: il secondo trigger elimina lo studente da _studente_ in modo che si attivi il primo trigger che sposta i dati di studente prima che sia eliminato in _storico_studente_
+  - **hash**: permette di rendere indipendete l'applicazione della funzione di hash dalla procedura di inserimento utente che potrebbe non essere invocata.
 ---
 ## Applicativo Web
-
+a

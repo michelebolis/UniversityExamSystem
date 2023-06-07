@@ -177,7 +177,7 @@ Parametri:
     - the_IDCorso varchar(20), 
     - incremento integer  
 ---
-- **uni.registrazion_esito_laurea**: permette di registrarre l'esito della sessione di laurea, in una specifica data, di uno studente di un corso di laurea a cui è stato assegnato un eventuale incremento e l'eventuale lode
+- **uni.registrazione_esito_laurea**: permette di registrarre l'esito della sessione di laurea, in una specifica data, di uno studente di un corso di laurea a cui è stato assegnato un eventuale incremento e l'eventuale lode
 RETURNS NOTHING  
 Parametri:
     - the_matricola char(6), 

@@ -82,7 +82,7 @@ ON uni.laurea
 WHEN BEFORE UPDATE     
 FOR EACH ROW  
 ---
-- hash: all'inserimento o alla modifica di un utente, applico la funzione hash md5 alla password.
+- **hash**: all'inserimento o alla modifica di un utente, applico la funzione hash md5 alla password.
 ON uni.utente  
 BEFORE INSERT OR UPDATE  
 FOR EACH ROW

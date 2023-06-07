@@ -80,3 +80,5 @@ CALL uni.accetta_esito('000003', 4, True);
 
 CALL uni.iscrizione_laurea('000003', '25/05/2023', 'F2X');
 CALL uni.registrazione_esito_laurea('000003', 'F2X', '25/05/2023', 5, False);
+
+CALL uni.insert_corso_laurea('R1', 'Ricamo', 3, 31);
