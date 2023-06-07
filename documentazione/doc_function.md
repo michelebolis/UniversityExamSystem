@@ -179,18 +179,16 @@ Parametri:
     - the_lode boolean
 ---
 - uni.get_id_ruolo: data la mail e password di un utente, restituisce l'id dell'utente e il suo ruolo  
-## TO FIX 
+RETURNS ROW: idutente, ruolo
 Parametri: 
     - the_email varchar(100), 
     - the_password varchar(32)  
-RETURNS SETOF uni.utente   
 Nota: SE email e password non corrispondono a nessun utente, restituisce una riga vuota
 ---
 - uni.get_utente_bio: permette di ottenere tutti i dati dell'utente dato il suo identificativo  
-## TO FIX 
-Parametri: 
+RETRURNS ROW: 
+Parametri: idutente, ruolo, nome, cognome, email, password, cellulare
     - the_idutente integer  
-RETURNS SETOF uni.utente 
 NOTA: la password è cifrata quindi non comprensibile
 --- 
 - uni.get_id_studente: permette di ottenere l'idutente data la matricola dello studente  
