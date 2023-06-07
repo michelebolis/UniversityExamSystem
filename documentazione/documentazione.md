@@ -174,11 +174,21 @@ In particolare:
   - **uni.studente_bio**: restituisce le informazioni dello studente iscritto: la sua matricola, il nome, il cognome, la email, il cellulare, il corso a cui è iscritto e la data di immatricolazione.  
   - **uni.carriera_studente_view**: restituisce le informazioni contenute nella vista materializzata _uni.carriera_studente_.  
   - **carriera_completa_studente**: restituisce per ogni matricola iscritta ad un corso di laurea tutti gli esami a cui è stato iscritto. 
+### Elenco domini DB
+| Nome Dominio | Valori                                                                           | Condizione               |
+| ------------ | -------------------------------------------------------------------------------- | ------------------------ |
+| ruolo        | {"Segreteria", "Docente", "Studente"}                                            | Elenco                   |
+| tipoLaurea   | {3, 2}                                                                           | Elenco                   |
+| annoCorso    | {1, 2, 3}                                                                        | Elenco                   |
+| voto         | [0, 1, .., 30]                                                                   | value>=0 AND value<=30   |
+| statoEsito   | {"Ritirato", "Rifiutato", "In attesa", "In attesa di accettazione",  "Bocciato"} | Elenco                   |
+| votoLaurea   | [60, …, 110]                                                                     | value>=60 AND value<=110 |
+
 ---
 ## Funzionalità realizzate
 L'elenco delle funzioni, procedure e trigger creati è presente per intero sia nel dump del database uni_empty_dump.sql (https://github.com/michelebolis/UniversityExamSystem/tree/main/uni_empty_dump.sql) che nelle documentazioni specifiche (  
     - doc_function: https://github.com/michelebolis/UniversityExamSystem/tree/main/documentazione/doc_function.md     
-    -  doc_trigger: https://github.com/michelebolis/UniversityExamSystem/tree/main/documentazione/doc_function.md  
+    -  doc_trigger: https://github.com/michelebolis/UniversityExamSystem/tree/main/documentazione/doc_trigger.md  
 )  
 
 Qui di seguito vengono evidenziate le parti piu rilevanti per il funzionamento corrento del database.  

@@ -1,5 +1,5 @@
 ## Elenco domini DB
-| Nome Dominio | Elenco                                                                           | Condizione               |
+| Nome Dominio | Valori                                                                           | Condizione               |
 | ------------ | -------------------------------------------------------------------------------- | ------------------------ |
 | ruolo        | {"Segreteria", "Docente", "Studente"}                                            | Elenco                   |
 | tipoLaurea   | {3, 2}                                                                           | Elenco                   |

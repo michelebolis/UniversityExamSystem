@@ -1310,11 +1310,11 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
--- check_deleteesito_trigger: all'eliminazione di un esito, verifico che questo abbia uno stato di iscritto e una data successiva a quella odierna
 CREATE OR REPLACE TRIGGER check_updateesito_trigger BEFORE UPDATE ON uni.esito 
 FOR EACH ROW EXECUTE FUNCTION uni.check_updateesito();
 
+
+-- check_deleteesito_trigger: all'eliminazione di un esito, verifico che questo abbia uno stato di iscritto e una data successiva a quella odierna
 CREATE OR REPLACE FUNCTION uni.check_deleteesito()
 RETURNS TRIGGER AS $$
 DECLARE 
@@ -1439,9 +1439,9 @@ CREATE OR REPLACE TRIGGER move_to_storico_studente_trigger AFTER DELETE ON uni.s
 FOR EACH ROW EXECUTE FUNCTION uni.move_to_storico_studente();
 
 
--- check_registrazione_esami: all'inserimento di un iscrizione ad una sessione di laurea in laurea, controlla 
+-- check_registrazione_laurea: all'inserimento di un iscrizione ad una sessione di laurea in laurea, controlla 
 -- SE lo studente ha superato tutti gli insegnamenti del corso e SE li ha passati, il voto di laurea, l'incremento e la lode devono essere NULL
-CREATE OR REPLACE FUNCTION uni.check_registrazione_esami()
+CREATE OR REPLACE FUNCTION uni.check_registrazione_laurea()
 RETURNS TRIGGER AS $$
 BEGIN 
     PERFORM * FROM (
@@ -1460,8 +1460,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE TRIGGER check_registrazione_esami_trigger BEFORE INSERT ON uni.laurea 
-FOR EACH ROW EXECUTE FUNCTION uni.check_registrazione_esami();
+CREATE OR REPLACE TRIGGER check_registrazione_laurea_trigger BEFORE INSERT ON uni.laurea 
+FOR EACH ROW EXECUTE FUNCTION uni.check_registrazione_laurea();
 
 
 -- move_to_storico: alla modifica del voto di laurea di uno studente, elimino tale studente in quanto è diventato un ex-studente
@@ -1491,7 +1491,6 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE TRIGGER hash_trigger BEFORE INSERT OR UPDATE ON uni.utente 
 FOR EACH ROW EXECUTE FUNCTION uni.hash();
-
 
 -- Inserimento base di un utente segreteria
 CALL uni.insert_segreteria('admin', '_', 'admin@uni.it', 'Admin', '0123456789');
