@@ -163,8 +163,17 @@ _Nota : l'entità esito è associata con l'entità matricola cosicchè abbia sol
 
 ---
 ## Realizzazione database: uni
-![ER_db](img/ER_db.png)
+![ER_db](img/ER_db.png)  
+Dal punto di vista implementativo della base di dati, ho scelto di inserire due viste materializzate per motivi di ottimizzazione aggiornandole attraverso trigger.  
+In particolare:
+  - **uni.media_studente**: conserviamo in essa, per ogni studente che frequenta/ha frequentato un certo corso di laurea, la sua media pesata con i relativi crediti.  
+  - **uni.carriera_studente**: contiene, per ogni studente che frequenta/ha frequentato un corso di laurea gli esami superati e con esito accettato.   
 
+Oltre a ciò prevede delle viste per restituire in modo completo informazioni presenti in diverse tabelle.   
+In particolare:   
+  - **uni.studente_bio**: restituisce le informazioni dello studente iscritto: la sua matricola, il nome, il cognome, la email, il cellulare, il corso a cui è iscritto e la data di immatricolazione.  
+  - **uni.carriera_studente_view**: restituisce le informazioni contenute nella vista materializzata _uni.carriera_studente_.  
+  - **carriera_completa_studente**: restituisce per ogni matricola iscritta ad un corso di laurea tutti gli esami a cui è stato iscritto. 
 ---
 ## Funzionalità realizzate
 L'elenco delle funzioni, procedure e trigger creati è presente per intero sia nel dump del database uni_empty_dump.sql (https://github.com/michelebolis/UniversityExamSystem/tree/main/uni_empty_dump.sql) che nelle documentazioni specifiche (  
@@ -175,7 +184,10 @@ L'elenco delle funzioni, procedure e trigger creati è presente per intero sia n
 Qui di seguito vengono evidenziate le parti piu rilevanti per il funzionamento corrento del database.  
 In generale ho cercato di realizzare un giusto insieme di procedure/funzioni in modo tale da riusciure, lato backend dell'applicativo, ad interrogare ed interagire con il database senza essere a conoscenza dello schema delle tabelle.  
 
-Per garantire ciò 
+Per garantire ciò prevedo vari funzioni di _get_ e _get_all_ per la maggior parte delle tabelle, congiuntamente anche a procedure _insert_ per popolarle. Tuttavia per mantenere la consistenza e correttezza della base di dati, ho previsto, durante la creazione delle tabelle, varie clausole check (per es prevedendo che i campi di tipo varchar non siano vuoti) oltre all'utilizzo di domini specifici (per es il dominio _uni.ruolo_ e _uni.voto_).  
+
+Infine, prevedendo il caso che l'utilizzatore della base di dati non utilizzi le procedure predisposte, ho aggiunto, per i casi piu problematici, appositi trigger:  
+  -  
 
 ---
 ## Applicativo Web

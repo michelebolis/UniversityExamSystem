@@ -418,38 +418,9 @@ CREATE OR REPLACE PROCEDURE uni.insert_esame(
     the_IDDocente integer, the_IDInsegnamento integer, the_data date, orario time
 )
 AS $$
-DECLARE 
-    corso_laurea uni.manifesto_insegnamenti%ROWTYPE;
-    altro_insegnamento uni.insegnamento.IDInsegnamento%TYPE;
 BEGIN 
-    PERFORM * FROM uni.insegnamento as i WHERE i.IDInsegnamento=the_IDInsegnamento AND i.IDDocente=the_IDDocente;
-    IF FOUND THEN 
-        -- IF data<CURRENT_DATE THEN
-            -- RAISE EXCEPTION 'La data non puo essere precedente a quella di oggi';
-        -- END IF;
-
-        -- controllo che non ci sia nella stessa data previsto nello stesso anno, un altro esame di un altro insegnamento 
-        FOR corso_laurea IN 
-            SELECT * FROM uni.manifesto_insegnamenti WHERE IDInsegnamento=the_IDInsegnamento
-        LOOP
-            FOR altro_insegnamento IN 
-                SELECT m.IDInsegnamento FROM uni.insegnamento as i INNER JOIN uni.manifesto_insegnamenti as m 
-                ON i.IDInsegnamento=m.IDInsegnamento 
-                WHERE m.IDCorso=corso_laurea.IDCorso AND m.anno=corso_laurea.anno
-            LOOP
-                PERFORM * FROM uni.esame WHERE altro_insegnamento=IDInsegnamento AND data=the_data;
-                IF FOUND THEN
-                    RAISE EXCEPTION 'Nella data selezionata è gia presente un esame dello stesso anno per un corso di laurea dell insegnamento';
-                END IF;
-            END LOOP;
-        END LOOP;
-
-        INSERT INTO uni.esame(IDDocente, IDInsegnamento, data, orario)
+    INSERT INTO uni.esame(IDDocente, IDInsegnamento, data, orario)
             VALUES (the_IDDocente, the_IDInsegnamento, the_data, orario);
-    ELSE
-        RAISE EXCEPTION 'Il docente non è attualmente responsabile dell insegnamento, non puo inserire un esame per tale insegnamento';
-    END IF;
-
 END;
 $$ LANGUAGE plpgsql;
 
@@ -1179,6 +1150,45 @@ CREATE OR REPLACE TRIGGER update_media_trigger AFTER INSERT ON uni.carriera_stud
 FOR EACH ROW EXECUTE FUNCTION uni.update_media();
 
 
+-- check_esame_trigger: all'inserimento di una nuova sessione di esame controlla che non siano gia previsti esami
+-- nello stesso giorno per insegnamenti previsti nello stesso anno nel manifesto degli studi
+CREATE OR REPLACE FUNCTION uni.check_esame_trigger()
+RETURNS TRIGGER AS $$ 
+DECLARE
+    corso_laurea uni.manifesto_insegnamenti%ROWTYPE;
+    altro_insegnamento uni.insegnamento.IDInsegnamento%TYPE;
+BEGIN
+    PERFORM * FROM uni.insegnamento as i WHERE i.IDInsegnamento=NEW.IDInsegnamento AND i.IDDocente=NEW.IDDocente;
+    IF FOUND THEN 
+        -- IF NEW.data<CURRENT_DATE THEN
+            -- RAISE EXCEPTION 'La data non puo essere precedente a quella di oggi';
+        -- END IF;
+
+        -- controllo che non ci sia nella stessa data previsto nello stesso anno, un altro esame di un altro insegnamento 
+        FOR corso_laurea IN 
+            SELECT * FROM uni.manifesto_insegnamenti WHERE IDInsegnamento=NEW.IDInsegnamento
+        LOOP
+            FOR altro_insegnamento IN 
+                SELECT m.IDInsegnamento FROM uni.insegnamento as i INNER JOIN uni.manifesto_insegnamenti as m 
+                ON i.IDInsegnamento=m.IDInsegnamento 
+                WHERE m.IDCorso=corso_laurea.IDCorso AND m.anno=corso_laurea.anno
+            LOOP
+                PERFORM * FROM uni.esame WHERE altro_insegnamento=IDInsegnamento AND data=NEW.data;
+                IF FOUND THEN
+                    RAISE EXCEPTION 'Nella data selezionata è gia presente un esame dello stesso anno per un corso di laurea dell insegnamento';
+                END IF;
+            END LOOP;
+        END LOOP;
+    ELSE
+        RAISE EXCEPTION 'Il docente non è attualmente responsabile dell insegnamento, non puo inserire un esame per tale insegnamento';
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER check_esame_trigger BEFORE INSERT ON uni.esame 
+FOR EACH ROW EXECUTE FUNCTION uni.check_esame_trigger();
+
 -- check_insertesito: all'inserimento di un nuovo esito, verifico che il nuovo stato sia Iscritto e che lo studente 
 -- NON abbia già accetato un esito positivo per lo stesso insegnamento, sia del corso di laurea dell'insegnamento 
 -- e che abbia superato gli esami propedeutici a tale insegnamento
@@ -1429,9 +1439,9 @@ CREATE OR REPLACE TRIGGER move_to_storico_studente_trigger AFTER DELETE ON uni.s
 FOR EACH ROW EXECUTE FUNCTION uni.move_to_storico_studente();
 
 
--- check_esami: all'inserimento di un iscrizione ad una sessione di laurea in laurea, controlla 
+-- check_registrazione_esami: all'inserimento di un iscrizione ad una sessione di laurea in laurea, controlla 
 -- SE lo studente ha superato tutti gli insegnamenti del corso e SE li ha passati, il voto di laurea, l'incremento e la lode devono essere NULL
-CREATE OR REPLACE FUNCTION uni.check_esami()
+CREATE OR REPLACE FUNCTION uni.check_registrazione_esami()
 RETURNS TRIGGER AS $$
 BEGIN 
     PERFORM * FROM (
@@ -1450,8 +1460,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE TRIGGER check_esami_trigger BEFORE INSERT ON uni.laurea 
-FOR EACH ROW EXECUTE FUNCTION uni.check_esami();
+CREATE OR REPLACE TRIGGER check_registrazione_esami_trigger BEFORE INSERT ON uni.laurea 
+FOR EACH ROW EXECUTE FUNCTION uni.check_registrazione_esami();
 
 
 -- move_to_storico: alla modifica del voto di laurea di uno studente, elimino tale studente in quanto è diventato un ex-studente
@@ -1469,6 +1479,8 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE TRIGGER move_to_storico_trigger BEFORE UPDATE ON uni.laurea 
 FOR EACH ROW EXECUTE FUNCTION uni.move_to_storico();
 
+
+-- hash: all'inserimento o alla modifica di un utente, applico la funzione hash md5 alla password.
 CREATE OR REPLACE FUNCTION uni.hash()
 RETURNS TRIGGER AS $$
 BEGIN 
@@ -1479,6 +1491,7 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE TRIGGER hash_trigger BEFORE INSERT OR UPDATE ON uni.utente 
 FOR EACH ROW EXECUTE FUNCTION uni.hash();
+
 
 -- Inserimento base di un utente segreteria
 CALL uni.insert_segreteria('admin', '_', 'admin@uni.it', 'Admin', '0123456789');
