@@ -263,7 +263,7 @@ CREATE OR REPLACE PROCEDURE uni.insert_utente(ruolo uni.ruolo, nome varchar(50),
 AS $$
 BEGIN 
     INSERT INTO uni.utente(ruolo, nome, cognome, email, password, cellulare) 
-        VALUES (ruolo, nome, cognome, new_email, md5(password), cellulare);
+        VALUES (ruolo, nome, cognome, new_email, (password), cellulare);
 END;
 $$ LANGUAGE plpgsql;
 
@@ -327,7 +327,7 @@ BEGIN
         UPDATE uni.utente SET email=new_email, password=new_password, cellulare=new_cellulare
         WHERE IDUtente=the_IDUtente;
     ELSE 
-        UPDATE uni.utente SET email=new_email, password=md5(new_password), cellulare=new_cellulare
+        UPDATE uni.utente SET email=new_email, password=(new_password), cellulare=new_cellulare
         WHERE IDUtente=the_IDUtente;
     END IF; 
 END;
@@ -1468,6 +1468,17 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE TRIGGER move_to_storico_trigger BEFORE UPDATE ON uni.laurea 
 FOR EACH ROW EXECUTE FUNCTION uni.move_to_storico();
+
+CREATE OR REPLACE FUNCTION uni.hash()
+RETURNS TRIGGER AS $$
+BEGIN 
+    NEW.password = md5(NEW.password);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER hash_trigger BEFORE INSERT OR UPDATE ON uni.utente 
+FOR EACH ROW EXECUTE FUNCTION uni.hash();
 
 -- Inserimento base di un utente segreteria
 CALL uni.insert_segreteria('admin', '_', 'admin@uni.it', 'Admin', '0123456789');
