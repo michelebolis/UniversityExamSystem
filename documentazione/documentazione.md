@@ -1,5 +1,22 @@
 # Documentazione
 
+## Indice
+
+1. [Introduzione](#introduzione)
+2. [Progettazione schema concettuale ER](#progettazione-schema-concettuale-er)  
+3. [Progettazione logica](#progettazione-logica)
+4. [Realizzazione database: uni](#realizzazione-database-uni)
+5. [Funzionalità realizzate](#funzionalità-realizzate)
+6. [Applicativo Web: introduzione](#applicativo-web-introduzione)
+7. [Applicativo Web: realizzazione](#applicativo-web-realizzazione)  
+   I. [Login](#login)  
+   II. [Segreteria](#segreteria)  
+   III. [Docente](#docente)  
+   IV. [Studente](#studente)  
+   V. [Ex-Studente](#caso-particolare-ex-studente) 
+
+---
+
 ## Introduzione
 
 La nostra base di dati ha l'obiettivo di gestire l'organizzazione degli esami universitari congiuntamente all'insegnamento associato ed ai vari corsi di laurea.  
