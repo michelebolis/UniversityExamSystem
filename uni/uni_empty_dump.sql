@@ -110,7 +110,7 @@ CREATE TABLE uni.esame(
     IDDocente integer REFERENCES uni.docente(IDDocente) ON DELETE CASCADE NOT NULL,
     IDInsegnamento integer REFERENCES uni.insegnamento(IDInsegnamento) ON DELETE CASCADE NOT NULL,
     data date NOT NULL,
-    orario time NOT NULL DEFAULT '12:00'
+    orario time NOT NULL 
 );
 
 CREATE TABLE uni.storico_insegnamento(
@@ -176,16 +176,16 @@ CREATE OR REPLACE VIEW uni.studente_bio AS
 
 -- Inserimento viste materializzate
 CREATE TABLE uni.media_studente (
-    matricola char(6) REFERENCES uni.matricola(matricola),
-    IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso),
+    matricola char(6) REFERENCES uni.matricola(matricola) ON DELETE CASCADE,
+    IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso) ON DELETE CASCADE,
     media decimal CHECK (media>=0) DEFAULT 0,
     crediti integer CHECK (crediti>=0) DEFAULT 0,
     PRIMARY KEY (matricola, IDCorso)
 );
 
 CREATE TABLE uni.carriera_studente (
-    matricola char(6) REFERENCES uni.matricola(matricola),
-    IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso),
+    matricola char(6) REFERENCES uni.matricola(matricola) ON DELETE CASCADE,
+    IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso) ON DELETE CASCADE,
     IDInsegnamento integer NOT NULL,
     IDDocente integer NOT NULL,
     data date NOT NULL,

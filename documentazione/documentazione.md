@@ -120,7 +120,7 @@ _Nota_ : l'entità esito è associata con l'entità matricola in modo tale che a
 |                        | matricola             | char(6)      | PPK, FK | UNIQUE          |              |
 |                        | dataImmatricolazione  | date         |         | NOTNULL         | CURRENT_DATE |
 |                        |                       |              |         |                 |              |
-| matricola              | matricola             | varchar(6)   | PK      |                 |              |
+| matricola              | matricola             | char(6)   | PK      |                 |              |
 |                        | codiceFiscale         | varchar(16)  |         | NOTNULL, UNIQUE |              |
 |                        | IDUtente              | integer      | FK      | NOTNULL, UNIQUE |              |
 |                        |                       |              |         |                 |              |
