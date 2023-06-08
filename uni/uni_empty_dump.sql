@@ -68,7 +68,7 @@ CREATE TABLE uni.docente(
 
 CREATE TABLE uni.insegnamento(
     IDInsegnamento SERIAL PRIMARY KEY,
-    IDDocente integer REFERENCES uni.docente(IDDocente) DEFAULT NULL,
+    IDDocente integer REFERENCES uni.docente(IDDocente) ON DELETE CASCADE DEFAULT NULL,
     nome varchar(200) NOT NULL CHECK(nome!=''),
     descrizione text,
     crediti integer NOT NULL CHECK(crediti>0),
@@ -77,44 +77,44 @@ CREATE TABLE uni.insegnamento(
 
 CREATE TABLE uni.matricola(
     matricola char(6) PRIMARY KEY,
-    IDUtente integer REFERENCES uni.utente(IDUtente) NOT NULL UNIQUE,
+    IDUtente integer REFERENCES uni.utente(IDUtente) ON DELETE CASCADE NOT NULL UNIQUE,
     codiceFiscale varchar(16) NOT NULL UNIQUE CHECK(codiceFiscale!='')
 );
 
 CREATE TABLE uni.studente(
-    IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso),
-    matricola char(6) REFERENCES uni.matricola(matricola) UNIQUE,
+    IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso) ON DELETE CASCADE,
+    matricola char(6) REFERENCES uni.matricola(matricola) ON DELETE CASCADE UNIQUE,
     dataImmatricolazione date NOT NULL DEFAULT CURRENT_DATE,
     PRIMARY KEY (IDCorso, matricola)
 );
 
 CREATE TABLE uni.sessione_laurea(
     data date,
-    IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso),
+    IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso) ON DELETE CASCADE,
     PRIMARY KEY(data, IDCorso)
 );
 
 CREATE TABLE uni.laurea(
-    matricola char(6) REFERENCES uni.matricola(matricola),
+    matricola char(6) REFERENCES uni.matricola(matricola) ON DELETE CASCADE,
     data date,
     IDCorso varchar(20),
     voto uni.votoLaurea DEFAULT NULL,
     incrementoVoto integer DEFAULT NULL CHECK (incrementoVoto>0) , 
     lode boolean DEFAULT NULL,
-	FOREIGN KEY (data, IDCorso) REFERENCES uni.sessione_laurea(data, IDCorso),
+	FOREIGN KEY (data, IDCorso) REFERENCES uni.sessione_laurea(data, IDCorso) ON DELETE CASCADE,
 	PRIMARY KEY (matricola, data, IDCorso)
 );
 
 CREATE TABLE uni.esame(
     IDEsame SERIAL PRIMARY KEY,
-    IDDocente integer REFERENCES uni.docente(IDDocente) NOT NULL,
-    IDInsegnamento integer REFERENCES uni.insegnamento(IDInsegnamento) NOT NULL,
+    IDDocente integer REFERENCES uni.docente(IDDocente) ON DELETE CASCADE NOT NULL,
+    IDInsegnamento integer REFERENCES uni.insegnamento(IDInsegnamento) ON DELETE CASCADE NOT NULL,
     data date NOT NULL,
     orario time NOT NULL DEFAULT '12:00'
 );
 
 CREATE TABLE uni.storico_insegnamento(
-    IDDocente integer REFERENCES uni.docente(IDDocente),
+    IDDocente integer REFERENCES uni.docente(IDDocente) ON DELETE CASCADE,
     IDInsegnamento integer,
     nome varchar(200) NOT NULL CHECK(nome!=''),
     crediti integer NOT NULL CHECK(crediti>0), 
@@ -124,8 +124,8 @@ CREATE TABLE uni.storico_insegnamento(
 );
 
 CREATE TABLE uni.storico_studente(
-    matricola char(6) REFERENCES uni.matricola(matricola),
-    IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso),
+    matricola char(6) REFERENCES uni.matricola(matricola) ON DELETE CASCADE,
+    IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso) ON DELETE CASCADE,
     dataImmatricolazione date NOT NULL,
     dataRimozione date NOT NULL DEFAULT CURRENT_DATE,
     PRIMARY KEY(matricola, IDCorso)
@@ -141,18 +141,18 @@ CREATE TABLE uni.storico_esame(
     stato uni.statoesito NOT NULL,
     lode boolean,
     data date NOT NULL,
-	FOREIGN KEY (matricola, IDCorso) REFERENCES uni.storico_studente(matricola, IDCorso)
+	FOREIGN KEY (matricola, IDCorso) REFERENCES uni.storico_studente(matricola, IDCorso) ON DELETE CASCADE
 );
 
 CREATE TABLE uni.manifesto_insegnamenti(
-    IDInsegnamento integer REFERENCES uni.insegnamento(IDInsegnamento),
-    IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso),
+    IDInsegnamento integer REFERENCES uni.insegnamento(IDInsegnamento) ON DELETE CASCADE,
+    IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso) ON DELETE CASCADE,
     anno uni.annoCorso NOT NULL CHECK(anno>0),
     PRIMARY KEY (IDInsegnamento, IDCorso) 
 );
 
 CREATE TABLE uni.esito(
-    matricola char(6) REFERENCES uni.matricola(matricola),
+    matricola char(6) REFERENCES uni.matricola(matricola) ON DELETE CASCADE,
     IDEsame integer REFERENCES uni.esame(IDEsame) ON DELETE CASCADE,
     voto uni.voto DEFAULT NULL,
     stato uni.statoEsito DEFAULT 'Iscritto',
@@ -161,8 +161,8 @@ CREATE TABLE uni.esito(
 );
 
 CREATE TABLE uni.propedeuticita(
-    insegnamento integer REFERENCES uni.insegnamento(IDInsegnamento),
-    insegnamentoRichiesto integer REFERENCES uni.insegnamento(IDInsegnamento),
+    insegnamento integer REFERENCES uni.insegnamento(IDInsegnamento) ON DELETE CASCADE,
+    insegnamentoRichiesto integer REFERENCES uni.insegnamento(IDInsegnamento) ON DELETE CASCADE,
     PRIMARY KEY (insegnamento, insegnamentoRichiesto)
 );
 
