@@ -283,29 +283,29 @@ Analizziamo le possibilità offerte per ciascun utente:
 ![segreteria_home](img/segreteria_home.png)
 Attraverso il menu della segreteria sarà concesso di:  
 
-1. La gestione dei corsi di laurea  
+1. **La gestione dei corsi di laurea**  
 ![segreteria_home](img/segreteria_corsi.png)
 L'utente della segreteria può inserire nuovi corsi di laurea ed aggiungere nel manifesto degli insegnamenti di un corso di laurea un insegnamento.
 Per far ciò sarà però necessario che siano presenti degli insegnamenti.
 
-2. La gestione degli insegnamenti
+2. **La gestione degli insegnamenti**
 ![segreteria_insegnamenti](img/segreteria_insegnamenti.png)
 Come nel punto precedente, la segreteria potrà aggiungere nuovi insegnamenti, specificando eventualmente il docente responsabile.  
 E' possibile poi inserire la propedeuticità di un insegnamento rispetto ad un altro e cambiare il docente responsabile di un insegnamento.
 
-3. La gestione degli utenti
+3. **La gestione degli utenti**
 ![segreteria_utenti](img/segreteria_utenti.png)
 Gli utenti della segreteria sono gli unici ad avere la capacità di inserire nuovi utenti nella base di dati, in particolare altri utenti della segreteria, un nuovo studente o un nuovo docente. E' quindi prima necessario il ruolo dell'utente che si sta per aggiungere. Verranno poi caricate caricate le informazioni da inserire in base al ruolo selezionato.  
 Chiaramente inizialmente sarà necessario avere un utente della segreteria nella base di dati per permettere di aggiungerne altre dall'applicativo: ho previsto quindi, nel dump del database vuoto, un utente segreteria _admin_.
 Nota: nell'inserimento di un nuovo studente viene visualizzato un errore se il corso di laurea a cui si sta iscrivendo non ha ancora insegnamenti nel manifesto degli studi.  
 Oltre ad inserire nuovi utenti, possono anche eseguire la rinuncia agli studi degli studenti, selezionandoli da un apposita select.
 
-4. La gestione delle lauree  
+4. **La gestione delle lauree**
 ![segreteria_lauree](img/segreteria_lauree.png)
 ![segreteria_lauree1](img/segreteria_lauree1.png)
 Le sessioni di laurea non sono associate ad alcun docente, quindi sono gestite dalla segreteria che aggiunge nuove sessione di laurea per un corso di laurea in una data. Successivamente procederà a registrarne l'esito per gli iscritti.
 
-5. La visualizzazione delle carriere  
+5. **La visualizzazione delle carriere**  
 ![segreteria_carriere](img/segreteria_carriere.png)
 ![segreteria_carriere1](img/segreteria_carriere1.png)
 La segreteria è infine in grado di visualizzare le carriere di ogni studente, in particolare quella completa conterrà anche gli esami non superati/rifiutati/senza valutazione mentre l'altra conterrà solo gli esami con esito positivo accettato.
@@ -318,10 +318,10 @@ E' inoltre possibile visualizzare la carriera (non completa) di tutti gli studen
 Oltre alle informazioni di base, vengono visualizzati i prossimi esami in programma per il docente.
 Attraverso il menu del docente sarà concesso di:  
 
-1. Gestione degli esami
+1. **Gestione degli esami**
 ![docente_esame](img/docente_esame.png)
 Il docente responsabile del corso deve inserire le sessioni di laurea per gli insegnamenti di cui è responsabile in modo tale che gli studenti si possano iscrivere.
-2. Gestione degli esiti
+2. **Gestione degli esiti**
 ![docente_esito](img/docente_esito.png)
 ![docente_esito1](img/docente_esito1.png)
 Il docente dovrà poi, in una data successiva a quella della sessione di esame, registrare gli esiti degli studenti iscritti, selezionandoli dall'apposita select.  
@@ -333,24 +333,24 @@ Oltre all'inserimento del voto, sarà possibile registrare il ritiri dello stude
 Oltre alle informazioni di base, vengono visualizzati i prossimi esami in programma a cui si è iscritto lo steudente. Vengono inoltre mostrate le statistiche dello studente per il corso di laurea a cui è iscritto: media, numero di crediti ottenuti ed esami passati.  
 Attraverso il menu dello studente sarà concesso di:  
 
-1. Gestione degli esami
+1. **Gestione degli esami**
 ![studente_esame](img/studente_esame.png)  
 Lo studente può, dopo aver selezionato un insegnamento non ancora sostenuto del suo manifesto degli studi, iscriversi ad una sessione di esame se è stata fissata dal docente responsabile.  
 E' possibile anche eliminare l'iscrizione ad un esame se la data dell'esame è successiva a quella odierna.
 
-2. Gestione degli esiti  
+2. **Gestione degli esiti**  
 ![studente_esito](img/studente_esito.png)  
 Lo studente, dopo essersi iscritto a una sessione di esame per un insegnamento, se il suo esito risulta in attesa di accettazione (quindi con un voto maggiore o uguale di 18), potrà accettare o meno tale esito.
 
-3. Gestione della laurea
+3. **Gestione della laurea**
 ![studente_laurea](img/studente_laurea.png)  
 A seguito del conseguimento di tutti gli esami presenti nel suo manifesto degli studi, lo studente può iscriversi ad una sessione di laurea. In caso provi ad accedere a tale sezione prima di aver raggiunto il requisito sopra citato, non gli sara possibile l'iscrizione.
 
-4. Visualizzazione della carriera  
+4. **Visualizzazione della carriera**  
 ![studente_carriera](img/studente_carriera.png)  
 Anche per lo studente, come in precedenza per la segreteria, è prevista un'interfaccia per visualizzare la sua carriera completa e non oppure la sua carriera di un corso di laurea precedente.
 
-5. Visualizzazione dei corsi di laurea  
+5. **Visualizzazione dei corsi di laurea**  
 Infine lo studente può visualizzare il manifesto di studi di ciascun corso di laurea previsto nell'univerisità.
 
 - ### Caso particolare: ex-studente
@@ -359,11 +359,11 @@ Infine lo studente può visualizzare il manifesto di studi di ciascun corso di l
 Consentiamo l'accesso all'applicativo web anche agli ex-studente in modo tale che possano reperire le loro informazioni. Nella home vediamo, per esempio, l'esito della laurea conseguita in passato (se non si è laureato ma ha solo fatto la rinuncia agli studi, non sarà visualizzata).  
 Attraverso il menu dello studente, limitato, sarà concesso di:  
 
-1. Visualizzazione della carriera
+1. **Visualizzazione della carriera**
 ![exstudente_carriera](img/exstudente_carriera.png)  
 L'ex-studente puo visualizzare la carriera (non completa) per ogni corso di laurea a cui era iscritto precedentemente.
 
-2. Visualizzazione dei corsi di laurea
+2. **Visualizzazione dei corsi di laurea**
 Come per lo studente iscritto, è possibile visualizzare il manifesto di studi di ciascun corso di laurea previsto nell'univerisità.
 
 ---
