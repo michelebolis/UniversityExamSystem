@@ -244,7 +244,7 @@ Infine, prevedendo il caso che l'utilizzatore della base di dati non utilizzi le
 - **move_to_storico_studente**/**move_to_storico**: il secondo trigger elimina lo studente da _studente_ in modo che si attivi il primo trigger che sposta i dati di studente prima che sia eliminato in _storico_studente_
 - **hash**: permette di rendere indipendete l'applicazione della funzione di hash dalla procedura di inserimento utente che potrebbe non essere invocata.
 
-Per semplificare il testing delle funzionalità, è previsto un file _esempi.sql_ per popolare il database. Le credenziali per accedere agli utenti d'esempio sono presenti nel file _credenziali.md_.
+Per semplificare il testing delle funzionalità, è previsto un file _esempi.sql_ per popolare il database. Le credenziali per accedere agli utenti d'esempio sono presenti nel file [credenziali](credenziali.md).
 
 ---
 
