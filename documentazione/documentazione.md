@@ -4,11 +4,12 @@
 
 1. [Introduzione](#introduzione)
 2. [Progettazione schema concettuale ER](#progettazione-schema-concettuale-er)  
-3. [Progettazione logica](#progettazione-logica)
-4. [Realizzazione database: uni](#realizzazione-database-uni)
-5. [Funzionalità realizzate](#funzionalità-realizzate)
-6. [Applicativo Web: introduzione](#applicativo-web-introduzione)
-7. [Applicativo Web: realizzazione](#applicativo-web-realizzazione)  
+3. [Elenco domini](#elenco-domini-db)
+4. [Progettazione logica](#progettazione-logica)
+5. [Realizzazione database: uni](#realizzazione-database-uni)
+6. [Funzionalità realizzate](#funzionalità-realizzate)
+7. [Applicativo Web: introduzione](#applicativo-web-introduzione)
+8. [Applicativo Web: realizzazione](#applicativo-web-realizzazione)  
    I. [Login](#login)  
    II. [Segreteria](#segreteria)  
    III. [Docente](#docente)  
@@ -97,6 +98,19 @@ L'entità _studente_ invece, non sarà piu direttamente relazionata con utente, 
 _matricola_ associerà ad ogni matricola l'identificativo dell'utente, che sarà unico nella tabella come il codice fiscale. Facendo ciò le informazioni contenute in utente sono indipendenti dal corso che segue lo studente in modo tale, che qualora venisse eliminato da _studente_, possa comunque accedere al db grazie alle credenziali conservate e associate ancora con la propria matricola.  
 
 _Nota_ : l'entità esito è associata con l'entità matricola in modo tale che abbia la chiave primaria composta da 2 attributi invece che da 3 (nel caso in cui fosse referenziata con la chiave primaria di studente)
+
+---
+
+### Elenco domini DB
+
+| Nome Dominio | Valori                                                                           | Condizione               |
+| ------------ | -------------------------------------------------------------------------------- | ------------------------ |
+| ruolo        | {"Segreteria", "Docente", "Studente"}                                            | Elenco                   |
+| tipoLaurea   | {3, 2}                                                                           | Elenco                   |
+| annoCorso    | {1, 2, 3}                                                                        | Elenco                   |
+| voto         | [0, 1, .., 30]                                                                   | value>=0 AND value<=30   |
+| statoEsito   | {"Ritirato", "Rifiutato", "In attesa", "In attesa di accettazione",  "Bocciato"} | Elenco                   |
+| votoLaurea   | [60, …, 110]                                                                     | value>=60 AND value<=110 |
 
 ---
 
@@ -204,17 +218,6 @@ In particolare:
 - **uni.studente_bio**: restituisce le informazioni dello studente iscritto: la sua matricola, il nome, il cognome, la email, il cellulare, il corso a cui è iscritto e la data di immatricolazione.  
 - **uni.carriera_studente_view**: restituisce le informazioni contenute nella vista materializzata _uni.carriera_studente_.  
 - **uni.carriera_completa_studente**: restituisce per ogni matricola iscritta ad un corso di laurea tutti gli esami a cui è stato iscritto.
-
-### Elenco domini DB
-
-| Nome Dominio | Valori                                                                           | Condizione               |
-| ------------ | -------------------------------------------------------------------------------- | ------------------------ |
-| ruolo        | {"Segreteria", "Docente", "Studente"}                                            | Elenco                   |
-| tipoLaurea   | {3, 2}                                                                           | Elenco                   |
-| annoCorso    | {1, 2, 3}                                                                        | Elenco                   |
-| voto         | [0, 1, .., 30]                                                                   | value>=0 AND value<=30   |
-| statoEsito   | {"Ritirato", "Rifiutato", "In attesa", "In attesa di accettazione",  "Bocciato"} | Elenco                   |
-| votoLaurea   | [60, …, 110]                                                                     | value>=60 AND value<=110 |
 
 ---
 
