@@ -512,14 +512,17 @@ CREATE OR REPLACE PROCEDURE uni.registrazione_esito_esame(
 AS $$
 DECLARE newStato uni.esito.stato%TYPE;
 BEGIN 
-    PERFORM * FROM uni.esito WHERE matricola=the_matricola AND IDEsame=the_IDEsame AND voto>=0;
+    PERFORM * FROM uni.esito WHERE matricola=the_matricola AND IDEsame=the_IDEsame AND stato!='Iscritto';
     IF FOUND THEN
         RAISE EXCEPTION 'Esito gia registrato';
     END IF;
-    IF the_voto<18 THEN 
-        newStato='Bocciato';
-    ELSE
-        newStato='In attesa di accettazione';
+    IF the_voto IS NULL THEN
+        newStato='Ritirato';
+        ELSE IF the_voto<18 THEN 
+            newStato='Bocciato';
+        ELSE
+            newStato='In attesa di accettazione';
+        END IF;
     END IF;
     IF the_voto!=30 AND the_lode THEN
         RAISE EXCEPTION 'La lode puo essere assegnata solo ad un voto 30';
@@ -1038,6 +1041,7 @@ BEGIN
         SELECT * FROM uni.carriera_studente_view WHERE matricola=the_matricola AND IDCorso=(
             SELECT IDCorso FROM uni.studente WHERE matricola=the_matricola
         )
+        ORDER BY data
     LOOP
         RETURN NEXT exam;
     END LOOP;
@@ -1051,7 +1055,8 @@ RETURNS SETOF uni.carriera_studente_view AS $$
 DECLARE exam uni.carriera_studente_view%ROWTYPE;
 BEGIN 
     FOR exam IN 
-        SELECT * FROM uni.carriera_studente_view WHERE matricola=the_matricola AND IDCorso=the_IDCorso
+        SELECT * FROM uni.carriera_studente_view WHERE matricola=the_matricola AND IDCorso=the_IDCorso 
+        ORDER BY data
     LOOP
         RETURN NEXT exam;
     END LOOP;
@@ -1066,6 +1071,7 @@ DECLARE exam uni.carriera_studente%ROWTYPE;
 BEGIN 
     FOR exam IN 
         SELECT * FROM uni.carriera_completa_studente WHERE matricola=the_matricola
+        ORDER BY data
     LOOP
         RETURN NEXT exam;
     END LOOP;
@@ -1085,6 +1091,7 @@ BEGIN
     LOOP
         FOR esame_passato IN 
             SELECT * FROM uni.storico_esame WHERE IDCorso=corso_passato AND matricola=the_matricola
+            ORDER BY data
         LOOP
             RETURN NEXT esame_passato;
         END LOOP;

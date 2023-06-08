@@ -216,12 +216,20 @@ Tecnologie utilizzate:
 Organizzazione dei file: le pagine effettive che verranno visualizzate sono presenti nel root della directory mentre i componenti che verranno inclusi grazie php in modo dinamico sono presenti nella cartella _template_.  
 Le varie funzioni di php si trovano nella cartella _lib_ e in generale sono categorizzate in _insert_, _get_, _update_ e _delete_. Al di fuori di questa divisione, troviamo altre funzioni come quelle di connessione (_connection.php_) e di configurazione della connessione (_config.php_) che verranno incluse dalle altre in modo da connettersi al database.  
 
+![codice_insert_esame](img/codice_insert_esame.img)  
+La struttura dei file _template_nome.php_ è indicativamente sempre la stessa: definisco una funzione di print del form con argomento l'eventuale errore che verrà stampato come primo elemento del form.   
+Questa funzione viene chiamata, e quindi viene stampato il form, se le variabili in POST non sono settate, e quindi non ho ancora premuto sul bottone che fa il submit alla stessa pagina.  
+Se invece tali variabili sono settate, richiamo la funzione php che a sua volta chiama la funzione/procedura pgsql utilizzando le variabili in POST. Dalla funzione pgsql è possibile che vengano restituiti degli errori, in tal caso richiamo la funzione di _printform_ passandogli l'errore ricevuto e inserendo negli input del form i valori nelle variabili di POST che hanno causato l'errore.  
+Nel caso in cui non ci siano errori, non viene visualizzato il form ma un messaggio che segnala il corretto esito dell'operazione.
+
 ---
 ## Applicativo Web: realizzazione  
 - ### Login  
 ![login](img/login.png)
 All'avvio sarà necessario effettuare con la propria email e password. Se le credenziali non risultano nel database, viene visualizzato in messaggio di errore.    
-Nel caso invece l'accesso sia eseguito correttamente, vengono settate due variabili di sessione per conservare l'id dell'utente e il suo ruolo, in base al quale verranno caricate le successive interfacce. Per ciascun utente vengono visualizzate nella pagina iniziata le informazioni biografiche contenute in _utente_.   
+Nel caso invece l'accesso sia eseguito correttamente, vengono settate due variabili di sessione per conservare l'id dell'utente e il suo ruolo, in base al quale verranno caricate le successive interfacce. Per ciascun utente vengono visualizzate nella pagina iniziata le informazioni biografiche contenute in _utente_.  
+![cambio_credenziali](img/cambio_credenziali.png)
+Si potrà eventualmente cambiare le credenziali di accesso dall'apposita opzione nel menu.  
 E' anche possibile effettuare in qualsiasi momento effettuare il logout, che toglierà le variabili di sessione, viasualizzando nuovamente la schermata di login.  
 Nota: le credenziali degli utenti predisposti nel file di esempio sono presenti in _credenziali.md_.
 
@@ -251,10 +259,29 @@ Oltre ad inserire nuovi utenti, possono anche eseguire la rinuncia agli studi de
 ![segreteria_lauree1](img/segreteria_lauree1.png)
 Le sessioni di laurea non sono associate ad alcun docente, quindi sono gestite dalla segreteria che aggiunge nuove sessione di laurea per un corso di laurea in una data. Successivamente procederà a registrarne l'esito per gli iscritti.
 
-- ### Docente
+5. La visualizzazione delle carriere  
+![segreteria_carriere](img/segreteria_carriere.png)
+![segreteria_carriere1](img/segreteria_carriere1.png)
+La segreteria è infine in grado di visualizzare le carriere di ogni studente, in particolare quella completa conterrà anche gli esami non superati/rifiutati/senza valutazione mentre l'altra conterrà solo gli esami con esito positivo accettato.
+![segreteria_carriere1](img/segreteria_carriere2.png)
+E' inoltre possibile visualizzare la carriera (non completa) di tutti gli studenti di un corso di laurea.
 
+- ### Docente  
+![docente_home](img/docente_home.png)
+Oltre alle informazioni di base, vengono visualizzati i prossimi esami in programma per il docente.
+Attraverso il menu del docente sarà concesso di:  
+1. Gestione degli esami
+![docente_esame](img/docente_esame.png)
+Il docente responsabile del corso deve inserire le sessioni di laurea per gli insegnamenti di cui è responsabile in modo tale che gli studenti si possano iscrivere.
+2. Gestione degli esiti
+![docente_esito](img/docente_esito.png)
+![docente_esito1](img/docente_esito1.png)
+Il docente dovrà poi, in una data successiva a quella della sessione di esame, registrare gli esiti degli studenti iscritti, selezionandoli dall'apposita select.  
+Oltre all'inserimento del voto, sarà possibile registrare il ritiri dello studente dall'esame con l'apposita spunta (eventuali altri valori inseriti negli altri text verranno ignorati).
 
 - ### Studente
+![studente_home](img/studente_home.png)  
+aa
 
 - ### Caso particolare: ex-studente
 
