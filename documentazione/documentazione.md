@@ -9,8 +9,9 @@ Prevediamo 3 ruoli per l'utenza che utilizzerà il nostro database:
 - I docenti
 - Gli studenti  
 
-Ad ogni ruolo sono associate diverse funzionalità ed accesso ad informazioni diverse.  
-___
+Ad ogni ruolo sono associate diverse funzionalità ed accesso ad informazioni diverse  
+
+---
 
 ## Progettazione schema concettuale ER
 
@@ -78,7 +79,7 @@ Ristrutturando l'ER, lascio nell'entità _utente_ gli attributi comuni della gen
 L'entità _studente_ invece, non sarà piu direttamente relazionata con utente, ma passerà per _matricola_ utilizzando la chiave primaria, matricola, per comporre la propria primaria congiuntamente ad IDCorso.  
 _matricola_ associerà ad ogni matricola l'identificativo dell'utente, che sarà unico nella tabella come il codice fiscale. Facendo ciò le informazioni contenute in utente sono indipendenti dal corso che segue lo studente in modo tale, che qualora venisse eliminato da _studente_, possa comunque accedere al db grazie alle credenziali conservate e associate ancora con la propria matricola.  
 
-_Nota : l'entità esito è associata con l'entità matricola in modo tale che abbia la chiave primaria composta da 2 attributi invece che da 3 (nel caso in cui fosse referenziata con la chiave primaria di studente)_
+_Nota_ : l'entità esito è associata con l'entità matricola in modo tale che abbia la chiave primaria composta da 2 attributi invece che da 3 (nel caso in cui fosse referenziata con la chiave primaria di studente)
 
 ---
 
