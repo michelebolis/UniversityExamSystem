@@ -258,14 +258,14 @@ Parametri:
 ---
 
 - **uni.get_next_exam_bydoc**: permette di ottenere le informazioni dei prossimi esami di un docente
-RETURNS ROW: idesame, idinsegnamento, data, ora
+RETURNS ROWS: idesame, idinsegnamento, data, ora
 Parametri:
   - the_IDDocente integer  
 
 ---
 
 - **uni.get_past_esame**: restituisce gli esami passati dato un docente  
-RETURNS ROW: idesame, idinsegnamento, iddocente, data  
+RETURNS ROWS: idesame, idinsegnamento, iddocente, data  
 Parametri:  
   - the_IDDocente integer
 
@@ -294,7 +294,7 @@ Parametri:
 ---
 
 - **uni.get_laurea**: restituisce eventuali lauree data una matricola  
-RETURNS ROW: matricola, data, idcorso, voto, incremento, lode  
+RETURNS ROWS: matricola, data, idcorso, voto, incremento, lode  
 Parametri:
   - the_matricola varchar(6)
 
@@ -308,7 +308,7 @@ Parametri:
 ---
 
 - **uni.get_manifesto**: restituisce gli insegnamenti presenti nel manifesto degli studi di un corso di laurea  
-RETURNS ROW: idcorso, idinsegnamento, anno  
+RETURNS ROWS: idcorso, idinsegnamento, anno  
 Parametri:
   - the_IDCorso varchar(20)
 
@@ -329,105 +329,105 @@ Parametri:
 ---
 
 - **uni.get_all_insegnamento**: restituisce le informazioni di tutti gli insegnamenti  
-RETURNS ROW: idinsegnamento, iddocente, nome, descrizione, crediti, annoattivazione  
+RETURNS ROWS: idinsegnamento, iddocente, nome, descrizione, crediti, annoattivazione  
 Parametri:
   - Nessuno
 
 ---
 
 - **uni.get_all_insegnamento_mancante**: restituisce gli identificativi degli insegnamenti mancanti ad una matricola  
-RETURNS ROW: idinsegnamento  
+RETURNS ROWS: idinsegnamento  
 Parametri:  
   - the_matricola char(6)
 
 ---
 
 - **uni.get_all_corso**: restituisce le informazioni di tutti i corsi di laurea  
-RETURNS ROW: idcorso, nome, annitotali, valorelode, attivo  
+RETURNS ROWS: idcorso, nome, annitotali, valorelode, attivo  
 Parametri:
   - Nessuno
 
 ---
 
 - **uni.get_all_docente**: restituisce le informazioni di tutti i docenti  
-RETURNS ROW: iddocente, iniziorapporto, finerapporto  
+RETURNS ROWS: iddocente, iniziorapporto, finerapporto  
 Parametri:
   - Nessuno
 
 ---
 
 - **uni.get_all_studente**: restituisce le informazioni di tutti gli studenti iscritti  
-RETURNS ROW: matricola, idcorso, dataimmatricolazione  
+RETURNS ROWS: matricola, idcorso, dataimmatricolazione  
 Parametri:
   - Nessuno
 
 ---
 
 - **uni.get_all_studente_bycorso**: restituisce le informazioni di tutti gli studenti iscritti ad un corso di laurea
-RETURNS ROW: matricola, idcorso, dataimmatricolazione  
+RETURNS ROWS: matricola, idcorso, dataimmatricolazione  
 Parametri:
   - corso varchar(20)
 
 ---
 
 - **uni.get_all_sessione**: restituisce le informazioni su tutte le sessioni di laurea  
-RETURNS ROW: idcorso, data  
+RETURNS ROWS: idcorso, data  
 Parametri:
   - Nessuno
 
 ---
 
 - **uni.get_all_sessione_bycorso**: restituisce le informazioni su tutte le sessioni di laurea di un corso di laurea specificato
-RETURNS ROW: idcorso, data  
+RETURNS ROWS: idcorso, data  
 Parametri:
   - the_corso varchar(20)
 
 ---
 
 - **uni.get_all_iscrizione**: restituisce le informazioni degli esami a cui una matricola è iscritta e per cui non ha ancora ricevuto un'esito  
-RETURNS ROW: idesame, idinsegnamento, iddocente, data, ora  
+RETURNS ROWS: idesame, idinsegnamento, iddocente, data, ora  
 Parametri:
   - the_matricola char(6)
 
 ---
 
 - **uni.get_all_nextiscrizione**: restituisce le informazioni degli esami futuri a cui una matricola è iscritta  
-RETURNS ROW: idesame, idinsegnamento, iddocente, data  
+RETURNS ROWS: idesame, idinsegnamento, iddocente, data  
 Parametri:
   - the_matricola char(6)
 
 ---
 
 - **uni.get_all_esito_attesa_acc**: restituisce gli esiti in attesa di accettazione per una matricola  
-RETURNS ROW: matricola, idesame, voto, stato, lode
+RETURNS ROWS: matricola, idesame, voto, stato, lode
 Parametri:
   - the_matricola char(6)
 
 ---
 
 - **uni.get_sessione_esame**: restituisce gli esami futuri previsti per un insegnamento  
-RETURNS ROW: idesame, idinsegnamento, iddocente, data, ora  
+RETURNS ROWS: idesame, idinsegnamento, iddocente, data, ora  
 Parametri:  
   - the_IDInsegnamento integer
 
 ---
 
 - **uni.get_insegnamenti**: restituisce gli insegnamenti di cui è responsabile un docente  
-RETURNS ROW: idinsegnamento, iddocente, nome, descrizione, crediti, annoattivazione  
+RETURNS ROWS: idinsegnamento, iddocente, nome, descrizione, crediti, annoattivazione  
 Parametri:
   - the_IDDocente integer
 
 ---
 
 - **uni.get_iscritti_esame**: restituisce le matricole iscritte ad un esame senza ancora un esito
-RETURNS ROW: matricola
+RETURNS ROWS: matricola
 Parametri:
   - the_IDEsame integer
 
 ---
 
 - **uni.get_iscritti_laurea**: restituisce le matricola iscritte ad una sessione di laurea senza ancora il voto finale registrato  
-RETURNS ROW: matricola  
+RETURNS ROWS: matricola  
 Parametri:
   - the_IDCorso varchar(20)
   - the_data date
@@ -435,7 +435,7 @@ Parametri:
 ---
 
 - **uni.get_past_corso**: restiuisce i corsi di laurea a cui è stato iscritto uno studente, data la sua matricola  
-RETURNS ROW: matricola, idcorso, dataimmatricolazione, datarimozione
+RETURNS ROWS: matricola, idcorso, dataimmatricolazione, datarimozione
 Parametri:
   - the_matricola varchar(20)
 
@@ -458,14 +458,14 @@ Parametri:
 ---
 
 - **uni.get_carriera_studente**: restituisce gli esami superati da uno studente iscritto, data la sua matricola  
-RETURNS ROW: matricola, idcorso, idinsegnamento, nome, iddocente, data, voto, lode  
+RETURNS ROWS: matricola, idcorso, idinsegnamento, nome, iddocente, data, voto, lode  
 Parametri:
   - the_matricola char(6)
 
 ---
 
 - **uni.get_carriera_studente**: restituisce gli esami superati da uno studente, data la sua matricola e un corso id laurea  
-RETURNS ROW: matricola, idcorso, idinsegnamento, nome, iddocente, data, voto, lode  
+RETURNS ROWS: matricola, idcorso, idinsegnamento, nome, iddocente, data, voto, lode  
 Parametri:
   - the_matricola char(6)
   - the_IDCorso varchar(20)
@@ -473,14 +473,14 @@ Parametri:
 ---
 
 - **uni.get_carriera_completa_studente**: restituisce tutti gli esami a cui si è iscritto uno studente iscritto, data la sua matricola  
-RETURNS ROW: matricola, idcorso, idinsegnamento, nome, iddocente, data, voto, lode  
+RETURNS ROWS: matricola, idcorso, idinsegnamento, nome, iddocente, data, voto, lode  
 Parametri:
   - the_matricola char(6)
 
 ---
 
 - **uni.get_carriera_passata_studente**: restituisce tutti gli esami a cui era iscritto un ex studente data la sua matricola  
-RETURNS ROW: idstorico, matricola, idcorso, idinsegnamento, iddocente, voto, stato, lode, data  
+RETURNS ROWS: idstorico, matricola, idcorso, idinsegnamento, iddocente, voto, stato, lode, data  
 Parametri:
   - the_matricola char(6)
 
