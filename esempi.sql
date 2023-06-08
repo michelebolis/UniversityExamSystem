@@ -82,3 +82,10 @@ CALL uni.iscrizione_laurea('000003', '25/05/2023', 'F2X');
 CALL uni.registrazione_esito_laurea('000003', 'F2X', '25/05/2023', 5, False);
 
 CALL uni.insert_corso_laurea('R1', 'Ricamo', 3, 31);
+CALL uni.insert_insegnamento(NULL, 'Ricamo 1', NULL, 12, 2023);
+CALL uni.insert_insegnamento(NULL, 'Ricamo 2', NULL, 6, 2023);
+CALL uni.insert_manifesto(6, 'R1', 1);
+CALL uni.insert_docente('Giulia', 'Strada', 'giulia.strada@uni.it', 'Giulia', '48793624982', '08/06/2023', 6);
+CALL uni.insert_studente('Sara', 'Uncino', 'sara.uncino@uni.it', 'Sara', '035127911', 'DIBUJLICKUABI1', 'R1', '09/06/2023');
+
+CALL uni.insert_sessione_laurea('12/06/2023', 'R1');

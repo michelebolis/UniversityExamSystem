@@ -207,5 +207,55 @@ Infine, prevedendo il caso che l'utilizzatore della base di dati non utilizzi le
   - **move_to_storico_studente**/**move_to_storico**: il secondo trigger elimina lo studente da _studente_ in modo che si attivi il primo trigger che sposta i dati di studente prima che sia eliminato in _storico_studente_
   - **hash**: permette di rendere indipendete l'applicazione della funzione di hash dalla procedura di inserimento utente che potrebbe non essere invocata.
 ---
-## Applicativo Web
-a
+## Applicativo Web: introduzione
+Per far interagire gli utenti con la base di dati, ho realizzato un applicativo Web in modo da semplificarne l'utilizzo. A seguito del login effettuato, verranno caricate diverse schermate in base al ruolo identificato.  
+Tecnologie utilizzate:  
+- Lato frontend ho utilizzato le classi di Bootstrap per il menu e gli elementi sottostanti ad esso congiuntamente ad un foglio di stile per aggiungere dei colori. 
+- Lato backend ho utilizzato php creando funzioni con la stessa segnatura e nome di quelle create nel database, in modo tale da avere una certa coerenza. In generale le eventuali eccezioni che possono essere sollevate vengono gestite dall'utilizzatore della funzione a cui viene restituito o il risultato (nelle _get_) o eventualmente l'ultimo errore di postgres (nelle _insert_ e nelle _update_).
+
+Organizzazione dei file: le pagine effettive che verranno visualizzate sono presenti nel root della directory mentre i componenti che verranno inclusi grazie php in modo dinamico sono presenti nella cartella _template_.  
+Le varie funzioni di php si trovano nella cartella _lib_ e in generale sono categorizzate in _insert_, _get_, _update_ e _delete_. Al di fuori di questa divisione, troviamo altre funzioni come quelle di connessione (_connection.php_) e di configurazione della connessione (_config.php_) che verranno incluse dalle altre in modo da connettersi al database.  
+
+---
+## Applicativo Web: realizzazione  
+- ### Login  
+![login](img/login.png)
+All'avvio sarà necessario effettuare con la propria email e password. Se le credenziali non risultano nel database, viene visualizzato in messaggio di errore.    
+Nel caso invece l'accesso sia eseguito correttamente, vengono settate due variabili di sessione per conservare l'id dell'utente e il suo ruolo, in base al quale verranno caricate le successive interfacce. Per ciascun utente vengono visualizzate nella pagina iniziata le informazioni biografiche contenute in _utente_.   
+E' anche possibile effettuare in qualsiasi momento effettuare il logout, che toglierà le variabili di sessione, viasualizzando nuovamente la schermata di login.  
+Nota: le credenziali degli utenti predisposti nel file di esempio sono presenti in _credenziali.md_.
+
+Analizziamo le possibilità offerte per ciascun utente:
+- ### Segreteria
+![segreteria_home](img/segreteria_home.png)
+Attraverso il menu della segreteria sarà concesso di:  
+1. La gestione dei corsi di laurea  
+![segreteria_home](img/segreteria_corsi.png)
+L'utente della segreteria può inserire nuovi corsi di laurea ed aggiungere nel manifesto degli insegnamenti di un corso di laurea un insegnamento.
+Per far ciò sarà però necessario che siano presenti degli insegnamenti.
+
+2. La gestione degli insegnamenti
+![segreteria_insegnamenti](img/segreteria_insegnamenti.png)
+Come nel punto precedente, la segreteria potrà aggiungere nuovi insegnamenti, specificando eventualmente il docente responsabile.  
+E' possibile poi inserire la propedeuticità di un insegnamento rispetto ad un altro e cambiare il docente responsabile di un insegnamento.
+
+3. La gestione degli utenti
+![segreteria_utenti](img/segreteria_utenti.png)
+Gli utenti della segreteria sono gli unici ad avere la capacità di inserire nuovi utenti nella base di dati, in particolare altri utenti della segreteria, un nuovo studente o un nuovo docente. E' quindi prima necessario il ruolo dell'utente che si sta per aggiungere. Verranno poi caricate caricate le informazioni da inserire in base al ruolo selezionato.  
+Chiaramente inizialmente sarà necessario avere un utente della segreteria nella base di dati per permettere di aggiungerne altre dall'applicativo: ho previsto quindi, nel dump del database vuoto, un utente segreteria _admin_.   
+Nota: nell'inserimento di un nuovo studente viene visualizzato un errore se il corso di laurea a cui si sta iscrivendo non ha ancora insegnamenti nel manifesto degli studi.  
+Oltre ad inserire nuovi utenti, possono anche eseguire la rinuncia agli studi degli studenti, selezionandoli da un apposita select.
+
+4. La gestione delle lauree  
+![segreteria_lauree](img/segreteria_lauree.png)
+![segreteria_lauree1](img/segreteria_lauree1.png)
+Le sessioni di laurea non sono associate ad alcun docente, quindi sono gestite dalla segreteria che aggiunge nuove sessione di laurea per un corso di laurea in una data. Successivamente procederà a registrarne l'esito per gli iscritti.
+
+- ### Docente
+
+
+- ### Studente
+
+- ### Caso particolare: ex-studente
+
+---
