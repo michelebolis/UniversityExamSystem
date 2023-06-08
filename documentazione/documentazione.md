@@ -1,16 +1,21 @@
-# Documentazione 
+# Documentazione
+
 ## Introduzione
+
 La nostra base di dati ha l'obiettivo di gestire l'organizzazione degli esami universitari congiuntamente all'insegnamento associato ed ai vari corsi di laurea.  
 Prevediamo 3 ruoli per l'utenza che utilizzerà il nostro database:
- - La segreteria
- - I docenti
- - Gli studenti  
+
+- La segreteria
+- I docenti
+- Gli studenti  
 
 Ad ogni ruolo sono associate diverse funzionalità ed accesso ad informazioni diverse.  
 ___
+
 ## Progettazione schema concettuale ER
+
 **Schema ER completo (non ristrutturato):**
-![](img/ER.png)  
+![ER](img/ER.png)  
   
 - _Utenti_  
   Le informazioni di accesso per gli utenti della nostra base di dati vengono salvate nell'entità (generalizzazione) _Utente_
@@ -47,7 +52,7 @@ Data una sessione di esame, registriamo nell'entità _esito_ sia l'iscrizione di
 
 - Storico degli insegnamenti  
 Come già esplicato, prevediamo la possibilità di poter cambiare il docente responsabile di un insegnamento, ma allo stesso tempo prevediamo uno _storico_insegnamento_ in cui conserviamo i vari docenti che sono stati responsabili degli insegnamenti.  
-_Nota : la chiave primaria dello storico poteva essere anche la chiave esterna dell'entità _Insegnamento_ dato che non prevediamo la cancellazione di record. Tuttavia questa soluzione con un IDInsegnamento che non referenzia l'entità _insegnamento_ è utile nel caso in cui si preveda la cancellazione degli insegnamenti._
+_Nota : la chiave primaria dello storico poteva essere anche la chiave esterna dell'entità_Insegnamento_dato che non prevediamo la cancellazione di record. Tuttavia questa soluzione con un IDInsegnamento che non referenzia l'entità_insegnamento_è utile nel caso in cui si preveda la cancellazione degli insegnamenti._
 
 - Laurea e sessione di laurea  
 Quando uno studente ha conseguito tutti gli insegnamenti del suo corso di laurea, gli sarà concesso di iscriversi ad una sessione di laurea, presente in _sessione_laurea_. Le sessioni in cui ci si può laureare sono identificate dal corso di laurea e dalla data.  
@@ -60,14 +65,15 @@ Una volta che uno studente consegue la laurea o decide di eseguire una rinuncia 
 e congiutamente il trasferimento di tali informazioni in due apposite entità: _storico_studente_ e _storico_esame_.  
 Lo _storico_studente_ è in relazione con _matricola_ in quanto non prevediamo la cancellazione della matricola associata allo studente. In questo modo non risulta piu iscritto al corso di laurea MA le sue informazioni restano nel sistema. Anche in questa entità infatti l'identificativo sarà composto dalla matricola e dall'identificativo del corso di laurea.  
 Per semplicità ipotizziamo che uno studente non esegua la rinuncia agli studi per due volte per lo stesso corso di laurea o che non si iscriva al corso di laurea per cui ha già ottenuto la laurea.  
-Lo _storico_esame_ invece contiene le informazioni dell'esito dell'esame: il voto, lo stato e la lode.   
+Lo _storico_esame_ invece contiene le informazioni dell'esito dell'esame: il voto, lo stato e la lode.
 Come chiavi esterne utilizziamo la matricola e il corso di laurea referenziandole allo storico studente. In aggiunta prevediamo anche l'identificativo dell'insegnamento e del docente responsabile del tempo in quanto NON possiamo utilizzare quelli dello storico_insegnamenti. Al momento dell'eliminazione dello studente i dati dell'insegnamento potrebbero non essere cambiati e quindi non presenti nello storico_insegnamenti  
 La soluzione a tale problema richiederebbe di "mischiare" insegnamenti effettivamente conclusi con quelli ancora inclusi nello storico_insegnamenti  
-_Nota : per evitare di avere come chiave primaria una chiave composta da matricola, IDCorso, IDInsegnamento e IDDocente, utilizzo IDStorico, un intero incrementale._ 
+_Nota : per evitare di avere come chiave primaria una chiave composta da matricola, IDCorso, IDInsegnamento e IDDocente, utilizzo IDStorico, un intero incrementale._
+
 ---
 **Schema ER completo (ristrutturato)**
-![](img/ER_ristrutturato.png)  
-Ristrutturando l'ER, lascio nell'entità _utente_ gli attributi comuni della generalizzazione. Elimino l'entità _segreteria_, in quanto non aveva piu alcun attributo, mentre l'entità _docente_ rimane e conserva i suoi due campi specifici utilizzando come chiave primaria la chiave esterna di utente, _IDUtente_ rinominandola IDDocente.   
+![ER_ristrutturato](img/ER_ristrutturato.png)  
+Ristrutturando l'ER, lascio nell'entità _utente_ gli attributi comuni della generalizzazione. Elimino l'entità _segreteria_, in quanto non aveva piu alcun attributo, mentre l'entità _docente_ rimane e conserva i suoi due campi specifici utilizzando come chiave primaria la chiave esterna di utente, _IDUtente_ rinominandola IDDocente.
 
 L'entità _studente_ invece, non sarà piu direttamente relazionata con utente, ma passerà per _matricola_ utilizzando la chiave primaria, matricola, per comporre la propria primaria congiuntamente ad IDCorso.  
 _matricola_ associerà ad ogni matricola l'identificativo dell'utente, che sarà unico nella tabella come il codice fiscale. Facendo ciò le informazioni contenute in utente sono indipendenti dal corso che segue lo studente in modo tale, che qualora venisse eliminato da _studente_, possa comunque accedere al db grazie alle credenziali conservate e associate ancora con la propria matricola.  
@@ -75,7 +81,9 @@ _matricola_ associerà ad ogni matricola l'identificativo dell'utente, che sarà
 _Nota : l'entità esito è associata con l'entità matricola in modo tale che abbia la chiave primaria composta da 2 attributi invece che da 3 (nel caso in cui fosse referenziata con la chiave primaria di studente)_
 
 ---
+
 ## Progettazione logica
+
 | Nome Tabella           | Attributi             | Tipo         | Chiave  | Vincoli         | Default      |
 | ---------------------- | --------------------- | ------------ | ------- | --------------- | ------------ |
 | utente                 | IDUtente              | SERIAL       | PK      |                 |              |
@@ -161,21 +169,26 @@ _Nota : l'entità esito è associata con l'entità matricola in modo tale che ab
 |                        |                       |              |         |                 |              |
 | sessione_laurea        | data                  | date         | PPK     |                 |              |
 |                        | IDCorso               | varchar(20)  | PPK, FK |                 |              |
-
 ---
+
 ## Realizzazione database: uni
+
 ![ER_db](img/ER_db.png)  
 Dal punto di vista implementativo della base di dati, ho scelto di inserire due viste materializzate per motivi di ottimizzazione aggiornandole attraverso trigger.  
 In particolare:
-  - **uni.media_studente**: conserviamo in essa, per ogni studente che frequenta/ha frequentato un certo corso di laurea, la sua media pesata con i relativi crediti.  
-  - **uni.carriera_studente**: contiene, per ogni studente che frequenta/ha frequentato un corso di laurea gli esami superati e con esito accettato.   
 
-Oltre a ciò prevedo delle viste per restituire in modo completo informazioni presenti in diverse tabelle.   
-In particolare:   
-  - **uni.studente_bio**: restituisce le informazioni dello studente iscritto: la sua matricola, il nome, il cognome, la email, il cellulare, il corso a cui è iscritto e la data di immatricolazione.  
-  - **uni.carriera_studente_view**: restituisce le informazioni contenute nella vista materializzata _uni.carriera_studente_.  
-  - **uni.carriera_completa_studente**: restituisce per ogni matricola iscritta ad un corso di laurea tutti gli esami a cui è stato iscritto. 
+- **uni.media_studente**: conserviamo in essa, per ogni studente che frequenta/ha frequentato un certo corso di laurea, la sua media pesata con i relativi crediti.  
+- **uni.carriera_studente**: contiene, per ogni studente che frequenta/ha frequentato un corso di laurea gli esami superati e con esito accettato.
+
+Oltre a ciò prevedo delle viste per restituire in modo completo informazioni presenti in diverse tabelle.
+In particolare:
+
+- **uni.studente_bio**: restituisce le informazioni dello studente iscritto: la sua matricola, il nome, il cognome, la email, il cellulare, il corso a cui è iscritto e la data di immatricolazione.  
+- **uni.carriera_studente_view**: restituisce le informazioni contenute nella vista materializzata _uni.carriera_studente_.  
+- **uni.carriera_completa_studente**: restituisce per ogni matricola iscritta ad un corso di laurea tutti gli esami a cui è stato iscritto.
+
 ### Elenco domini DB
+
 | Nome Dominio | Valori                                                                           | Condizione               |
 | ------------ | -------------------------------------------------------------------------------- | ------------------------ |
 | ruolo        | {"Segreteria", "Docente", "Studente"}                                            | Elenco                   |
@@ -186,10 +199,12 @@ In particolare:
 | votoLaurea   | [60, …, 110]                                                                     | value>=60 AND value<=110 |
 
 ---
+
 ## Funzionalità realizzate
-L'elenco delle funzioni, procedure e trigger creati è presente per intero sia nel dump del database uni_empty_dump.sql (https://github.com/michelebolis/UniversityExamSystem/tree/main/uni_empty_dump.sql) che nelle documentazioni specifiche (  
-    - doc_function: https://github.com/michelebolis/UniversityExamSystem/tree/main/documentazione/doc_function.md     
-    -  doc_trigger: https://github.com/michelebolis/UniversityExamSystem/tree/main/documentazione/doc_trigger.md  
+
+L'elenco delle funzioni, procedure e trigger creati è presente per intero sia nel dump del database uni_empty_dump.sql (<https://github.com/michelebolis/UniversityExamSystem/tree/main/uni_empty_dump.sql>) che nelle documentazioni specifiche (  
+    - doc_function: <https://github.com/michelebolis/UniversityExamSystem/tree/main/documentazione/doc_function.md>
+    -  doc_trigger: <https://github.com/michelebolis/UniversityExamSystem/tree/main/documentazione/doc_trigger.md>  
 )  
 
 Qui di seguito vengono evidenziate le parti piu rilevanti per il funzionamento corretto del database.  
@@ -199,34 +214,42 @@ Per garantire ciò prevedo vari funzioni di _get_ e _get_all_ per la maggior par
 
 Per esempio, per la registrazione di un esame, grazie all'apposita procedura _uni.registrazione_esito_esame_ non vi è la necessità di specificare se lo studente è stato bocciato o meno, ma lo stato dell'esito verrà ricavato dal voto. Un ragionamento analogo è stato utilizzato per l'inserimento degli utenti con apposite procedure insert che non richiedono il ruolo ma che, in base alla procedura, inserisce automaticamente il ruolo in _utente_ insieme alle altre informazioni grazie a una procedura generale _insert_utente_.
 
-Infine, prevedendo il caso che l'utilizzatore della base di dati non utilizzi le procedure predisposte, ho aggiunto, per i casi piu problematici, appositi trigger:    
-  -  **update_media**: trigger per garantire la consistenza della vista materializzata _media_studente_ quando viene accettato un nuovo esito.  
-  - **check_insertesito**: trigger per controllare la correttezza dell'iscrizione ad un esame di uno studente
-  - **check_updateesito**: trigger per garantire la correttezza dei dati in _esito_ dato il valore del campo _stato_ e lo _stato_ precedente all'update  
-  - **num_responsabile**: trigger che garantisce che ogni insegnante abbia almeno 1 insegnamento di cui è responsabile e al massimo 3
-  - **move_to_storico_studente**/**move_to_storico**: il secondo trigger elimina lo studente da _studente_ in modo che si attivi il primo trigger che sposta i dati di studente prima che sia eliminato in _storico_studente_
-  - **hash**: permette di rendere indipendete l'applicazione della funzione di hash dalla procedura di inserimento utente che potrebbe non essere invocata.
+Infine, prevedendo il caso che l'utilizzatore della base di dati non utilizzi le procedure predisposte, ho aggiunto, per i casi piu problematici, appositi trigger:
+
+- **update_media**: trigger per garantire la consistenza della vista materializzata _media_studente_ quando viene accettato un nuovo esito.  
+- **check_insertesito**: trigger per controllare la correttezza dell'iscrizione ad un esame di uno studente
+- **check_updateesito**: trigger per garantire la correttezza dei dati in _esito_ dato il valore del campo _stato_ e lo _stato_ precedente all'update  
+- **num_responsabile**: trigger che garantisce che ogni insegnante abbia almeno 1 insegnamento di cui è responsabile e al massimo 3
+- **move_to_storico_studente**/**move_to_storico**: il secondo trigger elimina lo studente da _studente_ in modo che si attivi il primo trigger che sposta i dati di studente prima che sia eliminato in _storico_studente_
+- **hash**: permette di rendere indipendete l'applicazione della funzione di hash dalla procedura di inserimento utente che potrebbe non essere invocata.
+
 ---
+
 ## Applicativo Web: introduzione
+
 Per far interagire gli utenti con la base di dati, ho realizzato un applicativo Web in modo da semplificarne l'utilizzo. A seguito del login effettuato, verranno caricate diverse schermate in base al ruolo identificato.  
 Tecnologie utilizzate:  
-- Lato frontend ho utilizzato le classi di Bootstrap per il menu e gli elementi sottostanti ad esso congiuntamente ad un foglio di stile per aggiungere dei colori. 
+
+- Lato frontend ho utilizzato le classi di Bootstrap per il menu e gli elementi sottostanti ad esso congiuntamente ad un foglio di stile per aggiungere dei colori.
 - Lato backend ho utilizzato php creando funzioni con la stessa segnatura e nome di quelle create nel database, in modo tale da avere una certa coerenza. In generale le eventuali eccezioni che possono essere sollevate vengono gestite dall'utilizzatore della funzione a cui viene restituito o il risultato (nelle _get_) o eventualmente l'ultimo errore di postgres (nelle _insert_ e nelle _update_).
 
 Organizzazione dei file: le pagine effettive che verranno visualizzate sono presenti nel root della directory mentre i componenti che verranno inclusi grazie php in modo dinamico sono presenti nella cartella _template_.  
 Le varie funzioni di php si trovano nella cartella _lib_ e in generale sono categorizzate in _insert_, _get_, _update_ e _delete_. Al di fuori di questa divisione, troviamo altre funzioni come quelle di connessione (_connection.php_) e di configurazione della connessione (_config.php_) che verranno incluse dalle altre in modo da connettersi al database.  
 
 ![codice_insert_esame](img/codice_insert_esame.img)  
-La struttura dei file _template_nome.php_ è indicativamente sempre la stessa: definisco una funzione di print del form con argomento l'eventuale errore che verrà stampato come primo elemento del form.   
+La struttura dei file _template_nome.php_ è indicativamente sempre la stessa: definisco una funzione di print del form con argomento l'eventuale errore che verrà stampato come primo elemento del form.
 Questa funzione viene chiamata, e quindi viene stampato il form, se le variabili in POST non sono settate, e quindi non ho ancora premuto sul bottone che fa il submit alla stessa pagina.  
 Se invece tali variabili sono settate, richiamo la funzione php che a sua volta chiama la funzione/procedura pgsql utilizzando le variabili in POST. Dalla funzione pgsql è possibile che vengano restituiti degli errori, in tal caso richiamo la funzione di _printform_ passandogli l'errore ricevuto e inserendo negli input del form i valori nelle variabili di POST che hanno causato l'errore.  
 Nel caso in cui non ci siano errori, non viene visualizzato il form ma un messaggio che segnala il corretto esito dell'operazione.
 
 ---
+
 ## Applicativo Web: realizzazione  
+
 - ### Login  
+
 ![login](img/login.png)
-All'avvio sarà necessario effettuare con la propria email e password. Se le credenziali non risultano nel database, viene visualizzato in messaggio di errore.    
+All'avvio sarà necessario effettuare con la propria email e password. Se le credenziali non risultano nel database, viene visualizzato in messaggio di errore.
 Nel caso invece l'accesso sia eseguito correttamente, vengono settate due variabili di sessione per conservare l'id dell'utente e il suo ruolo, in base al quale verranno caricate le successive interfacce. Per ciascun utente vengono visualizzate nella pagina iniziata le informazioni biografiche contenute in _utente_.  
 ![cambio_credenziali](img/cambio_credenziali.png)
 Si potrà eventualmente cambiare le credenziali di accesso dall'apposita opzione nel menu.  
@@ -234,9 +257,12 @@ E' anche possibile effettuare in qualsiasi momento effettuare il logout, che tog
 Nota: le credenziali degli utenti predisposti nel file di esempio sono presenti in _credenziali.md_.
 
 Analizziamo le possibilità offerte per ciascun utente:
+
 - ### Segreteria
+
 ![segreteria_home](img/segreteria_home.png)
 Attraverso il menu della segreteria sarà concesso di:  
+
 1. La gestione dei corsi di laurea  
 ![segreteria_home](img/segreteria_corsi.png)
 L'utente della segreteria può inserire nuovi corsi di laurea ed aggiungere nel manifesto degli insegnamenti di un corso di laurea un insegnamento.
@@ -250,7 +276,7 @@ E' possibile poi inserire la propedeuticità di un insegnamento rispetto ad un a
 3. La gestione degli utenti
 ![segreteria_utenti](img/segreteria_utenti.png)
 Gli utenti della segreteria sono gli unici ad avere la capacità di inserire nuovi utenti nella base di dati, in particolare altri utenti della segreteria, un nuovo studente o un nuovo docente. E' quindi prima necessario il ruolo dell'utente che si sta per aggiungere. Verranno poi caricate caricate le informazioni da inserire in base al ruolo selezionato.  
-Chiaramente inizialmente sarà necessario avere un utente della segreteria nella base di dati per permettere di aggiungerne altre dall'applicativo: ho previsto quindi, nel dump del database vuoto, un utente segreteria _admin_.   
+Chiaramente inizialmente sarà necessario avere un utente della segreteria nella base di dati per permettere di aggiungerne altre dall'applicativo: ho previsto quindi, nel dump del database vuoto, un utente segreteria _admin_.
 Nota: nell'inserimento di un nuovo studente viene visualizzato un errore se il corso di laurea a cui si sta iscrivendo non ha ancora insegnamenti nel manifesto degli studi.  
 Oltre ad inserire nuovi utenti, possono anche eseguire la rinuncia agli studi degli studenti, selezionandoli da un apposita select.
 
@@ -267,9 +293,11 @@ La segreteria è infine in grado di visualizzare le carriere di ogni studente, i
 E' inoltre possibile visualizzare la carriera (non completa) di tutti gli studenti di un corso di laurea.
 
 - ### Docente  
+
 ![docente_home](img/docente_home.png)
 Oltre alle informazioni di base, vengono visualizzati i prossimi esami in programma per il docente.
 Attraverso il menu del docente sarà concesso di:  
+
 1. Gestione degli esami
 ![docente_esame](img/docente_esame.png)
 Il docente responsabile del corso deve inserire le sessioni di laurea per gli insegnamenti di cui è responsabile in modo tale che gli studenti si possano iscrivere.
@@ -280,9 +308,9 @@ Il docente dovrà poi, in una data successiva a quella della sessione di esame, 
 Oltre all'inserimento del voto, sarà possibile registrare il ritiri dello studente dall'esame con l'apposita spunta (eventuali altri valori inseriti negli altri text verranno ignorati).
 
 - ### Studente
+
 ![studente_home](img/studente_home.png)  
 Oltre alle informazioni di base, vengono visualizzati i prossimi esami in programma a cui si è iscritto lo steudente. Vengono inoltre mostrate le statistiche dello studente per il corso di laurea a cui è iscritto: media, numero di crediti ottenuti ed esami passati.  
-
 
 - ### Caso particolare: ex-studente
 
