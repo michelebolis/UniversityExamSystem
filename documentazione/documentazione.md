@@ -281,7 +281,8 @@ Oltre all'inserimento del voto, sarà possibile registrare il ritiri dello stude
 
 - ### Studente
 ![studente_home](img/studente_home.png)  
-aa
+Oltre alle informazioni di base, vengono visualizzati i prossimi esami in programma a cui si è iscritto lo steudente. Vengono inoltre mostrate le statistiche dello studente per il corso di laurea a cui è iscritto: media, numero di crediti ottenuti ed esami passati.  
+
 
 - ### Caso particolare: ex-studente
 
