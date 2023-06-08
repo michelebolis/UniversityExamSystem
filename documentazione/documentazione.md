@@ -312,6 +312,27 @@ Oltre all'inserimento del voto, sarà possibile registrare il ritiri dello stude
 
 ![studente_home](img/studente_home.png)  
 Oltre alle informazioni di base, vengono visualizzati i prossimi esami in programma a cui si è iscritto lo steudente. Vengono inoltre mostrate le statistiche dello studente per il corso di laurea a cui è iscritto: media, numero di crediti ottenuti ed esami passati.  
+Attraverso il menu dello studente sarà concesso di:  
+
+1. Gestione degli esami
+![studente_esame](img/studente_esame.png)  
+Lo studente può, dopo aver selezionato un insegnamento non ancora sostenuto del suo manifesto degli studi, iscriversi ad una sessione di esame se è stata fissata dal docente responsabile.  
+E' possibile anche eliminare l'iscrizione ad un esame se la data dell'esame è successiva a quella odierna.
+
+2. Gestione degli esiti  
+![studente_esito](img/studente_esito.png)  
+Lo studente, dopo essersi iscritto a una sessione di esame per un insegnamento, se il suo esito risulta in attesa di accettazione (quindi con un voto maggiore o uguale di 18), potrà accettare o meno tale esito.
+
+3. Gestione della laurea
+![studente_laurea](img/studente_laurea.png)  
+A seguito del conseguimento di tutti gli esami presenti nel suo manifesto degli studi, lo studente può iscriversi ad una sessione di laurea. In caso provi ad accedere a tale sezione prima di aver raggiunto il requisito sopra citato, non gli sara possibile l'iscrizione.
+
+4. Visualizzazione della carriera  
+![studente_carriera](img/studente_carriera.png)  
+Anche per lo studente, come in precedenza per la segreteria, è prevista un'interfaccia per visualizzare la sua carriera completa e non oppure la sua carriera di un corso di laurea precedente.
+
+5. Visualizzazione dei corsi di laurea  
+Infine lo studente può visualizzare il manifesto di studi di ciascun corso di laurea previsto nell'univerisità.
 
 - ### Caso particolare: ex-studente
 
