@@ -311,6 +311,7 @@ Le varie funzioni di php si trovano nella cartella _lib_ e in generale sono cate
     }
 ?>
 ```
+
 La struttura dei file _template_nome.php_ è indicativamente sempre la stessa: definisco una funzione di print del form con argomento l'eventuale errore che verrà stampato come primo elemento del form.
 Questa funzione viene chiamata, e quindi viene stampato il form, se le variabili in POST non sono settate, e quindi non ho ancora premuto sul bottone che fa il submit alla stessa pagina.  
 Se invece tali variabili sono settate, richiamo la funzione php che a sua volta chiama la funzione/procedura pgsql utilizzando le variabili in POST. Dalla funzione pgsql è possibile che vengano restituiti degli errori, in tal caso richiamo la funzione di _printform_ passandogli l'errore ricevuto e inserendo negli input del form i valori nelle variabili di POST che hanno causato l'errore.  
