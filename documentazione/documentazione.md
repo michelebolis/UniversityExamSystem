@@ -355,4 +355,15 @@ Infine lo studente può visualizzare il manifesto di studi di ciascun corso di l
 
 - ### Caso particolare: ex-studente
 
+![exstudente_home](img/exstudente_home.png)  
+Consentiamo l'accesso all'applicativo web anche agli ex-studente in modo tale che possano reperire le loro informazioni. Nella home vediamo, per esempio, l'esito della laurea conseguita in passato (se non si è laureato ma ha solo fatto la rinuncia agli studi, non sarà visualizzata).  
+Attraverso il menu dello studente, limitato, sarà concesso di:  
+
+1. Visualizzazione della carriera
+![exstudente_carriera](img/exstudente_carriera.png)  
+L'ex-studente puo visualizzare la carriera (non completa) per ogni corso di laurea a cui era iscritto precedentemente.
+
+2. Visualizzazione dei corsi di laurea
+Come per lo studente iscritto, è possibile visualizzare il manifesto di studi di ciascun corso di laurea previsto nell'univerisità.
+
 ---
