@@ -13,7 +13,7 @@
    II. [Segreteria](#segreteria)  
    III. [Docente](#docente)  
    IV. [Studente](#studente)  
-   V. [Ex-Studente](#caso-particolare-ex-studente) 
+   V. [Ex-Studente](#caso-particolare-ex-studente)
 
 ---
 
