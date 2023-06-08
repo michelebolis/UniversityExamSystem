@@ -36,50 +36,50 @@ Ad ogni ruolo sono associate diverse funzionalità ed accesso ad informazioni di
 **Schema ER completo (non ristrutturato):**
 ![ER](img/ER.png)  
   
-- _Utenti_  
-  Le informazioni di accesso per gli utenti della nostra base di dati vengono salvate nell'entità (generalizzazione) _Utente_
+- _**Utenti**_  
+  Le informazioni di accesso per gli utenti della nostra base di dati vengono salvate nell'entità (generalizzazione) _utente_
 
   In essa inoltre conserviamo le informazioni comuni a tutti gli utenti: nome, cognome e cellulare
 
-- _Docente e Segreteria_  
+- _**Docente e Segreteria**_  
 L'entità _segreteria_ non gode di attributi che la contraddistinguono mentre per il _docente_ prevediamo due attributi per conservare l'inizio e la fine del rapporto di collaborazione con l'università
 
-- Studente e Matricola  
+- _**Studente e Matricola**_  
 L'entità _studente_, che rappresenta gli studenti iscritti attualmente nell'università in un _corso di laurea_, è in relazione con l'entità _Matricola_ che contiene la matricola, con cui identifichiamo lo studente, ed il suo codice fiscale.  
 Prevediamo infatti di voler ricavare attraverso il codice fiscale, che consideriamo unico, la matricola di un ex-studente in modo tale che, nonostante non sia piu presente nell'entità _studente_, gli venga comunque riassegnata la sua precedente matricola cosicchè non si creino nuove matricole, nel caso di una nuova iscrizione ad un nuovo corso di laurea.  
 
 Ipotizziamo che i dati presenti in _matricola_, _docente_ e _utente_ **NON** vengano mai cancellati
 
-- Corso_Laurea  
+- _**Corso di laurea**_  
 I corsi di laurea sono identificati nell'entità '_corso_laurea_' da un identificativo incrementale, mentre sono caratterizzati dal nome, dagli anni totali del corso (3 per la triennale, 2 per la magistrale), dal valore della lode (per es la lode nella media puo essere considerata come un 30 o come un 32) e dal campo che identifica se il corso di laurea sia attivo o meno.  
 Per semplicità ipotizziamo che i corsi di laurea **NON** vengano mai cancellati  
 
-- Insegnamento e propedeuticità  
+- _**Insegnamento e propedeuticità**_  
 Gli insegnamenti sono contenuti nell'entità _insegnamento_ la cui chiave primaria è un id incrementale mentre i suoi attributi sono il nome, il numero di crediti, il docente responsabile, una descrizione eventualmente nulla e l'anno in cui è stato attivato tale insegnamento.  
 Il docente responsabile è inizialmente NULL, in quanto richiediamo che ogni docente sia responsabile di **ALMENO** un insegnamento fino ad un **MASSIMO** di 3.  
 Prevediamo inoltre la relazione ricorsiva di _propedeuticita_ che permette di specificare per un insegnamento, gli insegnamenti propedeutici necessari per il conseguimento del suddetto insegnamento.  
 Ipotizziamo che una volta inseriti, **NON** vengano eliminati gli insegnamenti
 
-- Manifesto insegnamenti  
+- _**Manifesto insegnamenti**_  
 Inizialmente ad un corso di laurea non è associato alcun insegnamento.  
 La relazione tra i corsi di laurea e gli insegnamenti è denotata dal _manifesto_insegnamenti_ che ci permette di sapere gli insegnamenti previsti in un corso di laurea con associato l'anno in cui è previsto che si svolgano (1, 2, 3 per i corsi triennali; 1, 2 per quelli magistrali)  
 Ipotizziamo, che una volta inseriti, **NON** vengano modificati/eliminati i record del manifesto
 
-- Esame e esito  
+- _**Esame e esito**_  
 L'entità _esame_ contiene le informazioni di una sessione di esame, in particolare è identificato da un id numerico incrementale e contiene l'orario e la data in cui si svolge, l'insegnamento e il docente che terrà tale esame. Quest'ultimo **deve** essere lo stesso docente responsabile del corso MA prevediamo che il docente responsabile possa cambiare, quindi salviamo tale informazione come attributo dell'esame.  
 Data una sessione di esame, registriamo nell'entità _esito_ sia l'iscrizione di uno studente ad una sessione d'esame che l'esito effettivo dell'esame. Per far ciò utilizziamo il campo "stato" che distinguerà il record come iscrizione all'esame o come esito effettivo.
 
-- Storico degli insegnamenti  
+- _**Storico degli insegnamenti**_  
 Come già esplicato, prevediamo la possibilità di poter cambiare il docente responsabile di un insegnamento, ma allo stesso tempo prevediamo uno _storico_insegnamento_ in cui conserviamo i vari docenti che sono stati responsabili degli insegnamenti.  
 _Nota : la chiave primaria dello storico poteva essere anche la chiave esterna dell'entità_Insegnamento_dato che non prevediamo la cancellazione di record. Tuttavia questa soluzione con un IDInsegnamento che non referenzia l'entità_insegnamento_è utile nel caso in cui si preveda la cancellazione degli insegnamenti._
 
-- Laurea e sessione di laurea  
+- _**Laurea e sessione di laurea**_  
 Quando uno studente ha conseguito tutti gli insegnamenti del suo corso di laurea, gli sarà concesso di iscriversi ad una sessione di laurea, presente in _sessione_laurea_. Le sessioni in cui ci si può laureare sono identificate dal corso di laurea e dalla data.  
 Per semplicità non consideriamo orari, aule o sedi in cui si svolgeranno tale evento.  
 L'iscrizione ad una sessione di laurea avviene analogamente a quanto accade con _esame-esito_. L'entità _laurea_ infatti conterrà sia gli studenti iscritti ad una sessione di laurea che gli studenti laureati di cui, a differenza di quelli iscritti, hanno gli attributi voto, lode e incremento diversi da NULL.  
 _Nota : la chiave esterna che compone la chiave primaria della laurea proviene dall'entità **matricola** e **NON** da studente, in quanto a seguito della laurea, viene prevista la cancellazione del record dello studente nell'entità studente_
 
-- Storico degli studenti e storico degli esami  
+- _**Storico degli studenti e storico degli esami**_  
 Una volta che uno studente consegue la laurea o decide di eseguire una rinuncia agli studi, prevediamo la cancellazione dei suoi dati in _studente_ e in _esito_
 e congiutamente il trasferimento di tali informazioni in due apposite entità: _storico_studente_ e _storico_esame_.  
 Lo _storico_studente_ è in relazione con _matricola_ in quanto non prevediamo la cancellazione della matricola associata allo studente. In questo modo non risulta piu iscritto al corso di laurea MA le sue informazioni restano nel sistema. Anche in questa entità infatti l'identificativo sarà composto dalla matricola e dall'identificativo del corso di laurea.  
