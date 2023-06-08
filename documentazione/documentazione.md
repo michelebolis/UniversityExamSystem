@@ -223,10 +223,10 @@ In particolare:
 
 ## Funzionalità realizzate
 
-L'elenco delle funzioni, procedure e trigger creati è presente per intero sia nel dump del database uni_empty_dump.sql (<https://github.com/michelebolis/UniversityExamSystem/tree/main/uni_empty_dump.sql>) che nelle documentazioni specifiche:  
+L'elenco delle funzioni, procedure e trigger creati è presente per intero sia nel dump del database [uni_empty_dump.sql](https://github.com/michelebolis/UniversityExamSystem/tree/main/uni_empty_dump.sql) che nelle documentazioni specifiche:  
 
-- doc_function: <https://github.com/michelebolis/UniversityExamSystem/tree/main/documentazione/doc_function.md>  
-- doc_trigger: <https://github.com/michelebolis/UniversityExamSystem/tree/main/documentazione/doc_trigger.md>  
+- [doc_function](https://github.com/michelebolis/UniversityExamSystem/tree/main/documentazione/doc_function.md)  
+- [doc_trigger](https://github.com/michelebolis/UniversityExamSystem/tree/main/documentazione/doc_trigger.md)  
 
 Qui di seguito vengono evidenziate le parti piu rilevanti per il funzionamento corretto del database.  
 In generale ho cercato di realizzare un sufficiente insieme di procedure/funzioni in modo tale da riuscire, lato backend dell'applicativo, ad interrogare ed interagire con il database senza essere a conoscenza dello schema delle tabelle.  
