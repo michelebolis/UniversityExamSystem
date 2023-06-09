@@ -22,22 +22,31 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link <?php if (isset($exstudente)){echo 'disabled';} ?>" aria-current="page" href="esame.php" >Gestione esami</a>
+          <a class="nav-link <?php if (isset($exstudente)){echo 'disabled';}
+          else if(str_contains($_SERVER['PHP_SELF'], 'esame.php')){echo 'active';}?> " 
+          href="esame.php" >Gestione esami</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link <?php if (isset($exstudente)){echo 'disabled';} ?>" aria-current="page" href="esito.php">Gestione esiti</a>
+          <a class="nav-link <?php if (isset($exstudente)){echo 'disabled';}
+          else if(str_contains($_SERVER['PHP_SELF'], 'esito.php')){echo 'active';} ?>" 
+          href="esito.php">Gestione esiti</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link <?php if (isset($exstudente)){echo 'disabled';} ?>"  href="laurea.php">Gestione laurea</a>
+          <a class="nav-link <?php if (isset($exstudente)){echo 'disabled';}
+          else if(str_contains($_SERVER['PHP_SELF'], 'laurea.php')){echo 'active';} ?>" 
+          href="laurea.php">Gestione laurea</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="carriera.php">Carriere</a>
+          <a class="nav-link <?php if(str_contains($_SERVER['PHP_SELF'], 'carriera.php')){echo 'active';}?>" 
+          href="carriera.php">Carriere</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="corso_laurea.php">Corsi di laurea</a>
+          <a class="nav-link <?php if(str_contains($_SERVER['PHP_SELF'], 'corso_laurea.php')){echo 'active';}?>" 
+          href="corso_laurea.php">Corsi di laurea</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="utente.php?change=True">Cambia credenziali</a>
+          <a class="nav-link <?php if(isset($_GET['change'])){echo 'active';}?>" 
+          href="utente.php?change=True">Cambia credenziali</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="index.php?logout=True">Logout</a>

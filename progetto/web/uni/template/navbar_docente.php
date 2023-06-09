@@ -12,13 +12,16 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link <?php if(isset($exam) && $exam){echo 'active';}?>" aria-current="page" href="esame.php">Sessione d'esame</a>
+          <a class="nav-link <?php if(str_contains($_SERVER['PHP_SELF'], 'esame.php')){echo 'active';}?>" 
+          aria-current="page" href="esame.php">Sessione d'esame</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="esito.php">Esiti esame</a>
+          <a class="nav-link <?php if(str_contains($_SERVER['PHP_SELF'], 'esito.php')){echo 'active';}?>" 
+          href="esito.php">Esiti esame</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="utente.php?change=True">Cambia credenziali</a>
+          <a class="nav-link <?php if(isset($_GET['change'])){echo 'active';}?>" 
+          href="utente.php?change=True">Cambia credenziali</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="index.php?logout=True">Logout</a>

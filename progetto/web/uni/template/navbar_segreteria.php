@@ -13,22 +13,28 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="corso_laurea.php">Gestione corsi di laurea</a>
+          <a class="nav-link <?php if(str_contains($_SERVER['PHP_SELF'], 'corso_laurea.php')){echo 'active';}?>" 
+          href="corso_laurea.php">Gestione corsi di laurea</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="insegnamento.php">Gestione insegnamenti</a>
+          <a class="nav-link <?php if(str_contains($_SERVER['PHP_SELF'], 'insegnamento.php')){echo 'active';}?>" 
+          href="insegnamento.php">Gestione insegnamenti</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="utente.php">Gestione utenti</a>
+          <a class="nav-link <?php if(str_contains($_SERVER['PHP_SELF'], 'utente.php')){echo 'active';}?>" 
+          href="utente.php">Gestione utenti</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="laurea.php">Gestione laurea</a>
+          <a class="nav-link <?php if(str_contains($_SERVER['PHP_SELF'], 'laurea.php')){echo 'active';}?>" 
+          href="laurea.php">Gestione laurea</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="carriera.php">Carriere</a>
+          <a class="nav-link <?php if(str_contains($_SERVER['PHP_SELF'], 'carriera.php')){echo 'active';}?>" 
+          href="carriera.php">Carriere</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="utente.php?change=True">Cambia credenziali</a>
+          <a class="nav-link <?php if(isset($_GET['change'])){echo 'active';}?>" 
+          href="utente.php?change=True">Cambia credenziali</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="index.php?logout=True">Logout</a>
