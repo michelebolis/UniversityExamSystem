@@ -1,0 +1,19 @@
+body {
+    background-color: #FFF7EF;
+}
+.btn-primary{
+    background-color:#546FFF;
+    margin-top:5px;
+}
+.row{
+    margin: 20px;
+}
+.home_element, form{
+    background-color: #C5DBFF; 
+    padding: 20px; 
+    border-radius:10px; 
+    border: solid #546FFF 1px;
+}
+nav{
+    background-color: #e3ff79;
+}
