@@ -1,4 +1,5 @@
-## Progettazione logica DB: uni
+# Progettazione logica DB: uni
+
 | Nome Tabella           | Attributi             | Tipo         | Chiave  | Vincoli         | Default      |
 | ---------------------- | --------------------- | ------------ | ------- | --------------- | ------------ |
 | utente                 | IDUtente              | SERIAL       | PK      |                 |              |

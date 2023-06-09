@@ -1,4 +1,5 @@
-## Elenco domini DB
+# Elenco domini DB
+
 | Nome Dominio | Valori                                                                           | Condizione               |
 | ------------ | -------------------------------------------------------------------------------- | ------------------------ |
 | ruolo        | {"Segreteria", "Docente", "Studente"}                                            | Elenco                   |
