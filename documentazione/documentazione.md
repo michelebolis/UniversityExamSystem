@@ -342,7 +342,8 @@ Analizziamo le possibilità offerte per ciascun utente:
 Attraverso il menu della segreteria sarà concesso di:  
 
 1. **La gestione dei corsi di laurea**  
-![segreteria_home](img/segreteria_corsi.png)
+![segreteria_corsi](img/segreteria_corsi.png)
+![segreteria_corsi2](img/segreteria_corsi2.png)
 L'utente della segreteria può inserire nuovi corsi di laurea ed aggiungere nel manifesto degli insegnamenti di un corso di laurea un insegnamento.
 Per far ciò sarà però necessario che siano presenti degli insegnamenti.
 
@@ -367,7 +368,7 @@ Le sessioni di laurea non sono associate ad alcun docente, quindi sono gestite d
 ![segreteria_carriere](img/segreteria_carriere.png)
 ![segreteria_carriere1](img/segreteria_carriere1.png)
 La segreteria è infine in grado di visualizzare le carriere di ogni studente, in particolare quella completa conterrà anche gli esami non superati/rifiutati/senza valutazione mentre l'altra conterrà solo gli esami con esito positivo accettato.
-![segreteria_carriere1](img/segreteria_carriere2.png)
+![segreteria_carriere2](img/segreteria_carriere2.png)
 E' inoltre possibile visualizzare la carriera (non completa) di tutti gli studenti di un corso di laurea.
 
 - ### Docente  
