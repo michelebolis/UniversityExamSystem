@@ -327,11 +327,11 @@ Nel caso in cui non ci siano errori, non viene visualizzato il form ma un messag
 - ### Login  
 
 ![login](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/login.png?raw=True)
-All'avvio sarà necessario effettuare con la propria email e password. Se le credenziali non risultano nel database, viene visualizzato in messaggio di errore.
+All'avvio sarà necessario effettuare l'accesso con la propria email e password. Se le credenziali non risultano nel database, viene visualizzato un messaggio di errore.
 Nel caso invece l'accesso sia eseguito correttamente, vengono settate due variabili di sessione per conservare l'id dell'utente e il suo ruolo, in base al quale verranno caricate le successive interfacce. Per ciascun utente vengono visualizzate nella pagina iniziata le informazioni biografiche contenute in _utente_.  
 ![cambio_credenziali](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/cambio_credenziali.png?raw=True)
 Si potrà eventualmente cambiare le credenziali di accesso dall'apposita opzione nel menu.  
-E' anche possibile effettuare in qualsiasi momento effettuare il logout, che toglierà le variabili di sessione, viasualizzando nuovamente la schermata di login.  
+E' anche possibile effettuare in qualsiasi momento il logout, che toglierà le variabili di sessione, visualizzando nuovamente la schermata di login.  
 Nota: le credenziali degli utenti predisposti nel file di esempio sono presenti in _credenziali.md_.
 
 Analizziamo le possibilità offerte per ciascun utente:
@@ -354,8 +354,8 @@ E' possibile poi inserire la propedeuticità di un insegnamento rispetto ad un a
 
 3. **La gestione degli utenti**
 ![segreteria_utenti](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_utenti.png?raw=True)
-Gli utenti della segreteria sono gli unici ad avere la capacità di inserire nuovi utenti nella base di dati, in particolare altri utenti della segreteria, un nuovo studente o un nuovo docente. E' quindi prima necessario il ruolo dell'utente che si sta per aggiungere. Verranno poi caricate caricate le informazioni da inserire in base al ruolo selezionato.  
-Chiaramente inizialmente sarà necessario avere un utente della segreteria nella base di dati per permettere di aggiungerne altre dall'applicativo: ho previsto quindi, nel dump del database vuoto, un utente segreteria _admin_.
+Gli utenti della segreteria sono gli unici ad avere la capacità di inserire nuovi utenti nella base di dati, in particolare altri utenti della segreteria, un nuovo studente o un nuovo docente. E' quindi prima necessario il ruolo dell'utente che si sta per aggiungere. Verranno poi caricate le informazioni da inserire in base al ruolo selezionato.  
+Chiaramente inizialmente sarà necessario avere un utente della segreteria nella base di dati per permettere di aggiungerne altre dall'applicativo: ho previsto quindi, nel dump del database vuoto, un utente segreteria _admin_.  
 Nota: nell'inserimento di un nuovo studente viene visualizzato un errore se il corso di laurea a cui si sta iscrivendo non ha ancora insegnamenti nel manifesto degli studi.  
 Oltre ad inserire nuovi utenti, possono anche eseguire la rinuncia agli studi degli studenti, selezionandoli da un apposita select.
 
@@ -374,7 +374,7 @@ E' inoltre possibile visualizzare la carriera (non completa) di tutti gli studen
 - ### Docente  
 
 ![docente_home](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/docente_home.png?raw=True)
-Oltre alle informazioni di base, vengono visualizzati i prossimi esami in programma per il docente.
+Oltre alle informazioni di base, vengono visualizzati i prossimi esami in programma per il docente.  
 Attraverso il menu del docente sarà concesso di:  
 
 1. **Gestione degli esami**
@@ -384,12 +384,12 @@ Il docente responsabile del corso deve inserire le sessioni di laurea per gli in
 ![docente_esito](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/docente_esito.png?raw=True)
 ![docente_esito1](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/docente_esito1.png?raw=True)
 Il docente dovrà poi, in una data successiva a quella della sessione di esame, registrare gli esiti degli studenti iscritti, selezionandoli dall'apposita select.  
-Oltre all'inserimento del voto, sarà possibile registrare il ritiri dello studente dall'esame con l'apposita spunta (eventuali altri valori inseriti negli altri text verranno ignorati).
+Oltre all'inserimento del voto, sarà possibile registrare il ritiro dello studente dall'esame con l'apposita spunta (eventuali altri valori inseriti negli altri text verranno ignorati).
 
 - ### Studente
 
 ![studente_home](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/studente_home.png?raw=True)  
-Oltre alle informazioni di base, vengono visualizzati i prossimi esami in programma a cui si è iscritto lo steudente. Vengono inoltre mostrate le statistiche dello studente per il corso di laurea a cui è iscritto: media, numero di crediti ottenuti ed esami passati.  
+Oltre alle informazioni di base, vengono visualizzati i prossimi esami in programma a cui si è iscritto lo studente. Vengono inoltre mostrate le statistiche dello studente per il corso di laurea a cui è iscritto: media, numero di crediti ottenuti ed esami passati.  
 Attraverso il menu dello studente sarà concesso di:  
 
 1. **Gestione degli esami**
@@ -403,7 +403,7 @@ Lo studente, dopo essersi iscritto a una sessione di esame per un insegnamento, 
 
 3. **Gestione della laurea**
 ![studente_laurea](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/studente_laurea.png?raw=True)  
-A seguito del conseguimento di tutti gli esami presenti nel suo manifesto degli studi, lo studente può iscriversi ad una sessione di laurea. In caso provi ad accedere a tale sezione prima di aver raggiunto il requisito sopra citato, non gli sara possibile l'iscrizione.
+A seguito del conseguimento di tutti gli esami presenti nel suo manifesto degli studi, lo studente può iscriversi ad una sessione di laurea. In caso provi ad accedere a tale sezione prima di aver raggiunto il requisito sopra citato, non gli sarà possibile l'iscrizione.
 
 4. **Visualizzazione della carriera**  
 ![studente_carriera](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/studente_carriera.png?raw=True)  
@@ -422,7 +422,7 @@ Attraverso il menu dello studente, limitato, sarà concesso di:
 ![exstudente_carriera](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/exstudente_carriera.png?raw=True)  
 L'ex-studente puo visualizzare la carriera (non completa) per ogni corso di laurea a cui era iscritto precedentemente.
 
-2. **Visualizzazione dei corsi di laurea**
+2. **Visualizzazione dei corsi di laurea**  
 Come per lo studente iscritto, è possibile visualizzare il manifesto di studi di ciascun corso di laurea previsto nell'univerisità.
 
 ---
