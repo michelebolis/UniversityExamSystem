@@ -394,8 +394,9 @@ Attraverso il menu dello studente sarà concesso di:
 
 1. **Gestione degli esami**
 ![studente_esame](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/studente_esame.png?raw=True)  
-Lo studente può, dopo aver selezionato un insegnamento non ancora sostenuto del suo manifesto degli studi, iscriversi ad una sessione di esame se è stata fissata dal docente responsabile.  
-E' possibile anche eliminare l'iscrizione ad un esame se la data dell'esame è successiva a quella odierna.
+Lo studente può, dopo aver selezionato un insegnamento non ancora superato del suo manifesto degli studi, iscriversi ad una sessione di esame se è stata fissata dal docente responsabile.  
+E' possibile anche eliminare l'iscrizione ad un esame se la data dell'esame è successiva a quella odierna.  
+Nota: decidiamo di non consentire l'iscrizione ad un esame gia superato in quanto prevediamo un meccanismo di accettazione/rifiuto dell'esito. SE un voto viene accettato, questo diventa definitivo per la carriera dello studente.
 
 2. **Gestione degli esiti**  
 ![studente_esito](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/studente_esito.png?raw=True)  
