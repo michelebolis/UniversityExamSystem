@@ -34,7 +34,7 @@ Ad ogni ruolo sono associate diverse funzionalità ed accesso ad informazioni di
 ## Progettazione schema concettuale ER
 
 **Schema ER completo (non ristrutturato):**
-![ER](https://github.com/michelebolis/UniversityExamSystem/tree/main/documentazione/img/ER.png)  
+![ER](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/ER.png?raw=True)  
   
 - _**Utenti**_  
   Le informazioni di accesso per gli utenti della nostra base di dati vengono salvate nell'entità (generalizzazione) _utente_
@@ -91,7 +91,7 @@ _Nota : per evitare di avere come chiave primaria una chiave composta da matrico
 
 ---
 **Schema ER completo (ristrutturato)**
-![ER_ristrutturato](img/ER_ristrutturato.png)  
+![ER_ristrutturato](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/ER_ristrutturato.png?raw=True)  
 Ristrutturando l'ER, lascio nell'entità _utente_ gli attributi comuni della generalizzazione. Elimino l'entità _segreteria_, in quanto non aveva piu alcun attributo, mentre l'entità _docente_ rimane e conserva i suoi due campi specifici utilizzando come chiave primaria la chiave esterna di utente, _IDUtente_ rinominandola IDDocente.
 
 L'entità _studente_ invece, non sarà piu direttamente relazionata con utente, ma passerà per _matricola_ utilizzando la chiave primaria, matricola, per comporre la propria primaria congiuntamente ad IDCorso.  
@@ -205,7 +205,7 @@ _Nota_ : l'entità esito è associata con l'entità matricola in modo tale che a
 
 ## Realizzazione database: uni
 
-![ER_db](img/ER_db.png)  
+![ER_db](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/ER_db.png?raw=True)  
 Dal punto di vista implementativo della base di dati, ho scelto di inserire due viste materializzate per motivi di ottimizzazione aggiornandole attraverso trigger.  
 In particolare:
 
@@ -326,10 +326,10 @@ Nel caso in cui non ci siano errori, non viene visualizzato il form ma un messag
 
 - ### Login  
 
-![login](img/login.png)
+![login](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/login.png?raw=True)
 All'avvio sarà necessario effettuare con la propria email e password. Se le credenziali non risultano nel database, viene visualizzato in messaggio di errore.
 Nel caso invece l'accesso sia eseguito correttamente, vengono settate due variabili di sessione per conservare l'id dell'utente e il suo ruolo, in base al quale verranno caricate le successive interfacce. Per ciascun utente vengono visualizzate nella pagina iniziata le informazioni biografiche contenute in _utente_.  
-![cambio_credenziali](img/cambio_credenziali.png)
+![cambio_credenziali](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/cambio_credenziali.png?raw=True)
 Si potrà eventualmente cambiare le credenziali di accesso dall'apposita opzione nel menu.  
 E' anche possibile effettuare in qualsiasi momento effettuare il logout, che toglierà le variabili di sessione, viasualizzando nuovamente la schermata di login.  
 Nota: le credenziali degli utenti predisposti nel file di esempio sono presenti in _credenziali.md_.
@@ -338,75 +338,75 @@ Analizziamo le possibilità offerte per ciascun utente:
 
 - ### Segreteria
 
-![segreteria_home](img/segreteria_home.png)
+![segreteria_home](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_home.png?raw=True)
 Attraverso il menu della segreteria sarà concesso di:  
 
 1. **La gestione dei corsi di laurea**  
-![segreteria_corsi](img/segreteria_corsi.png)
-![segreteria_corsi2](img/segreteria_corsi2.png)
+![segreteria_corsi](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_corsi.png?raw=True)
+![segreteria_corsi2](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_corsi2.png?raw=True)
 L'utente della segreteria può inserire nuovi corsi di laurea ed aggiungere nel manifesto degli insegnamenti di un corso di laurea un insegnamento.
 Per far ciò sarà però necessario che siano presenti degli insegnamenti.
 
 2. **La gestione degli insegnamenti**
-![segreteria_insegnamenti](img/segreteria_insegnamenti.png)
+![segreteria_insegnamenti](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_insegnamenti.png?raw=True)
 Come nel punto precedente, la segreteria potrà aggiungere nuovi insegnamenti, specificando eventualmente il docente responsabile.  
 E' possibile poi inserire la propedeuticità di un insegnamento rispetto ad un altro e cambiare il docente responsabile di un insegnamento.
 
 3. **La gestione degli utenti**
-![segreteria_utenti](img/segreteria_utenti.png)
+![segreteria_utenti](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_utenti.png?raw=True)
 Gli utenti della segreteria sono gli unici ad avere la capacità di inserire nuovi utenti nella base di dati, in particolare altri utenti della segreteria, un nuovo studente o un nuovo docente. E' quindi prima necessario il ruolo dell'utente che si sta per aggiungere. Verranno poi caricate caricate le informazioni da inserire in base al ruolo selezionato.  
 Chiaramente inizialmente sarà necessario avere un utente della segreteria nella base di dati per permettere di aggiungerne altre dall'applicativo: ho previsto quindi, nel dump del database vuoto, un utente segreteria _admin_.
 Nota: nell'inserimento di un nuovo studente viene visualizzato un errore se il corso di laurea a cui si sta iscrivendo non ha ancora insegnamenti nel manifesto degli studi.  
 Oltre ad inserire nuovi utenti, possono anche eseguire la rinuncia agli studi degli studenti, selezionandoli da un apposita select.
 
 4. **La gestione delle lauree**
-![segreteria_lauree](img/segreteria_lauree.png)
-![segreteria_lauree1](img/segreteria_lauree1.png)
+![segreteria_lauree](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_lauree.png?raw=True)
+![segreteria_lauree1](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_lauree1.png?raw=True)
 Le sessioni di laurea non sono associate ad alcun docente, quindi sono gestite dalla segreteria che aggiunge nuove sessione di laurea per un corso di laurea in una data. Successivamente procederà a registrarne l'esito per gli iscritti.
 
 5. **La visualizzazione delle carriere**  
-![segreteria_carriere](img/segreteria_carriere.png)
-![segreteria_carriere1](img/segreteria_carriere1.png)
+![segreteria_carriere](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_carriere.png?raw=True)
+![segreteria_carriere1](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_carriere1.png?raw=True)
 La segreteria è infine in grado di visualizzare le carriere di ogni studente, in particolare quella completa conterrà anche gli esami non superati/rifiutati/senza valutazione mentre l'altra conterrà solo gli esami con esito positivo accettato.
-![segreteria_carriere2](img/segreteria_carriere2.png)
+![segreteria_carriere2](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_carriere2.png?raw=True)
 E' inoltre possibile visualizzare la carriera (non completa) di tutti gli studenti di un corso di laurea.
 
 - ### Docente  
 
-![docente_home](img/docente_home.png)
+![docente_home](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/docente_home.png?raw=True)
 Oltre alle informazioni di base, vengono visualizzati i prossimi esami in programma per il docente.
 Attraverso il menu del docente sarà concesso di:  
 
 1. **Gestione degli esami**
-![docente_esame](img/docente_esame.png)
+![docente_esame](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/docente_esame.png?raw=True)
 Il docente responsabile del corso deve inserire le sessioni di laurea per gli insegnamenti di cui è responsabile in modo tale che gli studenti si possano iscrivere.
 2. **Gestione degli esiti**
-![docente_esito](img/docente_esito.png)
-![docente_esito1](img/docente_esito1.png)
+![docente_esito](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/docente_esito.png?raw=True)
+![docente_esito1](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/docente_esito1.png?raw=True)
 Il docente dovrà poi, in una data successiva a quella della sessione di esame, registrare gli esiti degli studenti iscritti, selezionandoli dall'apposita select.  
 Oltre all'inserimento del voto, sarà possibile registrare il ritiri dello studente dall'esame con l'apposita spunta (eventuali altri valori inseriti negli altri text verranno ignorati).
 
 - ### Studente
 
-![studente_home](img/studente_home.png)  
+![studente_home](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/studente_home.png?raw=True)  
 Oltre alle informazioni di base, vengono visualizzati i prossimi esami in programma a cui si è iscritto lo steudente. Vengono inoltre mostrate le statistiche dello studente per il corso di laurea a cui è iscritto: media, numero di crediti ottenuti ed esami passati.  
 Attraverso il menu dello studente sarà concesso di:  
 
 1. **Gestione degli esami**
-![studente_esame](img/studente_esame.png)  
+![studente_esame](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/studente_esame.png?raw=True)  
 Lo studente può, dopo aver selezionato un insegnamento non ancora sostenuto del suo manifesto degli studi, iscriversi ad una sessione di esame se è stata fissata dal docente responsabile.  
 E' possibile anche eliminare l'iscrizione ad un esame se la data dell'esame è successiva a quella odierna.
 
 2. **Gestione degli esiti**  
-![studente_esito](img/studente_esito.png)  
+![studente_esito](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/studente_esito.png?raw=True)  
 Lo studente, dopo essersi iscritto a una sessione di esame per un insegnamento, se il suo esito risulta in attesa di accettazione (quindi con un voto maggiore o uguale di 18), potrà accettare o meno tale esito.
 
 3. **Gestione della laurea**
-![studente_laurea](img/studente_laurea.png)  
+![studente_laurea](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/studente_laurea.png?raw=True)  
 A seguito del conseguimento di tutti gli esami presenti nel suo manifesto degli studi, lo studente può iscriversi ad una sessione di laurea. In caso provi ad accedere a tale sezione prima di aver raggiunto il requisito sopra citato, non gli sara possibile l'iscrizione.
 
 4. **Visualizzazione della carriera**  
-![studente_carriera](img/studente_carriera.png)  
+![studente_carriera](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/studente_carriera.png?raw=True)  
 Anche per lo studente, come in precedenza per la segreteria, è prevista un'interfaccia per visualizzare la sua carriera completa e non oppure la sua carriera di un corso di laurea precedente.
 
 5. **Visualizzazione dei corsi di laurea**  
@@ -414,12 +414,12 @@ Infine lo studente può visualizzare il manifesto di studi di ciascun corso di l
 
 - ### Caso particolare: ex-studente
 
-![exstudente_home](img/exstudente_home.png)  
+![exstudente_home](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/exstudente_home.png?raw=True)  
 Consentiamo l'accesso all'applicativo web anche agli ex-studente in modo tale che possano reperire le loro informazioni. Nella home vediamo, per esempio, l'esito della laurea conseguita in passato (se non si è laureato ma ha solo fatto la rinuncia agli studi, non sarà visualizzata).  
 Attraverso il menu dello studente, limitato, sarà concesso di:  
 
 1. **Visualizzazione della carriera**
-![exstudente_carriera](img/exstudente_carriera.png)  
+![exstudente_carriera](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/exstudente_carriera.png?raw=True)  
 L'ex-studente puo visualizzare la carriera (non completa) per ogni corso di laurea a cui era iscritto precedentemente.
 
 2. **Visualizzazione dei corsi di laurea**
