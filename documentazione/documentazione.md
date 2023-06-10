@@ -34,7 +34,7 @@ Ad ogni ruolo sono associate diverse funzionalità ed accesso ad informazioni di
 ## Progettazione schema concettuale ER
 
 **Schema ER completo (non ristrutturato):**
-![ER](img/ER.png)  
+![ER](https://github.com/michelebolis/UniversityExamSystem/tree/main/documentazione/img/ER.png)  
   
 - _**Utenti**_  
   Le informazioni di accesso per gli utenti della nostra base di dati vengono salvate nell'entità (generalizzazione) _utente_
