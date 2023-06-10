@@ -223,7 +223,7 @@ In particolare:
 
 ## Funzionalità realizzate
 
-L'elenco delle funzioni, procedure e trigger creati è presente per intero sia nel dump del database [uni_empty_dump.sql](https://github.com/michelebolis/UniversityExamSystem/tree/main/uni_empty_dump.sql) che nelle documentazioni specifiche:  
+L'elenco delle funzioni, procedure e trigger creati è presente per intero sia nel dump del database [uni_empty_dump.sql](https://github.com/michelebolis/UniversityExamSystem/blob/main/progetto/db/uni_empty_dump.sql) che nelle documentazioni specifiche:  
 
 - [doc_function](https://github.com/michelebolis/UniversityExamSystem/tree/main/documentazione/doc_function.md)  
 - [doc_trigger](https://github.com/michelebolis/UniversityExamSystem/tree/main/documentazione/doc_trigger.md)  
