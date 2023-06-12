@@ -69,7 +69,7 @@
         if (!is_null($err)){
             printform($err);
         }else{
-            echo 'Responsabile cambiato correttamente';
+            echo '<div class="home_element col-6 offset-1">Responsabile cambiato correttamente</div>';
         }
     }else{
         printform(null);

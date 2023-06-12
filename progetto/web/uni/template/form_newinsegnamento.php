@@ -8,7 +8,7 @@
                 <label for="docente" class="form-label">Docente</label>
                 <select name="docente" id="docente" class="form-select">
                     <?php
-                    echo '<option value='. null ;
+                    echo '<option value="'. null . '"' ;
                     if (isset($_POST['docente']) && $_POST['docente']=='null'){
                         echo ' selected';
                     }
@@ -81,7 +81,11 @@
         if ($descrizione==""){
             $descrizione=null;
         }
-        $err=insert_insegnamento($_POST['docente'],$_POST['nome'],$descrizione,$_POST['crediti'], $_POST['anno']);
+        $doc = $_POST['docente'];
+        if ($doc==''){
+            $doc = null;
+        }
+        $err=insert_insegnamento($doc,$_POST['nome'],$descrizione,$_POST['crediti'], $_POST['anno']);
         if (!is_null($err)){
             printform($err);
         }else{
