@@ -1,5 +1,5 @@
 <?php
-    include_once($_SERVER['DOCUMENT_ROOT'].'/xampp/uni/lib/connection.php');
+    include_once('lib/connection.php');
     function registrazione_esito_laurea($matricola, $corso, $data, $incremento, $lode){
         $conn = connect();
         if (!$conn) {

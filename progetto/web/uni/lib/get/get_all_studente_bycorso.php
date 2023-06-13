@@ -1,5 +1,5 @@
 <?php
-    include_once($_SERVER['DOCUMENT_ROOT'].'/xampp/uni/lib/connection.php');
+    include_once('lib/connection.php');
     function get_all_studente_bycorso($corso){
         $conn = connect();
         if (!$conn) {

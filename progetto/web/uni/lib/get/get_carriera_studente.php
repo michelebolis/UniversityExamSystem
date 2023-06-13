@@ -1,5 +1,5 @@
 <?php
-    include_once($_SERVER['DOCUMENT_ROOT'].'/xampp/uni/lib/connection.php');
+    include_once('lib/connection.php');
     function get_carriera_studente($matricola){
         $conn = connect();
         if (!$conn) {
