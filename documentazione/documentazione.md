@@ -338,7 +338,7 @@ Analizziamo le possibilità offerte per ciascun utente:
 
 - ### Segreteria
 
-![segreteria_home](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_home.png?raw=True)
+![segreteria_home](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_homev2.png?raw=True)
 Attraverso il menu della segreteria sarà concesso di:  
 
 1. **La gestione dei corsi di laurea**  
