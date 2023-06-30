@@ -326,6 +326,13 @@ Parametri:
 
 ---
 
+- **uni.get_past_insegnamento_bydoc**: restituisce le informazioni di tutti gli insegnamenti passati di un docente  
+RETURNS ROWS: iddocente, idinsegnamento, nome, crediti, annoinizio, annofine
+Parametri:  
+  - the_iddocente integer
+  
+---
+
 - **uni.get_manifesto**: restituisce gli insegnamenti presenti nel manifesto degli studi di un corso di laurea  
 RETURNS ROWS: idcorso, idinsegnamento, anno  
 Parametri:
@@ -350,6 +357,13 @@ Parametri:
 - **uni.get_all_insegnamento**: restituisce le informazioni di tutti gli insegnamenti  
 RETURNS ROWS: idinsegnamento, iddocente, nome, descrizione, crediti, annoattivazione  
 Parametri:
+  - Nessuno
+
+---
+
+- **uni.get_all_past_insegnamento**: restituisce le informazioni di tutti gli insegnamenti passati  
+RETURNS ROWS: iddocente, idinsegnamento, nome, crediti, annoinizio, annofine
+Parametri:  
   - Nessuno
 
 ---

@@ -15,7 +15,7 @@
             <div class="list-group col-3">
                 <a aria-current="true" class="list-group-item list-group-item-action 
                 <?php 
-                    if (!isset($_GET['prope']) && !isset($_GET['responsabile']) && !isset($_GET['allInsegnamento'])){
+                    if (!isset($_GET['prope']) && !isset($_GET['responsabile']) && !isset($_GET['allInsegnamento']) && !isset($_GET['past'])){
                         echo "active";
                     }
                 ?>
@@ -51,6 +51,15 @@
                 " href="insegnamento.php?allInsegnamento=True">
                     Visualizza tutti gli insegnamenti
                 </a>
+                <a aria-current="true" class="list-group-item list-group-item-action 
+                <?php 
+                    if (isset($_GET['past'])){
+                        echo "active";
+                    }
+                ?>
+                " href="insegnamento.php?past=True">
+                    Visualizza tutti gli insegnamenti passati
+                </a>
             </div>
             <?php 
                 if (isset($_GET['prope']) && $_GET['prope']=='True'){
@@ -59,6 +68,8 @@
                     include_once('template/form_responsabile.php');
                 }else if(isset($_GET['allInsegnamento'])){
                     include_once('template/form_allInsegnamento.php');
+                }else if(isset($_GET['past'])){
+                    include_once('template/form_allPastInsegnamento.php');
                 }else{
                     include_once('template/form_newinsegnamento.php');
                 }

@@ -823,6 +823,34 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- get_all_past_insegnamento: restituisce le informazioni di tutti gli insegnamenti passati
+-- ROW: iddocente, idinsegnamento, nome, crediti, annoinizio, annofine
+CREATE OR REPLACE FUNCTION uni.get_all_past_insegnamento()
+RETURNS SETOF uni.storico_insegnamento AS $$
+DECLARE insegnamento uni.storico_insegnamento%ROWTYPE;
+BEGIN
+    FOR insegnamento IN
+        SELECT * FROM uni.storico_insegnamento 
+    LOOP
+    	RETURN NEXT insegnamento;
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
+-- get_past_insegnamento_bydoc: restituisce le informazioni di tutti gli insegnamenti passati di un docente
+-- ROW: iddocente, idinsegnamento, nome, crediti, annoinizio, annofine
+CREATE OR REPLACE FUNCTION uni.get_past_insegnamento_bydoc(the_iddocente integer)
+RETURNS SETOF uni.storico_insegnamento AS $$
+DECLARE insegnamento uni.storico_insegnamento%ROWTYPE;
+BEGIN
+    FOR insegnamento IN
+        SELECT * FROM uni.storico_insegnamento WHERE iddocente=the_iddocente
+    LOOP
+    	RETURN NEXT insegnamento;
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
 -- get_all_insegnamento_mancante: restituisce gli identificativi degli insegnamenti mancanti ad una matricola
 -- ROW: idinsegnamento
 CREATE OR REPLACE FUNCTION uni.get_all_insegnamento_mancante(the_matricola char(6))

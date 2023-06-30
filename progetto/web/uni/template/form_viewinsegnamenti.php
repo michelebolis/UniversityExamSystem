@@ -6,7 +6,7 @@
         echo '<h4>Nessun insegnamento di cui è responsabile</h4>';
     }else{
     ?>
-    <h4>Elenco insegnamenti</h4>
+    <h4>Elenco insegnamenti di cui è responsabile <?php echo $info['nome'] . " " . $info['cognome']  ?></h4>
         <table class="table table-striped">
         <thead>
             <th>Insegnamento</th>

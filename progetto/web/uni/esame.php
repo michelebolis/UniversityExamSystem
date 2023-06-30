@@ -16,7 +16,7 @@
             <div class="list-group col-3 ">
                 <a aria-current="true" class="list-group-item list-group-item-action 
                 <?php
-                if(!isset($_GET['next']) && !isset($_GET['insegnamenti'])){
+                if(!isset($_GET['next']) && !isset($_GET['insegnamenti']) && !isset($_GET['past'])){
                     echo 'active';
                 }
                 ?>" href="esame.php">
@@ -38,12 +38,22 @@
                 ?>" href="esame.php?insegnamenti=True">
                 Visualizza gli insegnamenti di cui è responsabile
                 </a>
+                <a aria-current="true" class="list-group-item list-group-item-action 
+                <?php
+                if(isset($_GET['past'])){
+                    echo 'active';
+                }
+                ?>" href="esame.php?past=True">
+                Visualizza gli insegnamenti passati di cui eri responsabile
+                </a>
             </div>
             <?php 
                 if(isset($_GET['next'])){
                     include_once('template/form_viewiscritti.php');
                 }else if(isset($_GET['insegnamenti'])){
                     include_once('template/form_viewinsegnamenti.php');
+                }else if(isset($_GET['past'])){
+                    include_once('template/form_pastInsegnamento_bydoc.php');
                 }else{
                     include_once('template/form_newexam.php');
                 }
