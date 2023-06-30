@@ -67,7 +67,7 @@
         if (!is_null($err)){
             printform($err);
         }else{
-            echo 'Iscrizione all esame eseguita correttamente';
+            echo '<div class="home_element col-6 offset-1">Iscrizione all esame eseguita correttamente</div>';
         }
         
     }else{

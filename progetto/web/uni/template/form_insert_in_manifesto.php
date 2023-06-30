@@ -86,9 +86,7 @@
         if (!is_null($err)){
             printform($err);
         }else{
-            echo '<div class="home_element col-6 offset-1">
-            Insegnamento inserito correttamente nel manifesto del corso di laurea
-            </div>';
+            echo '<div class="home_element col-6 offset-1">Insegnamento inserito correttamente nel manifesto del corso di laurea</div>';
         }
     }else{
         printform(null);

@@ -84,7 +84,7 @@
         if (!is_null($err)){
             printform($err);
         }else{
-            echo 'Esito inserito correttamente';
+            echo '<div class="home_element col-6 offset-1">Esito inserito correttamente</div>';
         }
         
     }else{
