@@ -84,7 +84,7 @@ RETURNS NOTHING
 Parametri:  
   - the_matricola char(6),  
   - the_IDCorso varchar(20),  
-  - dataImmatricolazione date,  
+  - dataiscrizione date,  
   - new_email varchar(100),  
   - password varchar(32),  
   - cellulare varchar(20)  
@@ -101,7 +101,8 @@ Parametri:
   - cellulare varchar(20),
   - the_codiceFiscale varchar(16),
   - the_IDCorso varchar(20),
-  - dataImmatricolazione date  
+  - dataiscrizione date  
+  - dataiimmatricolazione date  
 EXCEPTION SE il corso di laurea a cui si sta iscrivendo non ha ancora nessun insegnamento associato
 
 ---
@@ -272,7 +273,7 @@ Parametri:
 ---
 
 - **uni.get_studente_bio**: restituisce le informazioni biografiche di uno studente data la sua matricola e il corso di laurea a cui è iscritto  
-RETURNS ROW: matricola, nome, cognome, email, cellulare, idcorso, dataImmatricolazione  
+RETURNS ROW: matricola, nome, cognome, email, cellulare, idcorso, dataIscrizione, dataImmatricolazione  
 Parametri:
   - the_matricola varchar(6),
   - the_corso varchar(20)
@@ -280,7 +281,7 @@ Parametri:
 ---
 
 - **uni.get_studente_bio**: restituisce le informazioni biografiche di uno studente dato il suo identificativo come utente  
-RETURNS ROW: matricola, nome, cognome, email, cellulare, idcorso, dataImmatricolazione  
+RETURNS ROW: matricola, nome, cognome, email, cellulare, idcorso, dataIscrizione, dataImmatricolazione  
 Parametri:
   - the_idutente integer
 
@@ -294,7 +295,7 @@ Parametri:
 ---
 
 - **get_exstudente_bio**: permette di recuperare le informazioni di un ex studente  
-RETURN ROW: matricola, idcorso, dataimmatricolazione, datarimozione
+RETURN ROW: matricola, idcorso, dataiscrizione, datarimozione
 Parametri:
   - the_matricola char(6)
   - the_idcorso varchar(20)
@@ -365,7 +366,7 @@ Parametri:
 ---
 
 - **uni.get_all_docente**: restituisce le informazioni di tutti i docenti  
-RETURNS ROWS: iddocente, iniziorapporto, finerapporto  
+RETURNS ROWS: iddocente, iniziorapporto  
 Parametri:
   - Nessuno
 
@@ -379,14 +380,14 @@ Parametri:
 ---
 
 - **uni.get_all_studente**: restituisce le informazioni di tutti gli studenti iscritti  
-RETURNS ROWS: matricola, idcorso, dataimmatricolazione  
+RETURNS ROWS: matricola, idcorso, dataiscrizione  
 Parametri:
   - Nessuno
 
 ---
 
 - **uni.get_all_studente_bycorso**: restituisce le informazioni di tutti gli studenti iscritti ad un corso di laurea
-RETURNS ROWS: matricola, idcorso, dataimmatricolazione  
+RETURNS ROWS: matricola, idcorso, dataiscrizione  
 Parametri:
   - corso varchar(20)
 
@@ -465,7 +466,7 @@ Parametri:
 ---
 
 - **uni.get_past_corso**: restiuisce i corsi di laurea a cui è stato iscritto uno studente, data la sua matricola  
-RETURNS ROWS: matricola, idcorso, dataimmatricolazione, datarimozione
+RETURNS ROWS: matricola, idcorso, dataiscrizione, datarimozione
 Parametri:
   - the_matricola varchar(20)
 
