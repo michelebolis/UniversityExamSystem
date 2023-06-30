@@ -49,7 +49,8 @@ CREATE TABLE uni.utente(
     cognome varchar(50) NOT NULL CHECK(cognome!=''),
     email varchar(100) NOT NULL UNIQUE CHECK(email!='' AND email LIKE '%@%'),
     password varchar(32) NOT NULL CHECK(password!=''),
-    cellulare varchar(20) NOT NULL CHECK(cellulare!='')
+    cellulare varchar(20) NOT NULL CHECK(cellulare!=''),
+    codiceFiscale varchar(16) NOT NULL UNIQUE CHECK(codiceFiscale!='')
 );
 
 CREATE TABLE uni.corso_laurea(
@@ -62,8 +63,7 @@ CREATE TABLE uni.corso_laurea(
 
 CREATE TABLE uni.docente(
     IDDocente integer PRIMARY KEY REFERENCES uni.utente(IDUtente),
-    inizioRapporto date DEFAULT CURRENT_DATE,
-    fineRapporto date DEFAULT NULL
+    inizioRapporto date DEFAULT CURRENT_DATE
 );
 
 CREATE TABLE uni.insegnamento(
@@ -75,16 +75,16 @@ CREATE TABLE uni.insegnamento(
     annoAttivazione integer NOT NULL CHECK(annoAttivazione>0)
 );
 
-CREATE TABLE uni.matricola(
+CREATE TABLE uni.immatricolazione(
     matricola char(6) PRIMARY KEY,
     IDUtente integer REFERENCES uni.utente(IDUtente) ON DELETE CASCADE NOT NULL UNIQUE,
-    codiceFiscale varchar(16) NOT NULL UNIQUE CHECK(codiceFiscale!='')
+    dataImmatricolazione date NOT NULL DEFAULT CURRENT_DATE
 );
 
 CREATE TABLE uni.studente(
     IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso) ON DELETE CASCADE,
-    matricola char(6) REFERENCES uni.matricola(matricola) ON DELETE CASCADE UNIQUE,
-    dataImmatricolazione date NOT NULL DEFAULT CURRENT_DATE,
+    matricola char(6) REFERENCES uni.immatricolazione(matricola) ON DELETE CASCADE UNIQUE,
+    dataIscrizione date NOT NULL DEFAULT CURRENT_DATE,
     PRIMARY KEY (IDCorso, matricola)
 );
 
@@ -95,7 +95,7 @@ CREATE TABLE uni.sessione_laurea(
 );
 
 CREATE TABLE uni.laurea(
-    matricola char(6) REFERENCES uni.matricola(matricola) ON DELETE CASCADE,
+    matricola char(6) REFERENCES uni.immatricolazione(matricola) ON DELETE CASCADE,
     data date,
     IDCorso varchar(20),
     voto uni.votoLaurea DEFAULT NULL,
@@ -124,9 +124,9 @@ CREATE TABLE uni.storico_insegnamento(
 );
 
 CREATE TABLE uni.storico_studente(
-    matricola char(6) REFERENCES uni.matricola(matricola) ON DELETE CASCADE,
+    matricola char(6) REFERENCES uni.immatricolazione(matricola) ON DELETE CASCADE,
     IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso) ON DELETE CASCADE,
-    dataImmatricolazione date NOT NULL,
+    dataIscrizione date NOT NULL,
     dataRimozione date NOT NULL DEFAULT CURRENT_DATE,
     PRIMARY KEY(matricola, IDCorso)
 );
@@ -152,12 +152,14 @@ CREATE TABLE uni.manifesto_insegnamenti(
 );
 
 CREATE TABLE uni.esito(
-    matricola char(6) REFERENCES uni.matricola(matricola) ON DELETE CASCADE,
+    matricola char(6),
+    IDCorso varchar(20),
     IDEsame integer REFERENCES uni.esame(IDEsame) ON DELETE CASCADE,
     voto uni.voto DEFAULT NULL,
     stato uni.statoEsito DEFAULT 'Iscritto',
     lode boolean DEFAULT NULL,
-    PRIMARY KEY (matricola, IDEsame)
+    FOREIGN KEY (matricola, IDCorso) REFERENCES uni.studente(matricola, IDCorso) ON DELETE CASCADE,
+    PRIMARY KEY (matricola, IDCorso, IDEsame)
 );
 
 CREATE TABLE uni.propedeuticita(
@@ -169,14 +171,14 @@ CREATE TABLE uni.propedeuticita(
 -- Inserimento delle viste
 -- studente_bio: contiene tutte le informazioni biografiche degli studenti iscritti
 CREATE OR REPLACE VIEW uni.studente_bio AS 
-	SELECT m.matricola, u.nome, u.cognome, u.email, u.cellulare, s.IDCorso, s.dataImmatricolazione
-    FROM uni.utente as u INNER JOIN uni.matricola as m ON u.IDUtente = m.IDUtente
+	SELECT m.matricola, u.nome, u.cognome, u.email, u.cellulare, u.codiceFiscale, s.IDCorso, s.dataIscrizione, m.dataImmatricolazione
+    FROM uni.utente as u INNER JOIN uni.immatricolazione as m ON u.IDUtente = m.IDUtente
 	INNER JOIN uni.studente as s ON m.matricola = s.matricola
 ;
 
 -- Inserimento viste materializzate
 CREATE TABLE uni.media_studente (
-    matricola char(6) REFERENCES uni.matricola(matricola) ON DELETE CASCADE,
+    matricola char(6) REFERENCES uni.immatricolazione(matricola) ON DELETE CASCADE,
     IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso) ON DELETE CASCADE,
     media decimal CHECK (media>=0) DEFAULT 0,
     crediti integer CHECK (crediti>=0) DEFAULT 0,
@@ -184,7 +186,7 @@ CREATE TABLE uni.media_studente (
 );
 
 CREATE TABLE uni.carriera_studente (
-    matricola char(6) REFERENCES uni.matricola(matricola) ON DELETE CASCADE,
+    matricola char(6) REFERENCES uni.immatricolazione(matricola) ON DELETE CASCADE,
     IDCorso varchar(20) REFERENCES uni.corso_laurea(IDCorso) ON DELETE CASCADE,
     IDInsegnamento integer NOT NULL,
     IDDocente integer NOT NULL,
@@ -259,17 +261,18 @@ $$ LANGUAGE plpgsql;
 
 
 -- insert_utente: permette di inserire un nuovo utente
-CREATE OR REPLACE PROCEDURE uni.insert_utente(ruolo uni.ruolo, nome varchar(50), cognome varchar(50), new_email varchar(100), password varchar(32), cellulare varchar(20)) 
+CREATE OR REPLACE PROCEDURE uni.insert_utente(ruolo uni.ruolo, nome varchar(50), cognome varchar(50), new_email varchar(100), password varchar(32), 
+cellulare varchar(20), codiceFiscale varchar(16)) 
 AS $$
 BEGIN 
-    INSERT INTO uni.utente(ruolo, nome, cognome, email, password, cellulare) 
-        VALUES (ruolo, nome, cognome, new_email, (password), cellulare);
+    INSERT INTO uni.utente(ruolo, nome, cognome, email, password, cellulare, codiceFiscale) 
+        VALUES (ruolo, nome, cognome, new_email, (password), cellulare, codiceFiscale);
 END;
 $$ LANGUAGE plpgsql;
 
 -- insert_docente: permette di inserire un nuovo docente
 CREATE OR REPLACE PROCEDURE uni.insert_docente(
-    nome varchar(50), cognome varchar(50), new_email varchar(100), password varchar(32), cellulare varchar(20), 
+    nome varchar(50), cognome varchar(50), new_email varchar(100), password varchar(32), cellulare varchar(20), codiceFiscale varchar(16),
     inizioRapporto date, 
     insegnamentoToUpdate integer
 ) 
@@ -281,10 +284,10 @@ BEGIN
     IF NOT FOUND THEN 
         RAISE EXCEPTION 'Insegnamento non trovato';
     END IF;
-    CALL uni.insert_utente('Docente', nome, cognome, new_email, password, cellulare);
+    CALL uni.insert_utente('Docente', nome, cognome, new_email, password, cellulare, codiceFiscale);
     SELECT u.IDUtente INTO newId FROM uni.utente as u WHERE u.email=new_email;
-    INSERT INTO uni.docente(IDDocente, inizioRapporto, fineRapporto) 
-        VALUES (newId, inizioRapporto, NULL);
+    INSERT INTO uni.docente(IDDocente, inizioRapporto) 
+        VALUES (newId, inizioRapporto);
     CALL uni.cambia_responsabile(insegnamentoToUpdate, newId);
 END;
 $$ LANGUAGE plpgsql;
@@ -292,12 +295,12 @@ $$ LANGUAGE plpgsql;
 -- new_matricola: restituisce la matricola da assegnare a uno nuovo studente
 -- LIMITE 999999 studenti
 CREATE OR REPLACE FUNCTION uni.new_matricola() 
-RETURNS uni.matricola.matricola%type AS $$
+RETURNS uni.immatricolazione.matricola%type AS $$
 DECLARE 
-	lastMatricola uni.matricola.matricola%TYPE;
-	newMatricola uni.matricola.matricola%TYPE;
+	lastMatricola uni.immatricolazione.matricola%TYPE;
+	newMatricola uni.immatricolazione.matricola%TYPE;
 BEGIN
-	SELECT m.matricola INTO lastMatricola FROM uni.matricola as m ORDER BY m.matricola desc;
+	SELECT m.matricola INTO lastMatricola FROM uni.immatricolazione as m ORDER BY m.matricola desc;
 	IF lastMatricola IS NULL THEN
 		RETURN '000001';
 	END IF;
@@ -336,7 +339,7 @@ $$ LANGUAGE plpgsql;
 -- cambio_corso_laurea: procedura usata internamente per iscrivere uno studente ad un nuovo corso di laurea, 
 -- recuperandone le informazioni in quanto già iscritto in precedenza
 CREATE OR REPLACE PROCEDURE uni.cambio_corso_laurea(
-    the_matricola char(6), the_IDCorso varchar(20), dataImmatricolazione date, new_email varchar(100), password varchar(32), cellulare varchar(20)
+    the_matricola char(6), the_IDCorso varchar(20), dataIscrizione date, new_email varchar(100), password varchar(32), cellulare varchar(20)
 )
 AS $$
 DECLARE 
@@ -345,11 +348,11 @@ DECLARE
     esame uni.carriera_studente_view%ROWTYPE;
 BEGIN
     -- inserisce il nuovo studente
-    INSERT INTO uni.studente(matricola, IDCorso, dataImmatricolazione)
-    VALUES (the_matricola, the_IDCorso, dataImmatricolazione);
+    INSERT INTO uni.studente(matricola, IDCorso, dataIscrizione)
+    VALUES (the_matricola, the_IDCorso, dataIscrizione);
     
     -- recupero il suo IDUtente passato
-    SELECT u.IDUtente INTO the_IDUtente FROM uni.utente as u INNER JOIN uni.matricola as m 
+    SELECT u.IDUtente INTO the_IDUtente FROM uni.utente as u INNER JOIN uni.immatricolazione as m 
     ON m.IDUtente=u.IDUtente AND m.matricola=the_matricola;
     CALL uni.modifica_utente (the_IDUtente, new_email, password, cellulare); -- Ne modifico i dati di accesso se richiesto
 
@@ -371,32 +374,37 @@ $$ LANGUAGE plpgsql;
 -- EXCEPTION SE il corso di laurea a cui si sta iscrivendo non ha ancora nessun insegnamento associato
 CREATE OR REPLACE PROCEDURE uni.insert_studente(
     nome varchar(50), cognome varchar(50), new_email varchar(100), password varchar(32), cellulare varchar(20), 
-    the_codiceFiscale varchar(16), the_IDCorso varchar(20), dataImmatricolazione date
+    the_codiceFiscale varchar(16), the_IDCorso varchar(20), dataIscrizione date, dataImmatricolazione date
 ) 
 AS $$
 DECLARE 
-    old_matricola uni.matricola.matricola%TYPE;
+    old_matricola uni.immatricolazione.matricola%TYPE;
     newId uni.utente.IDUtente%TYPE;
-    newMatricola uni.matricola.matricola%TYPE;
+    newMatricola uni.immatricolazione.matricola%TYPE;
 BEGIN 
     PERFORM * FROM uni.manifesto_insegnamenti WHERE IDCorso=the_IDCorso;
     IF NOT FOUND THEN
         RAISE EXCEPTION 'Il corso di laurea è ancora in fase di preparazione, aggiungere almeno un insegnamento al manifesto';
     END IF;
-    SELECT matricola INTO old_matricola FROM uni.matricola WHERE codiceFiscale=the_codiceFiscale;
+    SELECT m.matricola INTO old_matricola FROM uni.immatricolazione as m INNER JOIN uni.utente as u ON u.idutente=m.idutente
+    WHERE u.codiceFiscale=the_codiceFiscale;
     IF old_matricola IS NULL THEN --verifico che il codice fiscale non appartenga ad uno studente gia presente nel sistema
         -- SE non è presente nel sistema, lo creo
-        CALL uni.insert_utente('Studente', nome, cognome, new_email, password, cellulare);
+        CALL uni.insert_utente('Studente', nome, cognome, new_email, password, cellulare, the_codiceFiscale);
         SELECT * INTO newMatricola FROM uni.new_matricola();
         SELECT u.IDUtente INTO newId FROM uni.utente as u WHERE u.email=new_email;
-        INSERT INTO uni.matricola(IDUtente, matricola, codiceFiscale) 
-            VALUES (newId, newMatricola, the_codiceFiscale);
-
-	    INSERT INTO uni.studente(matricola, dataImmatricolazione, IDCorso) 
-            VALUES (newMatricola, dataImmatricolazione, the_IDCorso);
+        IF (dataImmatricolazione IS NULL) THEN 
+            INSERT INTO uni.immatricolazione(IDUtente, matricola, dataImmatricolazione) 
+            VALUES (newId, newMatricola, dataIscrizione);
+        ELSE 
+            INSERT INTO uni.immatricolazione(IDUtente, matricola, dataImmatricolazione) 
+            VALUES (newId, newMatricola, dataImmatricolazione);
+        END IF;
+	    INSERT INTO uni.studente(matricola, dataIscrizione, IDCorso) 
+            VALUES (newMatricola, dataIscrizione, the_IDCorso);
     ELSE
         -- SE è gia presente nel sistema, la sua iscrizione equivale ad un cambio di corso di laurea
-        CALL uni.cambio_corso_laurea(old_matricola, the_IDCorso, dataImmatricolazione, new_email, password, cellulare);
+        CALL uni.cambio_corso_laurea(old_matricola, the_IDCorso, dataIscrizione, new_email, password, cellulare);
         RETURN;
     END IF;
     
@@ -404,10 +412,10 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- insert_segreteria: permette di inserire un nuovo utente della segreteria date le informazioni biografiche e quelle di accesso
-CREATE OR REPLACE PROCEDURE uni.insert_segreteria(nome varchar(50), cognome varchar(50), new_email varchar(100), password varchar(32), cellulare varchar(20)) 
+CREATE OR REPLACE PROCEDURE uni.insert_segreteria(nome varchar(50), cognome varchar(50), new_email varchar(100), password varchar(32), cellulare varchar(20), codiceFiscale varchar(16)) 
 AS $$
 BEGIN
-    CALL uni.insert_utente('Segreteria', nome, cognome, new_email, password, cellulare);
+    CALL uni.insert_utente('Segreteria', nome, cognome, new_email, password, cellulare, codiceFiscale);
 END; 
 $$ LANGUAGE plpgsql;
 
@@ -441,12 +449,14 @@ $$ LANGUAGE plpgsql;
 
 -- iscrizione_esame: data una matricola e un identificativo di un esame, permette di iscriversi all'esame
 CREATE OR REPLACE PROCEDURE uni.iscrizione_esame(
-    matricola char(6), IDEsame integer
+    the_matricola char(6), IDEsame integer
 )
 AS $$
+DECLARE corso uni.studente.idcorso%TYPE;
 BEGIN 
-    INSERT INTO uni.esito(matricola, IDEsame, stato)
-        VALUES (matricola, IDEsame, 'Iscritto');
+    SELECT idcorso INTO corso FROM uni.studente WHERE matricola=the_matricola;
+    INSERT INTO uni.esito(matricola, IDCorso, IDEsame, stato)
+        VALUES (the_matricola, corso, IDEsame, 'Iscritto');
 END;
 $$ LANGUAGE plpgsql;
 
@@ -619,10 +629,10 @@ $$ LANGUAGE plpgsql;
 -- get_id_studente: permette di ottenere l'idutente data la matricola dello studente
 CREATE OR REPLACE FUNCTION uni.get_id_studente(the_matricola char(6))
 RETURNS integer AS $$
-DECLARE id uni.matricola.idutente%TYPE;
+DECLARE id uni.immatricolazione.idutente%TYPE;
 BEGIN
     SELECT idutente INTO id
-    FROM uni.matricola  
+    FROM uni.immatricolazione  
     WHERE matricola=the_matricola;
 	RETURN id;
 END;
@@ -660,7 +670,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- get_studente_bio: restituisce le informazioni biografiche di uno studente data la sua matricola e il corso di laurea a cui è iscritto
--- ROW: matricola, nome, cognome, email, cellulare, idcorso, dataImmatricolazione
+-- ROW: matricola, nome, cognome, email, cellulare, idcorso, dataIscrizione, dataImmatricolazione
 CREATE OR REPLACE FUNCTION uni.get_studente_bio(the_matricola varchar(6), the_corso varchar(20))
 RETURNS SETOF uni.studente_bio AS $$
 DECLARE stud uni.studente_bio%ROWTYPE;
@@ -673,13 +683,13 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- get_studente_bio: restituisce le informazioni biografiche di uno studente dato il suo identificativo come utente
--- ROW: matricola, nome, cognome, email, cellulare, idcorso, dataImmatricolazione
+-- ROW: matricola, nome, cognome, email, cellulare, idcorso, dataIscrizione, dataImmatricolazione
 CREATE OR REPLACE FUNCTION uni.get_studente_bio(the_idutente integer)
 RETURNS SETOF uni.studente_bio AS $$
 DECLARE stud uni.studente%ROWTYPE;
 BEGIN
     SELECT * INTO stud
-    FROM uni.studente as s INNER JOIN uni.matricola as m 
+    FROM uni.studente as s INNER JOIN uni.immatricolazione as m 
     ON m.matricola=s.matricola
     WHERE the_idutente=idutente;
 	RETURN NEXT uni.get_studente_bio(stud.matricola, stud.idcorso);
@@ -694,7 +704,7 @@ DECLARE stud uni.storico_studente%ROWTYPE;
 BEGIN
     FOR stud IN 
         SELECT m.matricola, idcorso 
-        FROM uni.storico_studente as s INNER JOIN uni.matricola as m 
+        FROM uni.storico_studente as s INNER JOIN uni.immatricolazione as m 
         ON m.matricola=s.matricola
         WHERE the_idutente=idutente
     LOOP
@@ -704,7 +714,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- get_exstudente_bio: permette di recuperare le informazioni di un ex studente
--- ROW: matricola, idcorso, dataimmatricolazione, datarimozione
+-- ROW: matricola, idcorso, dataIscrizione, datarimozione
 CREATE OR REPLACE FUNCTION uni.get_exstudente_bio(the_matricola char(6), the_idcorso varchar(20))
 RETURNS SETOF uni.storico_studente AS $$
 DECLARE stud uni.storico_studente%ROWTYPE;
@@ -723,9 +733,9 @@ $$ LANGUAGE plpgsql;
 -- ROW: idutente, ruolo, nome, cognome, email, password, cellulare
 CREATE OR REPLACE FUNCTION uni.get_exstudente_info(the_matricola char(6))
 RETURNS SETOF uni.utente AS $$
-DECLARE utente uni.matricola.idutente%TYPE;
+DECLARE utente uni.immatricolazione.idutente%TYPE;
 BEGIN
-    SELECT idutente INTO utente FROM uni.matricola WHERE matricola=the_matricola;
+    SELECT idutente INTO utente FROM uni.immatricolazione WHERE matricola=the_matricola;
     RETURN NEXT uni.get_utente_bio(utente);
 END;
 $$ LANGUAGE plpgsql;
@@ -846,7 +856,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- get_all_docente: restituisce le informazioni di tutti i docenti
--- ROWS: iddocente, iniziorapporto, finerapporto
+-- ROWS: iddocente, iniziorapporto
 CREATE OR REPLACE FUNCTION uni.get_all_docente()
 RETURNS SETOF uni.docente AS $$
 DECLARE docente uni.docente%ROWTYPE;
@@ -874,7 +884,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- get_all_studente: restituisce le informazioni di tutti gli studenti iscritti
--- ROWS: matricola, idcorso, dataimmatricolazione
+-- ROWS: matricola, idcorso, dataIscrizione
 CREATE OR REPLACE FUNCTION uni.get_all_studente()
 RETURNS SETOF uni.studente AS $$
 DECLARE studente uni.studente%ROWTYPE;
@@ -888,7 +898,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- get_all_studente_bycorso: restituisce le informazioni di tutti gli studenti iscritti ad un corso di laurea
--- ROW: matricola, idcorso, dataimmatricolazione
+-- ROW: matricola, idcorso, dataIscrizione
 CREATE OR REPLACE FUNCTION uni.get_all_studente_bycorso(corso varchar(20))
 RETURNS SETOF uni.studente AS $$
 DECLARE studente uni.studente%ROWTYPE;
@@ -1006,14 +1016,15 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- get_iscritti_esame: restituisce le matricole iscritte ad un esame senza ancora un esito
--- ROW: matricola
+-- ROW: matricola, idcorso
 CREATE OR REPLACE FUNCTION uni.get_iscritti_esame(the_IDEsame integer)
 RETURNS SETOF uni.esito AS $$
 DECLARE stud uni.esito%ROWTYPE;
 BEGIN
     FOR stud IN
-        SELECT matricola FROM uni.esito
+        SELECT matricola, idcorso FROM uni.esito
         WHERE IDEsame=the_IDEsame AND stato='Iscritto'
+        ORDER BY IDCorso, matricola
     LOOP
         RETURN NEXT stud;
     END LOOP;
@@ -1051,7 +1062,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- get_past_corso: restiuisce i corsi di laurea a cui è stato iscritto uno studente, data la sua matricola
--- matricola, idcorso, dataimmatricolazione, datarimozione
+-- matricola, idcorso, dataIscrizione, datarimozione
 CREATE OR REPLACE FUNCTION uni.get_past_corso(the_matricola varchar(20))
 RETURNS SETOF uni.storico_studente AS $$
 DECLARE stud uni.storico_studente%ROWTYPE;
@@ -1493,8 +1504,8 @@ DECLARE
     row_esame uni.esame%ROWTYPE;
 BEGIN 
     -- registro lo studente nello storico
-    INSERT INTO uni.storico_studente(matricola, IDCorso, dataImmatricolazione)
-        VALUES (OLD.matricola, OLD.IDCorso, OLD.dataImmatricolazione);
+    INSERT INTO uni.storico_studente(matricola, IDCorso, dataIscrizione)
+        VALUES (OLD.matricola, OLD.IDCorso, OLD.dataIscrizione);
     FOR exam IN -- per ogni esame che ha sostenuto
         SELECT * FROM uni.esito 
         WHERE matricola=OLD.matricola
@@ -1572,4 +1583,4 @@ CREATE OR REPLACE TRIGGER hash_trigger BEFORE INSERT OR UPDATE ON uni.utente
 FOR EACH ROW EXECUTE FUNCTION uni.hash();
 
 -- Inserimento base di un utente segreteria
-CALL uni.insert_segreteria('admin', '_', 'admin@uni.it', 'Admin', '0123456789');
+CALL uni.insert_segreteria('admin', '_', 'admin@uni.it', 'Admin', '0123456789', '0000000000000000');

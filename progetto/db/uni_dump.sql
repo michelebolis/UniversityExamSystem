@@ -49,7 +49,8 @@ CREATE TABLE uni.utente(
     cognome varchar(50) NOT NULL CHECK(cognome!=''),
     email varchar(100) NOT NULL UNIQUE CHECK(email!='' AND email LIKE '%@%'),
     password varchar(32) NOT NULL CHECK(password!=''),
-    cellulare varchar(20) NOT NULL CHECK(cellulare!='')
+    cellulare varchar(20) NOT NULL CHECK(cellulare!=''),
+    codiceFiscale varchar(16) NOT NULL UNIQUE CHECK(codiceFiscale!='')
 );
 
 CREATE TABLE uni.corso_laurea(
@@ -77,7 +78,6 @@ CREATE TABLE uni.insegnamento(
 CREATE TABLE uni.immatricolazione(
     matricola char(6) PRIMARY KEY,
     IDUtente integer REFERENCES uni.utente(IDUtente) ON DELETE CASCADE NOT NULL UNIQUE,
-    codiceFiscale varchar(16) NOT NULL UNIQUE CHECK(codiceFiscale!=''),
     dataImmatricolazione date NOT NULL DEFAULT CURRENT_DATE
 );
 
@@ -171,7 +171,7 @@ CREATE TABLE uni.propedeuticita(
 -- Inserimento delle viste
 -- studente_bio: contiene tutte le informazioni biografiche degli studenti iscritti
 CREATE OR REPLACE VIEW uni.studente_bio AS 
-	SELECT m.matricola, u.nome, u.cognome, u.email, u.cellulare, s.IDCorso, s.dataIscrizione, m.dataImmatricolazione
+	SELECT m.matricola, u.nome, u.cognome, u.email, u.cellulare, u.codiceFiscale, s.IDCorso, s.dataIscrizione, m.dataImmatricolazione
     FROM uni.utente as u INNER JOIN uni.immatricolazione as m ON u.IDUtente = m.IDUtente
 	INNER JOIN uni.studente as s ON m.matricola = s.matricola
 ;
@@ -261,17 +261,18 @@ $$ LANGUAGE plpgsql;
 
 
 -- insert_utente: permette di inserire un nuovo utente
-CREATE OR REPLACE PROCEDURE uni.insert_utente(ruolo uni.ruolo, nome varchar(50), cognome varchar(50), new_email varchar(100), password varchar(32), cellulare varchar(20)) 
+CREATE OR REPLACE PROCEDURE uni.insert_utente(ruolo uni.ruolo, nome varchar(50), cognome varchar(50), new_email varchar(100), password varchar(32), 
+cellulare varchar(20), codiceFiscale varchar(16)) 
 AS $$
 BEGIN 
-    INSERT INTO uni.utente(ruolo, nome, cognome, email, password, cellulare) 
-        VALUES (ruolo, nome, cognome, new_email, (password), cellulare);
+    INSERT INTO uni.utente(ruolo, nome, cognome, email, password, cellulare, codiceFiscale) 
+        VALUES (ruolo, nome, cognome, new_email, (password), cellulare, codiceFiscale);
 END;
 $$ LANGUAGE plpgsql;
 
 -- insert_docente: permette di inserire un nuovo docente
 CREATE OR REPLACE PROCEDURE uni.insert_docente(
-    nome varchar(50), cognome varchar(50), new_email varchar(100), password varchar(32), cellulare varchar(20), 
+    nome varchar(50), cognome varchar(50), new_email varchar(100), password varchar(32), cellulare varchar(20), codiceFiscale varchar(16),
     inizioRapporto date, 
     insegnamentoToUpdate integer
 ) 
@@ -283,7 +284,7 @@ BEGIN
     IF NOT FOUND THEN 
         RAISE EXCEPTION 'Insegnamento non trovato';
     END IF;
-    CALL uni.insert_utente('Docente', nome, cognome, new_email, password, cellulare);
+    CALL uni.insert_utente('Docente', nome, cognome, new_email, password, cellulare, codiceFiscale);
     SELECT u.IDUtente INTO newId FROM uni.utente as u WHERE u.email=new_email;
     INSERT INTO uni.docente(IDDocente, inizioRapporto) 
         VALUES (newId, inizioRapporto);
@@ -385,18 +386,19 @@ BEGIN
     IF NOT FOUND THEN
         RAISE EXCEPTION 'Il corso di laurea è ancora in fase di preparazione, aggiungere almeno un insegnamento al manifesto';
     END IF;
-    SELECT matricola INTO old_matricola FROM uni.immatricolazione WHERE codiceFiscale=the_codiceFiscale;
+    SELECT m.matricola INTO old_matricola FROM uni.immatricolazione as m INNER JOIN uni.utente as u ON u.idutente=m.idutente
+    WHERE u.codiceFiscale=the_codiceFiscale;
     IF old_matricola IS NULL THEN --verifico che il codice fiscale non appartenga ad uno studente gia presente nel sistema
         -- SE non è presente nel sistema, lo creo
-        CALL uni.insert_utente('Studente', nome, cognome, new_email, password, cellulare);
+        CALL uni.insert_utente('Studente', nome, cognome, new_email, password, cellulare, the_codiceFiscale);
         SELECT * INTO newMatricola FROM uni.new_matricola();
         SELECT u.IDUtente INTO newId FROM uni.utente as u WHERE u.email=new_email;
         IF (dataImmatricolazione IS NULL) THEN 
-            INSERT INTO uni.immatricolazione(IDUtente, matricola, codiceFiscale, dataImmatricolazione) 
-            VALUES (newId, newMatricola, the_codiceFiscale, dataIscrizione);
+            INSERT INTO uni.immatricolazione(IDUtente, matricola, dataImmatricolazione) 
+            VALUES (newId, newMatricola, dataIscrizione);
         ELSE 
-            INSERT INTO uni.immatricolazione(IDUtente, matricola, codiceFiscale, dataImmatricolazione) 
-            VALUES (newId, newMatricola, the_codiceFiscale, dataImmatricolazione);
+            INSERT INTO uni.immatricolazione(IDUtente, matricola, dataImmatricolazione) 
+            VALUES (newId, newMatricola, dataImmatricolazione);
         END IF;
 	    INSERT INTO uni.studente(matricola, dataIscrizione, IDCorso) 
             VALUES (newMatricola, dataIscrizione, the_IDCorso);
@@ -410,10 +412,10 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- insert_segreteria: permette di inserire un nuovo utente della segreteria date le informazioni biografiche e quelle di accesso
-CREATE OR REPLACE PROCEDURE uni.insert_segreteria(nome varchar(50), cognome varchar(50), new_email varchar(100), password varchar(32), cellulare varchar(20)) 
+CREATE OR REPLACE PROCEDURE uni.insert_segreteria(nome varchar(50), cognome varchar(50), new_email varchar(100), password varchar(32), cellulare varchar(20), codiceFiscale varchar(16)) 
 AS $$
 BEGIN
-    CALL uni.insert_utente('Segreteria', nome, cognome, new_email, password, cellulare);
+    CALL uni.insert_utente('Segreteria', nome, cognome, new_email, password, cellulare, codiceFiscale);
 END; 
 $$ LANGUAGE plpgsql;
 
@@ -1581,10 +1583,10 @@ CREATE OR REPLACE TRIGGER hash_trigger BEFORE INSERT OR UPDATE ON uni.utente
 FOR EACH ROW EXECUTE FUNCTION uni.hash();
 
 -- Inserimento base di un utente segreteria
-CALL uni.insert_segreteria('admin', '_', 'admin@uni.it', 'Admin', '0123456789');
+CALL uni.insert_segreteria('admin', '_', 'admin@uni.it', 'Admin', '0123456789', '0000000000000000');
 
 -- Esempi
-CALL uni.insert_segreteria('Giuseppe', 'Lavati', 'giuseppe.lavati@uni.it',  'Giuseppe', '370942736498');
+CALL uni.insert_segreteria('Giuseppe', 'Lavati', 'giuseppe.lavati@uni.it',  'Giuseppe', '370942736498', 'FVMDVJ29L46I705T');
 
 CALL uni.insert_corso_laurea('F1X', 'Informatica', 3, 32);
 CALL uni.insert_corso_laurea('F2X', 'Sicurezza', 3, 30);
@@ -1592,7 +1594,7 @@ CALL uni.insert_corso_laurea('F2X', 'Sicurezza', 3, 30);
 CALL uni.insert_insegnamento(NULL, 'Programmazione', NULL, 12, 2020);
 CALL uni.insert_manifesto(1, 'F1X', 1);
 CALL uni.insert_manifesto(1, 'F2X', 1);
-CALL uni.insert_docente('Paolo', 'Boldi', 'paolo.boldi@uni.it', 'Paolo', '48793624982', '07/11/2002', 1);
+CALL uni.insert_docente('Paolo', 'Boldi', 'paolo.boldi@uni.it', 'Paolo', '48793624982', 'PTPCWC59H44I805N', '07/11/2002', 1);
 
 CALL uni.insert_insegnamento(NULL, 'Basi di dati', NULL, 12, 2020);
 CALL uni.insert_manifesto(2, 'F1X', 2);
@@ -1610,8 +1612,8 @@ CALL uni.insert_insegnamento(NULL, 'Algoritmi', NULL, 12, 2020);
 CALL uni.insert_manifesto(5, 'F1X', 2);
 
 
-CALL uni.insert_docente('Stefano', 'Montanelli', 'stefano.montanelli@uni.it', 'Stefano', '03500182934', '11/12/2000', 2);
-CALL uni.insert_docente('Valerio', 'Bellandi', 'valerio.bellandi@uni.it', 'Valerio', '03500182934', '11/12/2000', 3);
+CALL uni.insert_docente('Stefano', 'Montanelli', 'stefano.montanelli@uni.it', 'Stefano', '03500182934', 'TFTFJW45D51A786R', '11/12/2000', 2);
+CALL uni.insert_docente('Valerio', 'Bellandi', 'valerio.bellandi@uni.it', 'Valerio', '03500182934', 'HRSSZW42E13H870P', '11/12/2000', 3);
 
 CALL uni.cambia_responsabile(4, 5);
 CALL uni.cambia_responsabile(5, 3);
@@ -1671,7 +1673,7 @@ CALL uni.insert_corso_laurea('R1', 'Ricamo', 3, 31);
 CALL uni.insert_insegnamento(NULL, 'Ricamo 1', NULL, 12, 2023);
 CALL uni.insert_insegnamento(NULL, 'Ricamo 2', NULL, 6, 2023);
 CALL uni.insert_manifesto(6, 'R1', 1);
-CALL uni.insert_docente('Giulia', 'Strada', 'giulia.strada@uni.it', 'Giulia', '48793624982', '08/06/2023', 6);
+CALL uni.insert_docente('Giulia', 'Strada', 'giulia.strada@uni.it', 'Giulia', '48793624982', 'BHBSKX96R14A517W', '08/06/2023', 6);
 CALL uni.insert_studente('Sara', 'Uncino', 'sara.uncino@uni.it', 'Sara', '035127911', 'DIBUJLICKUABI1', 'R1', '09/06/2023', NULL);
 
 CALL uni.insert_sessione_laurea('12/06/2023', 'R1');

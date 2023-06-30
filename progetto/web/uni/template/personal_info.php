@@ -20,4 +20,8 @@
         <td>Recapito telefonico</td>
         <td><?php echo $info['cellulare'];?></td>
     </tr>
+    <tr>
+        <td>Codice fiscale</td>
+        <td><?php echo $info['codicefiscale'];?></td>
+    </tr>
 </table>

@@ -9,6 +9,7 @@
 |                        | email                 | varchar(100) |         | NOTNULL, UNIQUE |              |
 |                        | password              | varchar(32)  |         | NOTNULL         |              |
 |                        | cellulare             | varchar(20)  |         | NOTNULL         |              |
+|                        | codiceFiscale         | varchar(16)  |         | NOTNULL, UNIQUE |              |
 |                        |                       |              |         |                 |              |
 | docente                | IDDocente             | integer      | PK, FK  |                 |              |
 |                        | inizioRapporto        | date         |         | NOTNULL         |              |
@@ -18,7 +19,6 @@
 |                        | dataIscrizione        | date         |         | NOTNULL         | CURRENT_DATE |
 |                        |                       |              |         |                 |              |
 | immatricolazione       | matricola             | varchar(6)   | PK      |                 |              |
-|                        | codiceFiscale         | varchar(16)  |         | NOTNULL, UNIQUE |              |
 |                        | dataImmatricolazione  | date         |         | NOTNULL         |              |
 |                        | IDUtente              | integer      | FK      | NOTNULL, UNIQUE |              |
 |                        |                       |              |         |                 |              |
@@ -64,7 +64,7 @@
 |                        |                       |              |         |                 |              |
 | storico_studente       | matricola             | char(6)      | PPK, FK |                 |              |
 |                        | IDCorso               | varchar(20)  | PPK, FK |                 |              |
-|                        | dataImmatricolazione  | date         |         | NOTNULL         |              |
+|                        | dataIscrizione        | date         |         | NOTNULL         |              |
 |                        | dataRimozione         | date         |         | NOTNULL         | CURRENT_DATE |
 |                        |                       |              |         |                 |              |
 | storico_esame          | IDStorico             | SERIAL       | PK      |                 |              |

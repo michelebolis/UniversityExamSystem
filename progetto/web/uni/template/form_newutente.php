@@ -68,6 +68,14 @@
                 ?>
                 >
             </div>
+            <div class="mb-2">
+                <label for="codfiscale" class="form-label">Codice fiscale</label>
+                <input type="text" id="codfiscale" class="form-control" name="codfiscale" maxlength="16"
+                <?php
+                    if ((isset($_POST['codfiscale']))){echo 'value="' . $_POST['codfiscale'] . '"';}
+                ?>
+                >
+            </div>
         <?php 
             if ($_POST['ruolo']=="Studente"){
             /* Attributi aggiuntivi per il ruolo studente */
@@ -77,14 +85,6 @@
                     echo 'Non è possibile aggiungere uno studente: non sono stati inseriti corsi di laurea';
                 }else{
         ?>
-            <div class="mb-2">
-                <label for="codfiscale" class="form-label">Codice fiscale</label>
-                <input type="text" id="codfiscale" class="form-control" name="codfiscale" maxlength="16"
-                <?php
-                    if ((isset($_POST['codfiscale']))){echo 'value="' . $_POST['codfiscale'] . '"';}
-                ?>
-                >
-            </div>
             <div class="mb-2">
                 <label for="corso" class="form-label">Corso di laurea</label>
                 <select name="corso" id="corso" class="form-select">
@@ -164,18 +164,22 @@
     }/*Fine funzione di print */
 
     if (isset($_POST['ruolo']) && isset($_POST['nome']) && isset($_POST['cognome']) && isset($_POST['email'])
-        && isset($_POST['password'])&& isset($_POST['cellulare'])){
+        && isset($_POST['password'])&& isset($_POST['cellulare']) && isset($_POST['codfiscale'])){
         if ($_POST['password']==''){ /*Controllo necessario perche l'md5 trasformerebbe il vuoto in una password non vuota */
             printform('La password non deve essere vuota');
         }else{
             switch($_POST['ruolo']){
                 case 'Segreteria': 
-                    $err=insert_segreteria($_POST['nome'],$_POST['cognome'],$_POST['email'], $_POST['password'], $_POST['cellulare']);
+                    $err=insert_segreteria($_POST['nome'],$_POST['cognome'],$_POST['email'], $_POST['password'], $_POST['cellulare'], $_POST['codfiscale']);
                     break;
                 case 'Studente':
-                    if (isset($_POST['codfiscale']) && isset($_POST['corso']) && isset($_POST['data']) && isset($_POST['imm'])){
+                    $iscrizione = $_POST['data'];
+                    if ($_POST['data']==""){$iscrizione = date("Y-m-d");}
+                    $immatricolazione = $_POST['imm'];
+                    if ($_POST['imm']==""){$immatricolazione = date("Y-m-d");}
+                    if (isset($_POST['corso']) && isset($_POST['data']) && isset($_POST['imm'])){
                         $err= insert_studente($_POST['nome'],$_POST['cognome'],$_POST['email'], $_POST['password'], 
-                                                $_POST['cellulare'], $_POST['codfiscale'], $_POST['corso'], $_POST['data'], $_POST['imm']);
+                                                $_POST['cellulare'], $_POST['codfiscale'], $_POST['corso'], $iscrizione, $immatricolazione);
                     }else{
                         printform(null);
                     }
@@ -183,7 +187,7 @@
                 case 'Docente':
                     if (isset($_POST['inizio']) && isset($_POST['insegnamento'])){
                         $err=insert_docente($_POST['nome'],$_POST['cognome'],$_POST['email'], $_POST['password'], 
-                                            $_POST['cellulare'], $_POST['inizio'], $_POST['insegnamento']);
+                                            $_POST['cellulare'], $_POST['codfiscale'], $_POST['inizio'], $_POST['insegnamento']);
                     }else{
                         printform(null);
                     }

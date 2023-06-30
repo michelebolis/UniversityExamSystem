@@ -15,7 +15,7 @@
             <div class="list-group col-3">
                 <a aria-current="true" class="list-group-item list-group-item-action 
                 <?php 
-                    if (!isset($_GET['prope']) && !isset($_GET['responsabile'])){
+                    if (!isset($_GET['prope']) && !isset($_GET['responsabile']) && !isset($_GET['allInsegnamento'])){
                         echo "active";
                     }
                 ?>
@@ -48,7 +48,7 @@
                         echo "active";
                     }
                 ?>
-                " href="corso_laurea.php?allInsegnamento=True">
+                " href="insegnamento.php?allInsegnamento=True">
                     Visualizza tutti gli insegnamenti
                 </a>
             </div>
