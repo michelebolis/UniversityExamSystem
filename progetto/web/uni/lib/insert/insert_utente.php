@@ -32,15 +32,15 @@
         pg_close($conn);
         return $err;
     }
-    function insert_studente($nome, $cognome, $email, $password, $cellulare, $codiceFiscale, $corso, $dataImmatricolazione){
+    function insert_studente($nome, $cognome, $email, $password, $cellulare, $codiceFiscale, $corso, $dataIscrizione, $dataImmatricolazione){
         $conn = connect();
         if (!$conn) {
             die;
         }
-        $sql = 'CALL uni.insert_studente($1, $2, $3, $4, $5, $6, $7, $8)';
+        $sql = 'CALL uni.insert_studente($1, $2, $3, $4, $5, $6, $7, $8, $9)';
         $res = pg_prepare($conn, "insert_studente", $sql);
         error_reporting(E_ERROR | E_PARSE);
-        if(pg_execute($conn, "insert_studente", array($nome, $cognome, $email, $password, $cellulare, $codiceFiscale, $corso, $dataImmatricolazione))){
+        if(pg_execute($conn, "insert_studente", array($nome, $cognome, $email, $password, $cellulare, $codiceFiscale, $corso, $dataIscrizione, $dataImmatricolazione))){
             $err= null;
         }else{
             $err= explode('CONTEXT',(pg_last_error($conn)))[0];            

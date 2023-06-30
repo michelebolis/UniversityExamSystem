@@ -82,7 +82,8 @@
                     Visualizza gli insegnamenti di un corso di laurea
                 </a>
                 <a aria-current="true" class="list-group-item list-group-item-action 
-                <?php 
+                <?php
+                    if (isset($exstudente)){echo "disabled";} 
                     if (isset($_GET['propedeuticita'])){
                         echo "active";
                     }

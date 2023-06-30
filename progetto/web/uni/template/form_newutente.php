@@ -102,10 +102,18 @@
                 </select>
             </div>
             <div class="mb-2">
-                <label for="data" class="form-label">Data immatricolazione</label>
+                <label for="data" class="form-label">Data iscrizione</label>
                 <input type="date" id="data" class="form-control" name="data"
                 <?php
                     if ((isset($_POST['data']))){echo 'value="' . $_POST['data'] . '"';}
+                ?>
+                >
+            </div>
+            <div class="mb-2">
+                <label for="imm" class="form-label">Data immatricolazione</label>
+                <input type="date" id="data" class="form-control" name="imm"
+                <?php
+                    if ((isset($_POST['imm']))){echo 'value="' . $_POST['imm'] . '"';}
                 ?>
                 >
             </div>
@@ -165,9 +173,9 @@
                     $err=insert_segreteria($_POST['nome'],$_POST['cognome'],$_POST['email'], $_POST['password'], $_POST['cellulare']);
                     break;
                 case 'Studente':
-                    if (isset($_POST['codfiscale']) && isset($_POST['corso']) && isset($_POST['data'])){
+                    if (isset($_POST['codfiscale']) && isset($_POST['corso']) && isset($_POST['data']) && isset($_POST['imm'])){
                         $err= insert_studente($_POST['nome'],$_POST['cognome'],$_POST['email'], $_POST['password'], 
-                                                $_POST['cellulare'], $_POST['codfiscale'], $_POST['corso'], $_POST['data']);
+                                                $_POST['cellulare'], $_POST['codfiscale'], $_POST['corso'], $_POST['data'], $_POST['imm']);
                     }else{
                         printform(null);
                     }

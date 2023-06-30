@@ -13,6 +13,7 @@
                 <th>Corso</th>
                 <th>Nome</th>
                 <th>Cognome</th>
+                <th>Data iscrizione</th>
                 <th>Data immatricolazione</th>
             </thead>
             <tbody>
@@ -25,7 +26,8 @@
                     echo '<td>' . $studente['idcorso'] . '</td>';
                     echo '<td>' . $info_studente['nome'] . '</td>';
                     echo '<td>' . $info_studente['cognome'] . '</td>';
-                    echo '<td>' . date_format(new DateTime($studente['dataimmatricolazione']), 'd/m/Y') . '</td>';
+                    echo '<td>' . date_format(new DateTime($studente['dataiscrizione']), 'd/m/Y') . '</td>';
+                    echo '<td>' . date_format(new DateTime($info_studente['dataimmatricolazione']), 'd/m/Y') . '</td>';
                 echo '</tr>';
             }
             ?>

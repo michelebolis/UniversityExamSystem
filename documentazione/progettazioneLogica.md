@@ -16,10 +16,11 @@
 |                        |                       |              |         |                 |              |
 | studente               | IDCorso               | varchar(20)  | PPK, FK |                 |              |
 |                        | matricola             | char(6)      | PPK, FK | UNIQUE          |              |
-|                        | dataImmatricolazione  | date         |         | NOTNULL         | CURRENT_DATE |
+|                        | dataIscrizione        | date         |         | NOTNULL         | CURRENT_DATE |
 |                        |                       |              |         |                 |              |
-| matricola              | matricola             | varchar(6)   | PK      |                 |              |
+| immatricolazione       | matricola             | varchar(6)   | PK      |                 |              |
 |                        | codiceFiscale         | varchar(16)  |         | NOTNULL, UNIQUE |              |
+|                        | dataImmatricolazione  | date         |         | NOTNULL         |              |
 |                        | IDUtente              | integer      | FK      | NOTNULL, UNIQUE |              |
 |                        |                       |              |         |                 |              |
 | corso_laurea           | IDCorso               | varchar(20)  | PK      |                 |              |
