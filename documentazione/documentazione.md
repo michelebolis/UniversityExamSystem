@@ -351,9 +351,12 @@ Per far ciò sarà però necessario che siano presenti degli insegnamenti.
 E' possibile visualizzare gli insegnamenti previsti per un corso di laurea con le rispettive propedeuticità e l'elenco di tutti i corsi di laurea previsti
 
 2. **La gestione degli insegnamenti**
-![segreteria_insegnamenti](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_insegnamenti.png?raw=True)
+![segreteria_insegnamenti](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_insegnamentiv2.png?raw=True)
 Come nel punto precedente, la segreteria potrà aggiungere nuovi insegnamenti, specificando eventualmente il docente responsabile.  
 E' possibile poi inserire la propedeuticità di un insegnamento rispetto ad un altro e cambiare il docente responsabile di un insegnamento.
+![segreteria_insegnamenti](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_insegnamenti2v2.png?raw=True)
+![segreteria_insegnamenti](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_insegnamenti3v2.png?raw=True)
+Infine è possibile visualizzare l'elenco di tutti gli insegnamenti erogati e di tutti gli insegnamenti erogati in passato
 
 3. **La gestione degli utenti**
 ![segreteria_utenti](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_utenti.png?raw=True)
