@@ -46,6 +46,7 @@ Parametri:
   - new_email varchar(100)
   - password varchar(32)  
   - cellulare varchar(20)
+  - codiceFiscale varchar(16)
 
 ---
 
@@ -59,6 +60,7 @@ Parametri:
   - cellulare varchar(20),
   - inizioRapporto date,
   - insegnamentoToUpdate integer
+  - codiceFiscale varchar(16)
 
 ---
 
@@ -115,6 +117,7 @@ Parametri:
   - new_email varchar(100),
   - password varchar(32),
   - cellulare varchar(20)
+  - codiceFiscale varchar(16)
 
 ---
 
@@ -244,7 +247,7 @@ Nota: SE email e password non corrispondono a nessun utente, restituisce una rig
 ---
 
 - **uni.get_utente_bio**: permette di ottenere tutti i dati dell'utente dato il suo identificativo  
-RETURNS ROW: idutente, ruolo, nome, cognome, email, password, cellulare
+RETURNS ROW: idutente, ruolo, nome, cognome, email, password, cellulare, codicefiscale
 Parametri:  
   - the_idutente integer  
 NOTA: la password è cifrata quindi non comprensibile
@@ -273,7 +276,7 @@ Parametri:
 ---
 
 - **uni.get_studente_bio**: restituisce le informazioni biografiche di uno studente data la sua matricola e il corso di laurea a cui è iscritto  
-RETURNS ROW: matricola, nome, cognome, email, cellulare, idcorso, dataIscrizione, dataImmatricolazione  
+RETURNS ROW: matricola, nome, cognome, email, cellulare, codicefiscale, idcorso, dataIscrizione, dataImmatricolazione  
 Parametri:
   - the_matricola varchar(6),
   - the_corso varchar(20)
@@ -281,7 +284,7 @@ Parametri:
 ---
 
 - **uni.get_studente_bio**: restituisce le informazioni biografiche di uno studente dato il suo identificativo come utente  
-RETURNS ROW: matricola, nome, cognome, email, cellulare, idcorso, dataIscrizione, dataImmatricolazione  
+RETURNS ROW: matricola, nome, cognome, email, cellulare, codicefiscale, idcorso, dataIscrizione, dataImmatricolazione  
 Parametri:
   - the_idutente integer
 
@@ -303,7 +306,7 @@ Parametri:
 ---
 
 - **get_exstudente_info**: permette di recuperare le informazioni personali di un ex studente  
-RETURN ROW: ROW: idutente, ruolo, nome, cognome, email, password, cellulare  
+RETURN ROW: ROW: idutente, ruolo, nome, cognome, email, password, cellulare, codicefiscale  
 Parametri:
   - the_matricola char(6)
 
