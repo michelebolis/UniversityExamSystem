@@ -368,9 +368,10 @@ Oltre ad inserire nuovi utenti, possono anche eseguire la rinuncia agli studi de
 Infine è possibile avere un elenco di tutti gli utenti di un ruolo.
 
 4. **La gestione delle lauree**
-![segreteria_lauree](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_lauree.png?raw=True)
-![segreteria_lauree1](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_lauree1.png?raw=True)
-Le sessioni di laurea non sono associate ad alcun docente, quindi sono gestite dalla segreteria che aggiunge nuove sessione di laurea per un corso di laurea in una data. Successivamente procederà a registrarne l'esito per gli iscritti.
+![segreteria_lauree](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_laureev2.png?raw=True)
+![segreteria_lauree1](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_lauree1v2.png?raw=True)
+Le sessioni di laurea non sono associate ad alcun docente, quindi sono gestite dalla segreteria che aggiunge nuove sessione di laurea per un corso di laurea in una data. Successivamente procederà a registrarne l'esito per gli iscritti.  
+In ogni momento sarà possibile avere un'elenco dei studenti che hanno preso parte ad una sessione di laurea con l'eventuale voto se questo è gia stato registrato.
 
 5. **La visualizzazione delle carriere**  
 ![segreteria_carriere](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_carriere.png?raw=True)
