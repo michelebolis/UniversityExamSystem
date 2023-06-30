@@ -374,10 +374,10 @@ Le sessioni di laurea non sono associate ad alcun docente, quindi sono gestite d
 In ogni momento sarà possibile avere un'elenco dei studenti che hanno preso parte ad una sessione di laurea con l'eventuale voto se questo è gia stato registrato.
 
 5. **La visualizzazione delle carriere**  
-![segreteria_carriere](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_carriere.png?raw=True)
-![segreteria_carriere1](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_carriere1.png?raw=True)
+![segreteria_carriere](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_carrierev2.png?raw=True)
+![segreteria_carriere1](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_carriere1v2.png?raw=True)
 La segreteria è infine in grado di visualizzare le carriere di ogni studente, in particolare quella completa conterrà anche gli esami non superati/rifiutati/senza valutazione mentre l'altra conterrà solo gli esami con esito positivo accettato.
-![segreteria_carriere2](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_carriere2.png?raw=True)
+![segreteria_carriere2](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_carriere2v2.png?raw=True)
 E' inoltre possibile visualizzare la carriera (non completa) di tutti gli studenti di un corso di laurea.
 
 - ### Docente  
