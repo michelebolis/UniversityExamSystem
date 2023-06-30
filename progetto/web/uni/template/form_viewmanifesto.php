@@ -31,7 +31,7 @@
         }else{
             ?>
     <div class="mb-3">
-        <h4>Elenco insegnamenti</h4>
+        <h4>Elenco insegnamenti di <?php echo $_POST['corso'];?></h4>
         <table class="table table-striped">
             <thead>
                 <th>Insegnamento</th>
