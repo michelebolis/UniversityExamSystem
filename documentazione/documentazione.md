@@ -382,13 +382,16 @@ E' inoltre possibile visualizzare la carriera (non completa) di tutti gli studen
 
 - ### Docente  
 
-![docente_home](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/docente_home.png?raw=True)
+![docente_home](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/docente_homev2.png?raw=True)
 Oltre alle informazioni di base, vengono visualizzati i prossimi esami in programma per il docente.  
 Attraverso il menu del docente sarà concesso di:  
 
 1. **Gestione degli esami**
-![docente_esame](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/docente_esame.png?raw=True)
-Il docente responsabile del corso deve inserire le sessioni di laurea per gli insegnamenti di cui è responsabile in modo tale che gli studenti si possano iscrivere.
+![docente_esame](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/docente_esamev2.png?raw=True)
+Il docente responsabile del corso deve inserire le sessioni d'esame per gli insegnamenti di cui è responsabile in modo tale che gli studenti si possano iscrivere.  
+Potrà visualizzare l'elenco degli studenti iscritti ad un esame prossimo e l'elenco degli insegnamenti di cui è responsabile e di cui è stato responsabile.
+![docente_esame2](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/docente_esame2v2.png?raw=True)
+
 2. **Gestione degli esiti**
 ![docente_esito](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/docente_esito.png?raw=True)
 ![docente_esito1](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/docente_esito1.png?raw=True)
