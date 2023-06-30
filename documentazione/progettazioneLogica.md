@@ -12,7 +12,6 @@
 |                        |                       |              |         |                 |              |
 | docente                | IDDocente             | integer      | PK, FK  |                 |              |
 |                        | inizioRapporto        | date         |         | NOTNULL         |              |
-|                        | fineRapporto          | date         |         |                 | NULL         |
 |                        |                       |              |         |                 |              |
 | studente               | IDCorso               | varchar(20)  | PPK, FK |                 |              |
 |                        | matricola             | char(6)      | PPK, FK | UNIQUE          |              |

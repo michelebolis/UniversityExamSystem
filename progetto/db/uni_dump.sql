@@ -62,8 +62,7 @@ CREATE TABLE uni.corso_laurea(
 
 CREATE TABLE uni.docente(
     IDDocente integer PRIMARY KEY REFERENCES uni.utente(IDUtente),
-    inizioRapporto date DEFAULT CURRENT_DATE,
-    fineRapporto date DEFAULT NULL
+    inizioRapporto date DEFAULT CURRENT_DATE
 );
 
 CREATE TABLE uni.insegnamento(
@@ -284,8 +283,8 @@ BEGIN
     END IF;
     CALL uni.insert_utente('Docente', nome, cognome, new_email, password, cellulare);
     SELECT u.IDUtente INTO newId FROM uni.utente as u WHERE u.email=new_email;
-    INSERT INTO uni.docente(IDDocente, inizioRapporto, fineRapporto) 
-        VALUES (newId, inizioRapporto, NULL);
+    INSERT INTO uni.docente(IDDocente, inizioRapporto) 
+        VALUES (newId, inizioRapporto);
     CALL uni.cambia_responsabile(insegnamentoToUpdate, newId);
 END;
 $$ LANGUAGE plpgsql;
@@ -851,7 +850,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- get_all_docente: restituisce le informazioni di tutti i docenti
--- ROWS: iddocente, iniziorapporto, finerapporto
+-- ROWS: iddocente, iniziorapporto
 CREATE OR REPLACE FUNCTION uni.get_all_docente()
 RETURNS SETOF uni.docente AS $$
 DECLARE docente uni.docente%ROWTYPE;
