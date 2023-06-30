@@ -243,8 +243,8 @@ Nota: SE email e password non corrispondono a nessun utente, restituisce una rig
 ---
 
 - **uni.get_utente_bio**: permette di ottenere tutti i dati dell'utente dato il suo identificativo  
-RETRURNS ROW:
-Parametri: idutente, ruolo, nome, cognome, email, password, cellulare
+RETURNS ROW: idutente, ruolo, nome, cognome, email, password, cellulare
+Parametri:  
   - the_idutente integer  
 NOTA: la password è cifrata quindi non comprensibile
 
@@ -290,6 +290,21 @@ Parametri:
 RETURNS ROW: matricola, idcorso
 Parametri:  
   - the_idutente integer
+
+---
+
+- **get_exstudente_bio**: permette di recuperare le informazioni di un ex studente  
+RETURN ROW: matricola, idcorso, dataimmatricolazione, datarimozione
+Parametri:
+  - the_matricola char(6)
+  - the_idcorso varchar(20)
+
+---
+
+- **get_exstudente_info**: permette di recuperare le informazioni personali di un ex studente  
+RETURN ROW: ROW: idutente, ruolo, nome, cognome, email, password, cellulare  
+Parametri:
+  - the_matricola char(6)
 
 ---
 
@@ -356,6 +371,13 @@ Parametri:
 
 ---
 
+- **get_all_segreteria**: restituisce le informazioni di tutti gli utenti della segreteria  
+RETURNS ROWS: idutente, ruolo, nome, cognome, email, password, cellulare
+Parametri:  
+  - Nessuno
+
+---
+
 - **uni.get_all_studente**: restituisce le informazioni di tutti gli studenti iscritti  
 RETURNS ROWS: matricola, idcorso, dataimmatricolazione  
 Parametri:
@@ -402,6 +424,14 @@ Parametri:
 RETURNS ROWS: matricola, idesame, voto, stato, lode
 Parametri:
   - the_matricola char(6)
+
+---
+
+- **get_all_iscritti_laurea**: restituisce le matricola iscritte ad una sessione di laurea
+RETURNS ROWS: matricola, data, idcorso, voto, incrementovoto, lode
+Parametri:  
+  - the_IDCorso varchar(20)
+  - the_data date
 
 ---
 
@@ -491,5 +521,12 @@ RETURNS boolean
 Parametri:
   - the_matricola char(6)
   - the_IDEsame integer  
+
+---
+
+- **uni.get_propedeuticita**: dato un insegnamento, restituisce gli insegnamenti propedeutici  
+RETURNS ROWS: idinsegnamento, insegnamento_richiesto
+Parametri:
+  - the_idinsegnamento integer
 
 ---

@@ -16,7 +16,7 @@
         <div class="list-group col-3">
             <a aria-current="true" class="list-group-item list-group-item-action 
             <?php 
-                if (!isset($_GET['esito'])){
+                if (!isset($_GET['esito']) && !isset($_GET['iscritti'])){
                     echo "active";
                 }
             ?>
@@ -33,11 +33,22 @@
             " href="laurea.php?esito=True">
                 Registra l'esito della laurea
             </a>
+            <a class="list-group-item list-group-item-action 
+            <?php 
+                if (isset($_GET['iscritti']) && $_GET['iscritti']=='True'){
+                    echo "active";
+                }
+            ?>
+            " href="laurea.php?iscritti=True">
+                Visualizza gli iscritti a una sessione di laurea
+            </a>
         </div>
         
             <?php 
             if (isset($_GET['esito']) && $_GET['esito']=='True'){
                 include_once('template/form_newlaurea.php'); 
+            }else if(isset($_GET['iscritti'])){
+                include_once('template/form_viewiscrittilaurea.php');
             }else{
                 include_once('template/form_newsessione.php');
             }

@@ -16,7 +16,7 @@
             <div class="list-group col-3">
                 <a aria-current="true" class="list-group-item list-group-item-action 
                 <?php 
-                    if (!isset($_GET['delete'])){
+                    if (!isset($_GET['delete']) && !isset($_GET['allSegreteria']) && !isset($_GET['allDocente']) && !isset($_GET['allStudente'])){
                         echo "active";
                     }
                 ?>
@@ -33,11 +33,44 @@
                 " href="utente.php?delete=True">
                     Cancella studente: rinuncia agli studi
                 </a>
+                <a class="list-group-item list-group-item-action 
+                <?php 
+                    if (isset($_GET['allSegreteria']) && $_GET['allSegreteria']=='True'){
+                        echo "active";
+                    }
+                ?>
+                " href="utente.php?allSegreteria=True">
+                    Visualizza tutti gli utenti della segreteria
+                </a>
+                <a class="list-group-item list-group-item-action 
+                <?php 
+                    if (isset($_GET['allDocente']) && $_GET['allDocente']=='True'){
+                        echo "active";
+                    }
+                ?>
+                " href="utente.php?allDocente=True">
+                    Visualizza tutti i docenti
+                </a>
+                <a class="list-group-item list-group-item-action 
+                <?php 
+                    if (isset($_GET['allStudente']) && $_GET['allStudente']=='True'){
+                        echo "active";
+                    }
+                ?>
+                " href="utente.php?allStudente=True">
+                    Visualizza tutti gli studenti
+                </a>
             </div>
         
             <?php 
-            if (isset($_GET['delete']) && $_GET['delete']=='True'){
+            if (isset($_GET['delete']) && $_GET['delete']=='True' && !isset($_GET['allSegreteria']) && !isset($_GET['allDocente']) && !!isset($_GET['allStudente'])){
                 include_once('template/form_deletestudente.php'); 
+            }else if(isset($_GET['allSegreteria'])){
+                include_once('template/form_allSegreteria.php'); 
+            }else if(isset($_GET['allDocente'])){
+                include_once('template/form_allDocente.php'); 
+            }else if(isset($_GET['allStudente'])){
+                include_once('template/form_allStudente.php'); 
             }else{
                 include_once('template/form_newutente.php');
             }

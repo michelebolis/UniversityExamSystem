@@ -703,6 +703,33 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- get_exstudente_bio: permette di recuperare le informazioni di un ex studente
+-- ROW: matricola, idcorso, dataimmatricolazione, datarimozione
+CREATE OR REPLACE FUNCTION uni.get_exstudente_bio(the_matricola char(6), the_idcorso varchar(20))
+RETURNS SETOF uni.storico_studente AS $$
+DECLARE stud uni.storico_studente%ROWTYPE;
+BEGIN
+    FOR stud IN 
+        SELECT * 
+        FROM uni.storico_studente 
+        WHERE matricola=the_matricola AND idcorso = the_idcorso
+    LOOP
+	    RETURN NEXT stud;
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
+-- get_exstudente_info: permette di recuperare le informazioni personali di un ex studente
+-- ROW: idutente, ruolo, nome, cognome, email, password, cellulare
+CREATE OR REPLACE FUNCTION uni.get_exstudente_info(the_matricola char(6))
+RETURNS SETOF uni.utente AS $$
+DECLARE utente uni.matricola.idutente%TYPE;
+BEGIN
+    SELECT idutente INTO utente FROM uni.matricola WHERE matricola=the_matricola;
+    RETURN NEXT uni.get_utente_bio(utente);
+END;
+$$ LANGUAGE plpgsql;
+
 -- get_laurea: restituisce eventuali lauree data una matricola
 -- ROW: matricola, data, idcorso, voto, incremento, lode
 CREATE OR REPLACE FUNCTION uni.get_laurea(the_matricola varchar(6))
@@ -819,7 +846,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- get_all_docente: restituisce le informazioni di tutti i docenti
--- ROW: iddocente, iniziorapporto, finerapporto
+-- ROWS: iddocente, iniziorapporto, finerapporto
 CREATE OR REPLACE FUNCTION uni.get_all_docente()
 RETURNS SETOF uni.docente AS $$
 DECLARE docente uni.docente%ROWTYPE;
@@ -832,8 +859,22 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- get_all_segreteria: restituisce le informazioni di tutti gli utenti della segreteria
+-- ROWS: idutente, ruolo, nome, cognome, email, password, cellulare
+CREATE OR REPLACE FUNCTION uni.get_all_segreteria()
+RETURNS SETOF uni.utente AS $$
+DECLARE segreteria uni.utente%ROWTYPE;
+BEGIN
+    FOR segreteria IN
+        SELECT * FROM uni.utente WHERE ruolo='Segreteria' 
+    LOOP
+    	RETURN NEXT segreteria;
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
 -- get_all_studente: restituisce le informazioni di tutti gli studenti iscritti
--- ROW: matricola, idcorso, dataimmatricolazione
+-- ROWS: matricola, idcorso, dataimmatricolazione
 CREATE OR REPLACE FUNCTION uni.get_all_studente()
 RETURNS SETOF uni.studente AS $$
 DECLARE studente uni.studente%ROWTYPE;
@@ -994,6 +1035,21 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- get_all_iscritti_laurea: restituisce le matricola iscritte ad una sessione di laurea
+-- ROWS: matricola, data, idcorso, voto, incrementovoto, lode
+CREATE OR REPLACE FUNCTION uni.get_all_iscritti_laurea(the_IDCorso varchar(20), the_data date)
+RETURNS SETOF uni.laurea AS $$
+DECLARE stud uni.laurea%ROWTYPE;
+BEGIN
+    FOR stud IN
+        SELECT * FROM uni.laurea
+        WHERE IDCorso=the_IDCorso AND data=the_data 
+    LOOP
+        RETURN NEXT stud;
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
 -- get_past_corso: restiuisce i corsi di laurea a cui è stato iscritto uno studente, data la sua matricola
 -- matricola, idcorso, dataimmatricolazione, datarimozione
 CREATE OR REPLACE FUNCTION uni.get_past_corso(the_matricola varchar(20))
@@ -1097,6 +1153,21 @@ BEGIN
         END LOOP;
     END LOOP;
 END;
+$$ LANGUAGE plpgsql;
+
+-- get_propedeuticita: dato un insegnamento, restituisce gli insegnamenti propedeutici
+-- ROWS: idinsegnamento, insegnamento_richiesto
+CREATE OR REPLACE FUNCTION uni.get_propedeuticita(the_idinsegnamento integer)
+RETURNS SETOF uni.propedeuticita AS $$
+DECLARE 
+    insegnamento_richiesto uni.propedeuticita%ROWTYPE;
+BEGIN
+    FOR insegnamento_richiesto IN 
+        SELECT * FROM uni.propedeuticita WHERE insegnamento=the_idinsegnamento
+    LOOP 
+        RETURN NEXT insegnamento_richiesto;
+    END LOOP;
+END; 
 $$ LANGUAGE plpgsql;
 
 -- is_iscritto: restituisce SE una matricola è iscritta o meno ad un esame

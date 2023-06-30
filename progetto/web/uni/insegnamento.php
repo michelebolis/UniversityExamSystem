@@ -42,12 +42,23 @@
                 " href="insegnamento.php?responsabile=True">
                     Cambia responsabile
                 </a>
+                <a aria-current="true" class="list-group-item list-group-item-action 
+                <?php 
+                    if (isset($_GET['allInsegnamento'])){
+                        echo "active";
+                    }
+                ?>
+                " href="corso_laurea.php?allInsegnamento=True">
+                    Visualizza tutti gli insegnamenti
+                </a>
             </div>
             <?php 
                 if (isset($_GET['prope']) && $_GET['prope']=='True'){
                     include_once('template/form_newprope.php');
                 }else if(isset($_GET['responsabile']) && $_GET['responsabile']=='True'){
                     include_once('template/form_responsabile.php');
+                }else if(isset($_GET['allInsegnamento'])){
+                    include_once('template/form_allInsegnamento.php');
                 }else{
                     include_once('template/form_newinsegnamento.php');
                 }

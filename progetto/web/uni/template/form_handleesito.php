@@ -63,7 +63,7 @@
     } /* Fine funzione di print */
     
     if (isset($_POST['esito']) && isset($_POST['accettato'])){
-        $err=accetta_esito($info['matricola'], $info['esito'],$_POST['accettato']=='SI');
+        $err=accetta_esito($info['matricola'], $_POST['esito'],$_POST['accettato']=='SI');
         if (!is_null($err)){
             printform($err);
         }else{

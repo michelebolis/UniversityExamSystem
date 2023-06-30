@@ -1,4 +1,4 @@
-<form class="col-6 offset-1" method="POST" action=<?php echo $_SERVER['PHP_SELF'].'?allCarriera=True';?>>
+<form class="col-6 offset-1" method="POST" action=<?php echo $_SERVER['PHP_SELF'].'?view_manifesto=True';?>>
 <?php
     if (!isset($_POST['corso'])){
         include_once('lib/get/get_all_corso.php');
@@ -31,11 +31,12 @@
         }else{
             ?>
     <div class="mb-3">
+        <h4>Elenco insegnamenti</h4>
         <table class="table table-striped">
             <thead>
-                <td>Insegnamento</td>
-                <td>Anno</td>
-                <td>Crediti</td>
+                <th>Insegnamento</th>
+                <th>Anno</th>
+                <th>Crediti</th>
             </thead>
             <tbody>
             <?php
@@ -51,6 +52,11 @@
             ?>
             <tbody>
         </table>
+        <h4>Elenco propedeuticità</h4>
+        <?php
+        include_once('lib/print_prope.php');
+        print_prope($_POST['corso']);
+        ?>
     </div>
             <?php
         }

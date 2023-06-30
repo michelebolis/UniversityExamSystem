@@ -14,12 +14,39 @@
     <div class="container ">
         <div class="row home-element">
             <div class="list-group col-3 ">
-                <a aria-current="true" class="list-group-item list-group-item-action active" href="esame.php">
+                <a aria-current="true" class="list-group-item list-group-item-action 
+                <?php
+                if(!isset($_GET['next']) && !isset($_GET['insegnamenti'])){
+                    echo 'active';
+                }
+                ?>" href="esame.php">
                 Inserisci una sessione d'esame
+                </a>
+                <a aria-current="true" class="list-group-item list-group-item-action 
+                <?php
+                if(isset($_GET['next'])){
+                    echo 'active';
+                }
+                ?>" href="esame.php?next=True">
+                Visualizza gli iscritti dei prossimi esami 
+                </a>
+                <a aria-current="true" class="list-group-item list-group-item-action 
+                <?php
+                if(isset($_GET['insegnamenti'])){
+                    echo 'active';
+                }
+                ?>" href="esame.php?insegnamenti=True">
+                Visualizza gli insegnamenti di cui è responsabile
                 </a>
             </div>
             <?php 
-                include_once('template/form_newexam.php');
+                if(isset($_GET['next'])){
+                    include_once('template/form_viewiscritti.php');
+                }else if(isset($_GET['insegnamenti'])){
+                    include_once('template/form_viewinsegnamenti.php');
+                }else{
+                    include_once('template/form_newexam.php');
+                }
             ?>
         </div>
     </div>
