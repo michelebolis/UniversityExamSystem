@@ -43,14 +43,26 @@
             include_once('lib/get/get_studente_bio.php');
             echo '<h4>Iscritti dell appello di ' . $info_insegnamento_esame['nome']. ' in data ' . date_format(new DateTime($info_esame['data']), 'd/m/Y') 
             . ' : ' . date_format(new DateTime($info_esame['orario']), 'H:i') . '</h4> ';
-            echo '<ul>';
+            ?>
+            <table class="table table-striped">
+                <thead>
+                    <th>Matricola</th>
+                    <th>Nome</th>
+                    <th>Cognome</th>
+                    <th>Corso di laurea</th>
+                </thead>
+            <?php
             while($studente = pg_fetch_assoc($res)){
-                $info_stud = get_studente_bio($studente['matricola']);
-                echo '<li>';
-                echo $studente['matricola'];
-                echo '</li>';
+                $info_stud = get_studente_bio($studente['matricola'], $studente['idcorso']);
+                echo '<tr>';
+                    echo '<td>' . $studente['matricola'] . '</td>';
+                    echo '<td>' . $info_stud['nome'] . '</td>';
+                    echo '<td>' . $info_stud['cognome'] . '</td>';
+                    echo '<td>' . $studente['idcorso'] . '</td>';
+                echo '</tr>';
             }
-            echo '</ul>';
+            echo '<tbody>
+            </table>';
         }
     }
 ?>
