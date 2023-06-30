@@ -39,14 +39,14 @@ Ad ogni ruolo sono associate diverse funzionalità ed accesso ad informazioni di
 - _**Utenti**_  
   Le informazioni di accesso per gli utenti della nostra base di dati vengono salvate nell'entità (generalizzazione) _utente_
 
-  In essa inoltre conserviamo le informazioni comuni a tutti gli utenti: nome, cognome e cellulare
+  In essa inoltre conserviamo le informazioni comuni a tutti gli utenti: nome, cognome, cellulare e codice fiscale
 
 - _**Docente e Segreteria**_  
-L'entità _segreteria_ non gode di attributi che la contraddistinguono mentre per il _docente_ prevediamo due attributi per conservare l'inizio e la fine del rapporto di collaborazione con l'università
+L'entità _segreteria_ non gode di attributi che la contraddistinguono mentre per il _docente_ prevediamo di conservare l'inizio del rapporto di collaborazione con l'università
 
 - _**Studente e Matricola**_  
-L'entità _studente_, che rappresenta gli studenti iscritti attualmente nell'università in un _corso di laurea_, è in relazione con l'entità _Matricola_ che contiene la matricola, con cui identifichiamo lo studente, ed il suo codice fiscale.  
-Prevediamo infatti di voler ricavare attraverso il codice fiscale, che consideriamo unico, la matricola di un ex-studente in modo tale che, nonostante non sia piu presente nell'entità _studente_, gli venga comunque riassegnata la sua precedente matricola cosicchè non si creino nuove matricole, nel caso di una nuova iscrizione ad un nuovo corso di laurea.  
+L'entità _studente_, che rappresenta gli studenti iscritti attualmente nell'università in un _corso di laurea_, è in relazione con l'entità _immatricolazione_ che contiene la matricola, con cui identifichiamo lo studente, la data in cui è avvenuta l'immatricolazione.  
+Prevediamo di voler ricavare attraverso il codice fiscale, che consideriamo unico, la matricola di un ex-studente in modo tale che, nonostante non sia piu presente nell'entità _studente_, nel caso di una nuova iscrizione ad un nuovo corso di laurea, gli venga riassegnata la sua precedente matricola cosicchè non si creino nuove matricole. In questo modo cancellando i dati da studente non precludiamo l'accesso agli ex-studenti alla base di dati.  
 
 Ipotizziamo che i dati presenti in _matricola_, _docente_ e _utente_ **NON** vengano mai cancellati
 
@@ -92,12 +92,10 @@ _Nota : per evitare di avere come chiave primaria una chiave composta da matrico
 ---
 **Schema ER completo (ristrutturato)**
 ![ER_ristrutturato](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/ER_ristrutturato.png?raw=True)  
-Ristrutturando l'ER, lascio nell'entità _utente_ gli attributi comuni della generalizzazione. Elimino l'entità _segreteria_, in quanto non aveva piu alcun attributo, mentre l'entità _docente_ rimane e conserva i suoi due campi specifici utilizzando come chiave primaria la chiave esterna di utente, _IDUtente_ rinominandola IDDocente.
+Ristrutturando l'ER, lascio nell'entità _utente_ gli attributi comuni della generalizzazione. Elimino l'entità _segreteria_, in quanto non aveva piu alcun attributo, mentre l'entità _docente_ rimane e conserva il suo campo specifico utilizzando come chiave primaria la chiave esterna di utente, _IDUtente_ rinominandola IDDocente.
 
-L'entità _studente_ invece, non sarà piu direttamente relazionata con utente, ma passerà per _matricola_ utilizzando la chiave primaria, matricola, per comporre la propria primaria congiuntamente ad IDCorso.  
-_matricola_ associerà ad ogni matricola l'identificativo dell'utente, che sarà unico nella tabella come il codice fiscale. Facendo ciò le informazioni contenute in utente sono indipendenti dal corso che segue lo studente in modo tale, che qualora venisse eliminato da _studente_, possa comunque accedere al db grazie alle credenziali conservate e associate ancora con la propria matricola.  
-
-_Nota_ : l'entità esito è associata con l'entità matricola in modo tale che abbia la chiave primaria composta da 2 attributi invece che da 3 (nel caso in cui fosse referenziata con la chiave primaria di studente)
+L'entità _studente_ invece, non sarà piu direttamente relazionata con utente, ma passerà per _immatricolazione_ utilizzando la chiave primaria, matricola, per comporre la propria primaria congiuntamente ad IDCorso.  
+_immatricolazione_ associerà ad ogni matricola l'identificativo dell'utente, che sarà unico nella tabella. Facendo ciò le informazioni contenute in utente sono indipendenti dal corso che segue lo studente in modo tale, che qualora venisse eliminato da _studente_, possa comunque accedere al db grazie alle credenziali conservate e associate ancora con la propria matricola.  
 
 ---
 
@@ -125,17 +123,17 @@ _Nota_ : l'entità esito è associata con l'entità matricola in modo tale che a
 |                        | email                 | varchar(100) |         | NOTNULL, UNIQUE |              |
 |                        | password              | varchar(32)  |         | NOTNULL         |              |
 |                        | cellulare             | varchar(20)  |         | NOTNULL         |              |
+|                        | codiceFiscale         | varchar(16)  |         | NOTNULL, UNIQUE |              |
 |                        |                       |              |         |                 |              |
 | docente                | IDDocente             | integer      | PK, FK  |                 |              |
 |                        | inizioRapporto        | date         |         | NOTNULL         |              |
-|                        | fineRapporto          | date         |         |                 | NULL         |
 |                        |                       |              |         |                 |              |
 | studente               | IDCorso               | varchar(20)  | PPK, FK |                 |              |
 |                        | matricola             | char(6)      | PPK, FK | UNIQUE          |              |
-|                        | dataImmatricolazione  | date         |         | NOTNULL         | CURRENT_DATE |
+|                        | dataIscrizione        | date         |         | NOTNULL         | CURRENT_DATE |
 |                        |                       |              |         |                 |              |
-| matricola              | matricola             | char(6)   | PK      |                 |              |
-|                        | codiceFiscale         | varchar(16)  |         | NOTNULL, UNIQUE |              |
+| immatricolazione       | matricola             | varchar(6)   | PK      |                 |              |
+|                        | dataImmatricolazione  | date         |         | NOTNULL         |              |
 |                        | IDUtente              | integer      | FK      | NOTNULL, UNIQUE |              |
 |                        |                       |              |         |                 |              |
 | corso_laurea           | IDCorso               | varchar(20)  | PK      |                 |              |
@@ -165,6 +163,7 @@ _Nota_ : l'entità esito è associata con l'entità matricola in modo tale che a
 |                        | orario                | time         |         | NOTNULL         | 12:00        |
 |                        |                       |              |         |                 |              |
 | esito                  | matricola             | char(6)      | PPK, FK |                 |              |
+|                        | IDCorso               | varchar(20)  | PPK, FK |                 |              |
 |                        | IDEsame               | integer      | PPK, FK |                 |              |
 |                        | voto                  | voto         |         |                 | NULL         |
 |                        | stato                 | statoEsito   |         |                 | In attesa    |
@@ -179,7 +178,7 @@ _Nota_ : l'entità esito è associata con l'entità matricola in modo tale che a
 |                        |                       |              |         |                 |              |
 | storico_studente       | matricola             | char(6)      | PPK, FK |                 |              |
 |                        | IDCorso               | varchar(20)  | PPK, FK |                 |              |
-|                        | dataImmatricolazione  | date         |         | NOTNULL         |              |
+|                        | dataIscrizione        | date         |         | NOTNULL         |              |
 |                        | dataRimozione         | date         |         | NOTNULL         | CURRENT_DATE |
 |                        |                       |              |         |                 |              |
 | storico_esame          | IDStorico             | SERIAL       | PK      |                 |              |
@@ -201,6 +200,7 @@ _Nota_ : l'entità esito è associata con l'entità matricola in modo tale che a
 |                        |                       |              |         |                 |              |
 | sessione_laurea        | data                  | date         | PPK     |                 |              |
 |                        | IDCorso               | varchar(20)  | PPK, FK |                 |              |
+
 ---
 
 ## Realizzazione database: uni
@@ -215,7 +215,7 @@ In particolare:
 Oltre a ciò prevedo delle viste per restituire in modo completo informazioni presenti in diverse tabelle.
 In particolare:
 
-- **uni.studente_bio**: restituisce le informazioni dello studente iscritto: la sua matricola, il nome, il cognome, la email, il cellulare, il corso a cui è iscritto e la data di immatricolazione.  
+- **uni.studente_bio**: restituisce le informazioni dello studente iscritto: la sua matricola, il nome, il cognome, la email, il cellulare, il codice fiscale, il corso a cui è iscritto e la data di immatricolazione e iscrizione.  
 - **uni.carriera_studente_view**: restituisce le informazioni contenute nella vista materializzata _uni.carriera_studente_.  
 - **uni.carriera_completa_studente**: restituisce per ogni matricola iscritta ad un corso di laurea tutti gli esami a cui è stato iscritto.
 
@@ -253,8 +253,8 @@ Per semplificare il testing delle funzionalità, è previsto un file [esempi](ht
 Per far interagire gli utenti con la base di dati, ho realizzato un applicativo Web in modo da semplificarne l'utilizzo. A seguito del login effettuato, verranno caricate diverse schermate in base al ruolo identificato.  
 Tecnologie utilizzate:  
 
-- Lato frontend ho utilizzato le classi di Bootstrap per il menu e gli elementi sottostanti ad esso congiuntamente ad un foglio di stile per aggiungere dei colori.
-- Lato backend ho utilizzato php creando funzioni con la stessa segnatura e nome di quelle create nel database, in modo tale da avere una certa coerenza. In generale le eventuali eccezioni che possono essere sollevate vengono gestite dall'utilizzatore della funzione a cui viene restituito o il risultato (nelle _get_) o eventualmente l'ultimo errore di postgres (nelle _insert_ e nelle _update_).
+- **Lato frontend** ho utilizzato le classi di Bootstrap per il menu e gli elementi sottostanti ad esso congiuntamente ad un foglio di stile per aggiungere dei colori.
+- **Lato backend** ho utilizzato php creando funzioni con la stessa segnatura e nome di quelle create nel database, in modo tale da avere una certa coerenza. In generale le eventuali eccezioni che possono essere sollevate vengono gestite dall'utilizzatore della funzione a cui viene restituito o il risultato (nelle _get_) o eventualmente l'ultimo errore di postgres (nelle _insert_ e nelle _update_).
 
 Organizzazione dei file: le pagine effettive che verranno visualizzate sono presenti nel root della directory mentre i componenti che verranno inclusi grazie php in modo dinamico sono presenti nella cartella _template_.  
 Le varie funzioni di php si trovano nella cartella _lib_ e in generale sono categorizzate in _insert_, _get_, _update_ e _delete_. Al di fuori di questa divisione, troviamo altre funzioni come quelle di connessione (_connection.php_) e di configurazione della connessione (_config.php_) che verranno incluse dalle altre in modo da connettersi al database.  
