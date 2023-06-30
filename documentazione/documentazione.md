@@ -359,11 +359,13 @@ E' possibile poi inserire la propedeuticità di un insegnamento rispetto ad un a
 Infine è possibile visualizzare l'elenco di tutti gli insegnamenti erogati e di tutti gli insegnamenti erogati in passato
 
 3. **La gestione degli utenti**
-![segreteria_utenti](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_utenti.png?raw=True)
+![segreteria_utenti](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_utentiv2.png?raw=True)
 Gli utenti della segreteria sono gli unici ad avere la capacità di inserire nuovi utenti nella base di dati, in particolare altri utenti della segreteria, un nuovo studente o un nuovo docente. E' quindi prima necessario il ruolo dell'utente che si sta per aggiungere. Verranno poi caricate le informazioni da inserire in base al ruolo selezionato.  
 Chiaramente inizialmente sarà necessario avere un utente della segreteria nella base di dati per permettere di aggiungerne altre dall'applicativo: ho previsto quindi, nel dump del database vuoto, un utente segreteria _admin_.  
 Nota: nell'inserimento di un nuovo studente viene visualizzato un errore se il corso di laurea a cui si sta iscrivendo non ha ancora insegnamenti nel manifesto degli studi.  
 Oltre ad inserire nuovi utenti, possono anche eseguire la rinuncia agli studi degli studenti, selezionandoli da un apposita select.
+![segreteria_utenti2](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_utenti2v2.png?raw=True)
+Infine è possibile avere un elenco di tutti gli utenti di un ruolo.
 
 4. **La gestione delle lauree**
 ![segreteria_lauree](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_lauree.png?raw=True)
