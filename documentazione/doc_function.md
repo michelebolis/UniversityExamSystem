@@ -451,7 +451,7 @@ Parametri:
 ---
 
 - **uni.get_iscritti_esame**: restituisce le matricole iscritte ad un esame senza ancora un esito
-RETURNS ROWS: matricola
+RETURNS ROWS: matricola, idcorso
 Parametri:
   - the_IDEsame integer
 

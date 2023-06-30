@@ -152,12 +152,14 @@ CREATE TABLE uni.manifesto_insegnamenti(
 );
 
 CREATE TABLE uni.esito(
-    matricola char(6) REFERENCES uni.immatricolazione(matricola) ON DELETE CASCADE,
+    matricola char(6),
+    IDCorso varchar(20),
     IDEsame integer REFERENCES uni.esame(IDEsame) ON DELETE CASCADE,
     voto uni.voto DEFAULT NULL,
     stato uni.statoEsito DEFAULT 'Iscritto',
     lode boolean DEFAULT NULL,
-    PRIMARY KEY (matricola, IDEsame)
+    FOREIGN KEY (matricola, IDCorso) REFERENCES uni.studente(matricola, IDCorso) ON DELETE CASCADE,
+    PRIMARY KEY (matricola, IDCorso, IDEsame)
 );
 
 CREATE TABLE uni.propedeuticita(
@@ -445,12 +447,14 @@ $$ LANGUAGE plpgsql;
 
 -- iscrizione_esame: data una matricola e un identificativo di un esame, permette di iscriversi all'esame
 CREATE OR REPLACE PROCEDURE uni.iscrizione_esame(
-    matricola char(6), IDEsame integer
+    the_matricola char(6), IDEsame integer
 )
 AS $$
+DECLARE corso uni.studente.idcorso%TYPE;
 BEGIN 
-    INSERT INTO uni.esito(matricola, IDEsame, stato)
-        VALUES (matricola, IDEsame, 'Iscritto');
+    SELECT idcorso INTO corso FROM uni.studente WHERE matricola=the_matricola;
+    INSERT INTO uni.esito(matricola, IDCorso, IDEsame, stato)
+        VALUES (the_matricola, corso, IDEsame, 'Iscritto');
 END;
 $$ LANGUAGE plpgsql;
 
@@ -1010,14 +1014,15 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- get_iscritti_esame: restituisce le matricole iscritte ad un esame senza ancora un esito
--- ROW: matricola
+-- ROW: matricola, idcorso
 CREATE OR REPLACE FUNCTION uni.get_iscritti_esame(the_IDEsame integer)
 RETURNS SETOF uni.esito AS $$
 DECLARE stud uni.esito%ROWTYPE;
 BEGIN
     FOR stud IN
-        SELECT matricola FROM uni.esito
+        SELECT matricola, idcorso FROM uni.esito
         WHERE IDEsame=the_IDEsame AND stato='Iscritto'
+        ORDER BY IDCorso, matricola
     LOOP
         RETURN NEXT stud;
     END LOOP;

@@ -49,6 +49,7 @@
 |                        | orario                | time         |         | NOTNULL         | 12:00        |
 |                        |                       |              |         |                 |              |
 | esito                  | matricola             | char(6)      | PPK, FK |                 |              |
+|                        | IDCorso               | varchar(20)  | PPK, FK |                 |              |
 |                        | IDEsame               | integer      | PPK, FK |                 |              |
 |                        | voto                  | voto         |         |                 | NULL         |
 |                        | stato                 | statoEsito   |         |                 | In attesa    |
