@@ -85,7 +85,11 @@
         if ($doc==''){
             $doc = null;
         }
-        $err=insert_insegnamento($doc,$_POST['nome'],$descrizione,$_POST['crediti'], $_POST['anno']);
+        $anno = $_POST['anno'];
+        if ($anno==''){
+            $anno = date('Y');
+        }
+        $err=insert_insegnamento($doc,$_POST['nome'],$descrizione,$_POST['crediti'], $anno);
         if (!is_null($err)){
             printform($err);
         }else{

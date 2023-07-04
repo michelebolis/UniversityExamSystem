@@ -22,15 +22,15 @@
             ?>
             <table name="esame" id="esame" class="table table-striped">
                 <thead>
-                    <td>Data</td>
-                    <td>Orario</td>
-                    <td>Insegnamento</td>
+                    <th>Data</th>
+                    <th>Orario</th>
+                    <th>Insegnamento</th>
                 </thead>
             <?php
                 while($esame = pg_fetch_assoc($res)){           
                     echo '<tr>';
                         echo '<td>' . date_format(new DateTime($esame['data']), 'd/m/Y') . '</td>';
-                        echo '<td>' . $esame['orario'] . '</td>';
+                        echo '<td>' . date_format(new DateTime($esame['orario']), 'H:i') . '</td>';
                         $insegnamento = get_insegnamento($esame['idinsegnamento']);
                         echo '<td>' . $insegnamento['nome'] . '</td>';
                     echo '</tr>';
@@ -84,7 +84,7 @@
         $res = get_laurea($info['matricola']);
         if (pg_num_rows($res)>0){
             ?>
-        <div class="col offset-1 home_element">
+        <div class="col-5 offset-2 home_element">
             <h5> Laurea/e </h5>    
             <table name="esame" id="esame" class="table table-striped">
                 <thead>
@@ -99,13 +99,19 @@
                 include_once('lib/get/get_exstudente_bio.php');
                 while($laurea = pg_fetch_assoc($res)){      
                     $corso = get_corso($laurea['idcorso']);     
-                    $info_ex = get_exstudente_bioinfo($info['matricola'], $corso['idcorso']);
+                    if (isset($exstudente)){
+                        $info_ex = get_exstudente_bioinfo($info['matricola'], $corso['idcorso']);
+                    }
                     echo '<tr>';
                         echo '<td>' . $corso['idcorso'] . ' ' . $corso['nome'] . '</td>';                 
                         echo '<td>' . $laurea['voto'];
                         if ($laurea['lode']=='t'){echo 'L';}
                         echo '</td>';
-                        echo '<td>' . date_format(new DateTime($info_ex['dataiscrizione']), 'd/m/Y') . '</td>'; 
+                        if (isset($exstudente)){
+                            echo '<td>' . date_format(new DateTime($info_ex['dataiscrizione']), 'd/m/Y') . '</td>'; 
+                        }else{
+                            echo '<td>' . date_format(new DateTime($info['dataiscrizione']), 'd/m/Y') . '</td>'; 
+                        }
                         echo '<td>' . date_format(new DateTime($laurea['data']), 'd/m/Y') . '</td>';     
                     echo '</tr>';
                 }

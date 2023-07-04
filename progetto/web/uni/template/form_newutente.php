@@ -188,8 +188,12 @@
                     break;
                 case 'Docente':
                     if (isset($_POST['inizio']) && isset($_POST['insegnamento'])){
+                        $inizio = $_POST['inizio'];
+                        if ($inizio==""){
+                            $inizio = date("d/m/Y");
+                        }
                         $err=insert_docente($_POST['nome'],$_POST['cognome'],$_POST['email'], $_POST['password'], 
-                                            $_POST['cellulare'], $_POST['codfiscale'], $_POST['inizio'], $_POST['insegnamento']);
+                                            $_POST['cellulare'], $_POST['codfiscale'], $inizio, $_POST['insegnamento']);
                     }else{
                         printform(null);
                     }

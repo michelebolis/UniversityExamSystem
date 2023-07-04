@@ -3,7 +3,7 @@
     function printform($err){
 ?>
     <form class="col-6 offset-1" method="POST" action=<?php echo $_SERVER['PHP_SELF'];?>>
-<?php if (!is_null($err)){echo $err;}
+<?php if (!is_null($err)){echo $err . '<br/>';}
         if(!isset($_POST['esame'])) {
             include_once('lib/get/get_past_exam.php');
             $res = get_past_exam($_SESSION['utente']);

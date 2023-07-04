@@ -590,7 +590,7 @@ CREATE OR REPLACE FUNCTION uni.calcola_voto_laurea(
 RETURNS decimal AS $$
 DECLARE the_media decimal; voto decimal;
 BEGIN 
-    SELECT media INTO the_media FROM uni.media_studente WHERE matricola=matricola AND IDCorso=the_IDCorso;
+    SELECT media INTO the_media FROM uni.media_studente WHERE matricola=the_matricola AND IDCorso=the_IDCorso;
     voto:=(the_media*110/30)+incremento;
     IF VOTO>=110 THEN
         RETURN 110;
@@ -974,7 +974,7 @@ RETURNS SETOF uni.sessione_laurea AS $$
 DECLARE sessione uni.sessione_laurea%ROWTYPE;
 BEGIN
     FOR sessione IN
-        SELECT * FROM uni.sessione_laurea WHERE IDCorso=the_corso
+        SELECT * FROM uni.sessione_laurea WHERE IDCorso=the_corso AND data>=CURRENT_DATE
     LOOP
     	RETURN NEXT sessione;
     END LOOP;
@@ -1009,7 +1009,7 @@ DECLARE
     info_esame uni.esame%ROWTYPE;
 BEGIN
     FOR info_esame IN
-        SELECT * FROM uni.get_all_iscrizione(the_matricola) WHERE data>CURRENT_DATE
+        SELECT * FROM uni.get_all_iscrizione(the_matricola) WHERE data>=CURRENT_DATE
     LOOP
         RETURN NEXT info_esame;
     END LOOP;
@@ -1050,10 +1050,12 @@ CREATE OR REPLACE FUNCTION uni.get_insegnamenti(the_IDDocente integer)
 RETURNS SETOF uni.insegnamento AS $$
 DECLARE insegnamento uni.insegnamento%ROWTYPE;
 BEGIN
-    SELECT * INTO insegnamento
-    FROM uni.insegnamento 
-    WHERE IDDocente=the_IDDocente;
-	RETURN NEXT insegnamento;
+    FOR insegnamento IN 
+        SELECT * FROM uni.insegnamento 
+        WHERE IDDocente=the_IDDocente
+	LOOP
+        RETURN NEXT insegnamento;
+    END LOOP;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -1081,7 +1083,7 @@ DECLARE stud uni.laurea%ROWTYPE;
 BEGIN
     FOR stud IN
         SELECT matricola FROM uni.laurea
-        WHERE IDCorso=the_IDCorso AND data=the_data AND voto=NULL
+        WHERE IDCorso=the_IDCorso AND data=the_data AND voto IS NULL
     LOOP
         RETURN NEXT stud;
     END LOOP;

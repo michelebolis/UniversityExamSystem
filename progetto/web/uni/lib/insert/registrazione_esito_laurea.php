@@ -5,7 +5,7 @@
         if (!$conn) {
             die;
         }
-        $sql = 'CALL uni.registrazione_esito_laurea($1, $2, $3, $4)';
+        $sql = 'CALL uni.registrazione_esito_laurea($1, $2, $3, $4, $5)';
         $res = pg_prepare($conn, "registrazione_esito_laurea", $sql);
         error_reporting(E_ERROR | E_PARSE);
         if(pg_execute($conn, "registrazione_esito_laurea", array($matricola, $corso, $data, $incremento, $lode))){

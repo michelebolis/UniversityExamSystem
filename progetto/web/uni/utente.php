@@ -63,7 +63,7 @@
             </div>
         
             <?php 
-            if (isset($_GET['delete']) && $_GET['delete']=='True' && !isset($_GET['allSegreteria']) && !isset($_GET['allDocente']) && !!isset($_GET['allStudente'])){
+            if (isset($_GET['delete']) && $_GET['delete']=='True'){
                 include_once('template/form_deletestudente.php'); 
             }else if(isset($_GET['allSegreteria'])){
                 include_once('template/form_allSegreteria.php'); 

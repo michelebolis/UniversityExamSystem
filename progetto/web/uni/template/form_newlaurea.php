@@ -3,7 +3,7 @@
     function printform($err){
 ?>
         <form class="col-6 offset-1" method="POST" action=<?php echo $_SERVER['PHP_SELF'] . '?esito=True';?>>
-        <?php if (!is_null($err)){echo $err;}
+        <?php if (!is_null($err)){echo $err . '<br/>';}
             if(!isset($_POST['info'])) {
                 include_once('lib/get/get_all_sessione.php');
                 $res = get_all_sessione();
@@ -32,7 +32,7 @@
             }else{
         ?>
             <label for="esame" class="form-label">Sessione di laurea</label>
-            <input id="esame" class="form-control" name="esame" type="text" readonly value=<?php echo $_POST['info'];?>>
+            <input id="esame" class="form-control" name="info" type="hidden" value=<?php echo $_POST['info'];?>>
         <?php
             include_once('lib/get/get_iscritti_laurea.php');
             $info=explode(";", $_POST['info']);
@@ -73,14 +73,14 @@
         </form>
 <?php
     }/* Fine funzione di print */
-    
-    if (isset($_POST['info']) && isset($_POST['matricola']) && isset($_POST['incremento']) && isset($_POST['lode'] )){
+
+    if (isset($_POST['info']) && isset($_POST['matricola']) && isset($_POST['incremento'])){
         $lode="false";
         if (isset($_POST['lode'])){
             $lode="true";
         }
         $info = explode(";", $_POST['info']);
-        $err=registrazione_esito_laurea($_POST['matricola'], $info[0], $info[1], $_POST['incremento'],$lode);
+        $err=registrazione_esito_laurea($_POST['matricola'], $info[0], $info[1], $_POST['incremento'], $lode);
         if (!is_null($err)){
             printform($err);
         }else{

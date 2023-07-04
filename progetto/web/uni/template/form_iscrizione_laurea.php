@@ -46,11 +46,11 @@
         echo 'Ci sono degli esami mancanti prima di poter sostenere la laurea';
         echo '</form>';
     }else if (isset($_POST['corso']) && isset($_POST['data'])){
-        $err=iscrizione_esame($info['matricola'],$_POST['data'], $_POST['corso']);
+        $err=iscrizione_laurea($info['matricola'], $_POST['data'], $_POST['corso']);
         if (!is_null($err)){
             printform($err);
         }else{
-            echo 'Iscrizione all esame eseguita correttamente';
+            echo '<div class="home_element col-6 offset-1">Iscrizione all esame eseguita correttamente</div>';
         }
     }else{
         printform(null);

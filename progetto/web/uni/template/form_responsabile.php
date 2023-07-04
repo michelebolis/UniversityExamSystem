@@ -65,7 +65,11 @@
     }/*Fine funzione di print */
     
     if (isset($_POST['insegnamento']) && isset($_POST['docente'])){
-        $err=cambia_responsabile($_POST['insegnamento'],$_POST['docente']);
+        $doc = $_POST['docente'];
+        if ($doc==""){
+            $doc = null;
+        }
+        $err=cambia_responsabile($_POST['insegnamento'], $doc);
         if (!is_null($err)){
             printform($err);
         }else{
