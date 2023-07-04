@@ -343,10 +343,11 @@ Attraverso il menu della segreteria sarà concesso di:
 
 1. **La gestione dei corsi di laurea**  
 ![segreteria_corsi](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_corsiv3.png?raw=True)
-![segreteria_corsi2](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_corsi2v2.png?raw=True)
+![segreteria_corsi](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_corsi5.png?raw=True)
+![segreteria_corsi2](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_corsi2v3.png?raw=True)
 L'utente della segreteria può inserire nuovi corsi di laurea ed aggiungere nel manifesto degli insegnamenti di un corso di laurea un insegnamento (Per far ciò sarà però necessario che siano presenti degli insegnamenti).  
 Inoltre sarà possibile disattivare/attivare dei corsi di laurea, permettendo quindi di inserire o meno dei nuovi studenti per tale corso.
-![segreteria_corsi3](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_corsi3v2.png?raw=True)
+![segreteria_corsi3](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_corsi3v3.png?raw=True)
 ![segreteria_corsi4](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_corsi4v2.png?raw=True)
 E' possibile visualizzare gli insegnamenti previsti per un corso di laurea con le rispettive propedeuticità e l'elenco di tutti i corsi di laurea previsti
 
