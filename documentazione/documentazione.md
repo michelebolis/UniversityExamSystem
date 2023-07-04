@@ -423,7 +423,7 @@ A seguito del conseguimento di tutti gli esami presenti nel suo manifesto degli 
 Anche per lo studente, come in precedenza per la segreteria, è prevista un'interfaccia per visualizzare la sua carriera completa e non oppure la sua carriera di un corso di laurea precedente.
 
 5. **Visualizzazione dei corsi di laurea**  
-![studente_corso](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/studente_corso.png?raw=True)  
+![studente_corso](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/studente_corsov2.png?raw=True)  
 Infine lo studente può visualizzare sia il manifesto di studi di ciascun corso di laurea previsto nell'univerisità, con le propedeuticità di ogni insegnamento, che le propedeuticità di ogni insegnamento del proprio corso di laurea.
 
 - ### Caso particolare: ex-studente
