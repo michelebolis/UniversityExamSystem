@@ -37,6 +37,23 @@ Nota: IDDocente puo essere eventualmente NULL
 
 ---
 
+- **uni.cambia_responsabile**: permette di cambiare il docente responsabile di un corso
+RETURNS NOTHING
+Parametri:
+  - insegnamentoToUpdate integer
+  - newDocente integer
+EXCEPTION SE l'insegnamento non esiste
+
+---
+
+- **uni.cambia_stato_corso**: permette di disattivare/attivare un corso di laurea
+RETURNS NOTHING
+Parametri:
+  - corsoToUpdate varchar(20)
+  - newStato boolean
+
+---
+
 - **uni.insert_utente**: permette di inserire un nuovo utente  
 RETURNS NOTHING  
 Parametri:  

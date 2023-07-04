@@ -23,7 +23,7 @@
                     echo '<td>' . $corso['nome'] . '</td>';
                     echo '<td>' . $corso['annitotali'] . '</td>';
                     echo '<td>' . $corso['valorelode'] . '</td>';
-                    echo '<td>' ; if($corso['attivo']=="t"){echo 'SI';} ; echo '</td>';
+                    echo '<td>' ; if($corso['attivo']=="t"){echo 'SI';}else{echo 'NO';} ; echo '</td>';
                 echo '</tr>';
             }
             ?>

@@ -89,14 +89,16 @@
                 <label for="corso" class="form-label">Corso di laurea</label>
                 <select name="corso" id="corso" class="form-select">
                 <?php
-                    while($corso = pg_fetch_assoc($res)){
-                        echo '<option value="'. $corso['idcorso'] . '"';
-                        if (isset($_POST['corso']) && $_POST['corso']==$corso['idcorso']){
-                            echo ' selected';
+                    while($corso = pg_fetch_assoc($res) ){
+                        if ($corso['attivo']=="t"){
+                            echo '<option value="'. $corso['idcorso'] . '"';
+                            if (isset($_POST['corso']) && $_POST['corso']==$corso['idcorso']){
+                                echo ' selected';
+                            }
+                            echo '>';
+                            echo $corso['idcorso'] . ' | ' . $corso['nome'];
+                            echo '</option>';
                         }
-                        echo '>';
-                        echo $corso['idcorso'] . ' | ' . $corso['nome'];
-                        echo '</option>';
                     }
                 ?>
                 </select>

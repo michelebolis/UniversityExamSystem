@@ -259,6 +259,20 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- cambia_stato_corso: permette di disattivare/attivare un corso di laurea
+CREATE OR REPLACE PROCEDURE uni.cambia_stato_corso(
+    corsoToUpdate varchar(20), newStato boolean
+)
+AS $$
+DECLARE corso uni.corso_laurea%ROWTYPE;
+BEGIN
+    PERFORM * FROM uni.corso_laurea as c WHERE c.IDCorso = corsoToUpdate;
+    IF NOT FOUND THEN 
+        RAISE EXCEPTION 'Corso di laurea non trovato';
+    END IF;
+    UPDATE uni.corso_laurea SET attivo = newStato WHERE IDCorso=corsoToUpdate;
+END;
+$$ LANGUAGE plpgsql;
 
 -- insert_utente: permette di inserire un nuovo utente
 CREATE OR REPLACE PROCEDURE uni.insert_utente(ruolo uni.ruolo, nome varchar(50), cognome varchar(50), new_email varchar(100), password varchar(32), 

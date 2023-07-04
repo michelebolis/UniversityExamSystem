@@ -16,12 +16,21 @@
             <div class="list-group col-3">
                 <a aria-current="true" class="list-group-item list-group-item-action 
                 <?php 
-                    if (!isset($_GET['manifesto']) && !isset($_GET['view_manifesto']) && !isset($_GET['allCorso']) ){
+                    if (!isset($_GET['manifesto']) && !isset($_GET['view_manifesto']) && !isset($_GET['allCorso']) && !isset($_GET['attiva']) ){
                         echo "active";
                     }
                 ?>
                 " href="corso_laurea.php">
                     Inserisci un nuovo corso di laurea
+                </a>
+                <a aria-current="true" class="list-group-item list-group-item-action 
+                <?php 
+                    if (isset($_GET['attiva'])){
+                        echo "active";
+                    }
+                ?>
+                " href="corso_laurea.php?attiva=True">
+                    Disattiva/attiva un corso di laurea
                 </a>
                 <a class="list-group-item list-group-item-action 
                 <?php 
@@ -53,7 +62,7 @@
                 
             </div>
             <?php 
-            if (!isset($_GET['manifesto']) && !isset($_GET['view_manifesto']) && !isset($_GET['allCorso']) ){
+            if (!isset($_GET['manifesto']) && !isset($_GET['view_manifesto']) && !isset($_GET['allCorso'] ) && !isset($_GET['attiva'] )){
                 include_once('template/form_newcorso.php');
             }else if(isset($_GET['manifesto'])){
                 include_once('template/form_insert_in_manifesto.php');
@@ -61,6 +70,8 @@
                 include_once('template/form_viewmanifesto.php');
             }else if(isset($_GET['allCorso'])){
                 include_once('template/form_allCorso.php');
+            }else if (isset($_GET['attiva'])){
+                include_once('template/form_statocorso.php');
             }
             ?>
         </div>

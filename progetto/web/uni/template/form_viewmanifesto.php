@@ -15,6 +15,7 @@
                 echo '<option value="'. $corso['idcorso'] . '"';
                 echo '>';
                 echo $corso['idcorso'] . ' | ' . $corso['nome'];
+                if ($corso['annitotali']==2){echo ' | magistrale';}else{echo ' | triennale';}
                 echo '</option>';
             }
         ?>
@@ -37,16 +38,20 @@
                 <th>Insegnamento</th>
                 <th>Anno</th>
                 <th>Crediti</th>
+                <th>Responsabile</th>
             </thead>
             <tbody>
             <?php
             include_once('lib/get/get_insegnamento.php');
+            include_once('lib/get/get_utente_bio.php');
             while ($insegnamento = pg_fetch_assoc($res)){
                 $info_insegnamento = get_insegnamento($insegnamento['idinsegnamento']);
+                $info_doc = get_utente_bio($info_insegnamento['iddocente']);
                 echo '<tr>';
                     echo '<td>' . $info_insegnamento['nome'] . '</td>';
                     echo '<td>' . $insegnamento['anno'] . '</td>';
                     echo '<td>' . $info_insegnamento['crediti'] . '</td>';
+                    echo '<td>' . $info_doc['nome'] . ' ' . $info_doc['cognome'] . '</td>';
                 echo '</tr>';
             }
             ?>
