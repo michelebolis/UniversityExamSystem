@@ -51,7 +51,7 @@ Prevediamo di voler ricavare attraverso il codice fiscale, che consideriamo unic
 Ipotizziamo che i dati presenti in _matricola_, _docente_ e _utente_ **NON** vengano mai cancellati
 
 - _**Corso di laurea**_  
-I corsi di laurea sono identificati nell'entità '_corso_laurea_' da un identificativo incrementale, mentre sono caratterizzati dal nome, dagli anni totali del corso (3 per la triennale, 2 per la magistrale), dal valore della lode (per es la lode nella media puo essere considerata come un 30 o come un 32) e dal campo che identifica se il corso di laurea sia attivo o meno.  
+I corsi di laurea sono identificati nell'entità '_corso_laurea_' da un identificativo incrementale, mentre sono caratterizzati dal nome, dagli anni totali del corso (3 per la triennale, 2 per la magistrale), dal valore della lode (per es la lode nella media puo essere considerata come un 30 o come un 32) e dal campo che identifica se il corso di laurea sia attivo o meno (se il corso non è attivo non sarà possibile iscriversi a tale corso di laurea).  
 Per semplicità ipotizziamo che i corsi di laurea **NON** vengano mai cancellati  
 
 - _**Insegnamento e propedeuticità**_  
@@ -344,8 +344,8 @@ Attraverso il menu della segreteria sarà concesso di:
 1. **La gestione dei corsi di laurea**  
 ![segreteria_corsi](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_corsiv2.png?raw=True)
 ![segreteria_corsi2](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_corsi2v2.png?raw=True)
-L'utente della segreteria può inserire nuovi corsi di laurea ed aggiungere nel manifesto degli insegnamenti di un corso di laurea un insegnamento.
-Per far ciò sarà però necessario che siano presenti degli insegnamenti.
+L'utente della segreteria può inserire nuovi corsi di laurea ed aggiungere nel manifesto degli insegnamenti di un corso di laurea un insegnamento (Per far ciò sarà però necessario che siano presenti degli insegnamenti).  
+Inoltre sarà possibile disattivare/attivare dei corsi di laurea, permettendo quindi di inserire o meno dei nuovi studenti per tale corso.
 ![segreteria_corsi3](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_corsi3v2.png?raw=True)
 ![segreteria_corsi4](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_corsi4v2.png?raw=True)
 E' possibile visualizzare gli insegnamenti previsti per un corso di laurea con le rispettive propedeuticità e l'elenco di tutti i corsi di laurea previsti
