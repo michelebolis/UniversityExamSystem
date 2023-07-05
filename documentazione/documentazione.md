@@ -366,6 +366,7 @@ Chiaramente inizialmente sarà necessario avere un utente della segreteria nella
 Nota: nell'inserimento di un nuovo studente viene visualizzato un errore se il corso di laurea a cui si sta iscrivendo non ha ancora insegnamenti nel manifesto degli studi.  
 Oltre ad inserire nuovi utenti, possono anche eseguire la rinuncia agli studi degli studenti, selezionandoli da un apposita select.
 ![segreteria_utenti2](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_utenti2v2.png?raw=True)
+![segreteria_utenti3](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/segreteria_utenti3.png?raw=True)
 Infine è possibile avere un elenco di tutti gli utenti di un ruolo.
 
 4. **La gestione delle lauree**
@@ -398,6 +399,8 @@ Potrà visualizzare l'elenco degli studenti iscritti ad un esame prossimo e l'el
 ![docente_esito1](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/docente_esito1.png?raw=True)
 Il docente dovrà poi, in una data successiva a quella della sessione di esame, registrare gli esiti degli studenti iscritti, selezionandoli dall'apposita select.  
 Oltre all'inserimento del voto, sarà possibile registrare il ritiro dello studente dall'esame con l'apposita spunta (eventuali altri valori inseriti negli altri text verranno ignorati).
+![docente_esito1](https://github.com/michelebolis/UniversityExamSystem/blob/main/documentazione/img/docente_esito2.png?raw=True)
+Il docente potrà anche visualizzare tutti gli esiti di un suo passato esame.
 
 - ### Studente
 

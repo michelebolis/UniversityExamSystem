@@ -939,6 +939,31 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- get_all_exstudente: restituisce le informazioni di tutti gli ex studenti
+-- ROWS: matricola, idcorso, dataIscrizione, datarimozione
+CREATE OR REPLACE FUNCTION uni.get_all_exstudente()
+RETURNS SETOF uni.storico_studente AS $$
+DECLARE studente uni.storico_studente%ROWTYPE;
+BEGIN
+    FOR studente IN
+        SELECT * FROM uni.storico_studente
+    LOOP
+    	RETURN NEXT studente;
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
+-- get_laurea: restituisce l'eventuale laurea di un ex studente che ha frequentato un corso di laurea
+-- ROWS: matricola, idcorso, data, voto, incremento, lode
+CREATE OR REPLACE FUNCTION uni.get_laurea(the_matricola char(6), the_idcorso varchar(20))
+RETURNS SETOF uni.laurea AS $$
+DECLARE laurea uni.laurea%ROWTYPE;
+BEGIN
+    SELECT * INTO laurea FROM uni.laurea WHERE matricola = the_matricola AND idcorso = the_idcorso;
+	RETURN NEXT laurea;
+END;
+$$ LANGUAGE plpgsql;
+
 -- get_all_studente_bycorso: restituisce le informazioni di tutti gli studenti iscritti ad un corso di laurea
 -- ROW: matricola, idcorso, dataIscrizione
 CREATE OR REPLACE FUNCTION uni.get_all_studente_bycorso(corso varchar(20))
@@ -1024,6 +1049,20 @@ DECLARE esito uni.esito%ROWTYPE;
 BEGIN
     FOR esito IN
         SELECT * FROM uni.esito WHERE matricola=the_matricola AND stato='In attesa di accettazione'
+    LOOP
+    	RETURN NEXT esito;
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
+-- get_all_esito: restituisce tutti gli esiti di una sessione
+-- ROW: matricola, idesame, voto, stato, lode
+CREATE OR REPLACE FUNCTION uni.get_all_esito(the_IDEsame integer)
+RETURNS SETOF uni.esito AS $$
+DECLARE esito uni.esito%ROWTYPE;
+BEGIN
+    FOR esito IN
+        SELECT * FROM uni.esito WHERE IDEsame=the_IDEsame
     LOOP
     	RETURN NEXT esito;
     END LOOP;

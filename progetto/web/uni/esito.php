@@ -14,12 +14,23 @@
     <div class="container">
       <div class="row">
         <div class="list-group col-3">
-            <a aria-current="true" class="list-group-item list-group-item-action active" href="#">
+            <a aria-current="true" class="list-group-item list-group-item-action 
+            <?php if(!isset($_GET['getAll'])){echo "active";}?>
+            " href="#">
                 Inserisci un esito per un esame
+            </a>
+            <a aria-current="true" class="list-group-item list-group-item-action 
+            <?php if(isset($_GET['getAll'])){echo "active";}?>
+            " href="esito.php?getAll=True">
+                Visualizza tutti gli esiti di un esame
             </a>
         </div>
         <?php 
+        if (isset($_GET['getAll'])){
+          include_once('template/form_allEsito.php');
+        }else{
           include_once('template/form_newesito.php');
+        }
         ?>
       </div>
     </div>

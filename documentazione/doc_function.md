@@ -336,6 +336,14 @@ Parametri:
 
 ---
 
+- **uni.get_laurea**: restituisce l'eventuale laurea di un ex studente che ha frequentato un corso di laurea
+RETURN ROW: matricola, idcorso, data, voto, incremento, lode
+Parametri:  
+  - the_matricola char(6)
+  - the_idcorso varchar(20)
+
+---
+
 - **uni.get_insegnamento**: restituisce le informazioni di un insegnamento  
 RETURNS ROW: idinsegnamento, iddocente, nome, descrizione, crediti, annoattivazione  
 Parametri:
@@ -467,6 +475,13 @@ RETURNS ROWS: matricola, data, idcorso, voto, incrementovoto, lode
 Parametri:  
   - the_IDCorso varchar(20)
   - the_data date
+
+---
+
+- **uni.get_all_exstudente**: restituisce le informazioni di tutti gli ex studenti
+RETURNS ROWS: matricola, idcorso, dataIscrizione, datarimozione
+Parametri:
+  - Nessuno
 
 ---
 

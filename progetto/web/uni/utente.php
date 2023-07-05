@@ -16,7 +16,7 @@
             <div class="list-group col-3">
                 <a aria-current="true" class="list-group-item list-group-item-action 
                 <?php 
-                    if (!isset($_GET['delete']) && !isset($_GET['allSegreteria']) && !isset($_GET['allDocente']) && !isset($_GET['allStudente'])){
+                    if (!isset($_GET['delete']) && !isset($_GET['allSegreteria']) && !isset($_GET['allDocente']) && !isset($_GET['allStudente'])  && !isset($_GET['ex'])){
                         echo "active";
                     }
                 ?>
@@ -60,6 +60,15 @@
                 " href="utente.php?allStudente=True">
                     Visualizza tutti gli studenti
                 </a>
+                <a class="list-group-item list-group-item-action 
+                <?php 
+                    if (isset($_GET['ex']) && $_GET['ex']=='True'){
+                        echo "active";
+                    }
+                ?>
+                " href="utente.php?ex=True">
+                    Visualizza tutti gli ex-studenti
+                </a>
             </div>
         
             <?php 
@@ -71,6 +80,8 @@
                 include_once('template/form_allDocente.php'); 
             }else if(isset($_GET['allStudente'])){
                 include_once('template/form_allStudente.php'); 
+            }else if(isset($_GET['ex'])){
+                include_once('template/form_allExStudente.php'); 
             }else{
                 include_once('template/form_newutente.php');
             }
